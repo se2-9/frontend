@@ -1,7 +1,7 @@
-import LoginForm from '@/components/login-form';
+import LoginForm from '@/components/auth/login-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
 
-export default function Login() {
+export default function Page() {
   return (
     <MaxWidthWrapper className="w-full h-screen flex flex-col items-center justify-center">
       <h1 className="text-4xl font-semibold text-center mb-10">

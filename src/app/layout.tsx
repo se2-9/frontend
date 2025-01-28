@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Noto_Sans_Thai } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/navbar';
 import QueryProviders from './query-providers';
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,7 +35,10 @@ export default function RootLayout({
       <body
         className={`${notoSansTH.className} ${geistSans.variable} ${geistMono.variable}  antialiased`}
       >
-        <Toaster richColors />
+        <Toaster
+          richColors
+          position="top-center"
+        />
         <QueryProviders>
           <Navbar />
           {children}

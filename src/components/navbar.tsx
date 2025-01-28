@@ -15,7 +15,8 @@ import { Separator } from './ui/separator';
 import MobileMenu from './mobile-menu';
 
 export default function Navbar() {
-  const user = 'foo';
+  // const user = 'foo';
+  const user = null;
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16 backdrop-blur-lg">
       <header className="relative border-b">

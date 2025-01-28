@@ -13,10 +13,12 @@ import {
   FormLabel,
 } from '../ui/form';
 import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { login } from '@/lib/api/auth';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export default function LoginForm() {
   const form = useForm<LoginFormData>({
@@ -30,7 +32,7 @@ export default function LoginForm() {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: () => toast.success('Logged in!'),
-    onError: () => toast.error('Failed to log in'),
+    onError: (err) => toast.error(err.message),
   });
 
   function onSubmit(values: LoginFormData) {
@@ -83,8 +85,17 @@ export default function LoginForm() {
           type="submit"
           className="w-full"
         >
-          Submit
+          Login
         </Button>
+        <Link
+          className={cn(
+            buttonVariants({ variant: 'link' }),
+            'w-full text-center hover:underline'
+          )}
+          href="/register"
+        >
+          Don&apos;t have an account? Register
+        </Link>
       </form>
     </Form>
   );

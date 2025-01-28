@@ -12,12 +12,17 @@ import {
   FormLabel,
 } from '../ui/form';
 import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { register } from '@/lib/api/auth';
 import { toast } from 'sonner';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterForm() {
+  const router = useRouter();
+
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -29,8 +34,11 @@ export default function RegisterForm() {
 
   const mutation = useMutation({
     mutationFn: register,
-    onSuccess: () => toast.success('Account created!'),
-    onError: () => toast.error('Failed to create account'),
+    onSuccess: () => {
+      toast.success('Account created!');
+      router.push('/login');
+    },
+    onError: (err) => toast.error(err.message),
   });
 
   const onSubmit = (values: RegisterFormData) => {
@@ -101,8 +109,17 @@ export default function RegisterForm() {
           type="submit"
           className="w-full"
         >
-          Submit
+          Register
         </Button>
+        <Link
+          className={cn(
+            buttonVariants({ variant: 'link' }),
+            'w-full text-center hover:underline'
+          )}
+          href="/login"
+        >
+          Already have an account? Login
+        </Link>
       </form>
     </Form>
   );

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useReducer } from "react";
-import { MenuIcon } from "lucide-react";
-import { Button } from "./ui/button";
+import { useReducer } from 'react';
+import { MenuIcon } from 'lucide-react';
+import { Button } from './ui/button';
 import {
   Sheet,
   SheetContent,
@@ -10,20 +10,29 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "./ui/sheet";
-import Link from "next/link";
+} from './ui/sheet';
+import Link from 'next/link';
+import { User } from '@/types/user';
+import { useAuthStore } from '@/store/auth-store';
 
 interface MobileMenuProps {
-  user: string | null;
+  user: User | null;
 }
 
 export default function MobileMenu({ user }: MobileMenuProps) {
   const [isOpen, toggle] = useReducer((open) => !open, false);
-
+  const logout = useAuthStore((state) => state.logout);
   return (
-    <Sheet open={isOpen} onOpenChange={toggle}>
+    <Sheet
+      open={isOpen}
+      onOpenChange={toggle}
+    >
       <SheetTrigger asChild>
-        <Button variant="secondary" size="icon" className="md:hidden">
+        <Button
+          variant="secondary"
+          size="icon"
+          className="md:hidden"
+        >
           <MenuIcon className="size-6" />
         </Button>
       </SheetTrigger>
@@ -35,7 +44,7 @@ export default function MobileMenu({ user }: MobileMenuProps) {
         <nav className="flex flex-col space-y-4">
           {user ? (
             <>
-              <span>{user}</span>
+              <span>{user.email}</span>
             </>
           ) : (
             <Button
@@ -47,13 +56,25 @@ export default function MobileMenu({ user }: MobileMenuProps) {
               <Link href="/login">Login</Link>
             </Button>
           )}
-          <Link href="/" onClick={toggle} className="hover:underline">
+          <Link
+            href="/"
+            onClick={toggle}
+            className="hover:underline"
+          >
             Posts
           </Link>
-          <Link href="/" onClick={toggle} className="hover:underline">
+          <Link
+            href="/"
+            onClick={toggle}
+            className="hover:underline"
+          >
             Learning
           </Link>
-          <Link href="/" onClick={toggle} className="hover:underline">
+          <Link
+            href="/"
+            onClick={toggle}
+            className="hover:underline"
+          >
             Students
           </Link>
           {user ? (
@@ -61,9 +82,10 @@ export default function MobileMenu({ user }: MobileMenuProps) {
               asChild
               size="sm"
               variant="secondary"
-              className="text-primary bg-destructive/50"
+              className="text-primary bg-destructive/50 w-full"
+              onClick={logout}
             >
-              <a href="/api/auth/logout">Logout</a>
+              <p>Logout</p>
             </Button>
           ) : null}
         </nav>

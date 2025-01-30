@@ -19,8 +19,15 @@ import { toast } from 'sonner';
 import { login } from '@/lib/api/auth';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/auth-store';
 
 export default function LoginForm() {
+  const router = useRouter();
+
+  const setTokens = useAuthStore((state) => state.setToken);
+  const fetchUser = useAuthStore((state) => state.fetchUser);
+
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -31,7 +38,22 @@ export default function LoginForm() {
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: () => toast.success('Logged in!'),
+    onSuccess: async (data) => {
+      if (!data.result) {
+        toast.error('Something went wrong');
+        return;
+      }
+
+      try {
+        setTokens(data.result.access_token, data.result.refresh_token);
+        await fetchUser();
+        toast.success('Logged in!');
+        router.push('/');
+      } catch (error) {
+        console.error(error);
+        toast.error('Something went wrong');
+      }
+    },
     onError: (err) => toast.error(err.message),
   });
 

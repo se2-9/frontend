@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import MaxWidthWrapper from './max-width-wrapper';
 import { cn } from '@/lib/utils';
@@ -13,10 +15,11 @@ import {
 } from './ui/dropdown-menu';
 import { Separator } from './ui/separator';
 import MobileMenu from './mobile-menu';
+import { useAuthStore } from '@/store/auth-store';
 
 export default function Navbar() {
-  // const user = 'foo';
-  const user = null;
+  const user = useAuthStore((state) => state.user);
+
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16 backdrop-blur-lg">
       <header className="relative border-b">
@@ -67,16 +70,16 @@ export default function Navbar() {
                     {/* <Button variant="ghost" size="icon"> */}
                     <Avatar>
                       <AvatarImage
-                        src="https://github.com/macgeargear.png"
-                        alt="@macgeargear"
+                        src=""
+                        alt={user.email}
                       />
-                      <AvatarFallback>G</AvatarFallback>
+                      <AvatarFallback>{user.email[0]}</AvatarFallback>
                     </Avatar>
                     {/* </Button> */}
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-full">
                     <DropdownMenuGroup>
-                      <DropdownMenuLabel>Macgeargear</DropdownMenuLabel>
+                      <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                       <DropdownMenuLabel className="-mt-3 font-normal text-sm">
                         macgeargear@gmail.com
                       </DropdownMenuLabel>

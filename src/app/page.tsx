@@ -1,4 +1,5 @@
-import MaxWidthWrapper from "@/components/max-width-wrapper";
+import MaxWidthWrapper from '@/components/max-width-wrapper';
+import UserInfo from '@/components/user-info';
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
           Obcaecati quisquam eius voluptas vitae, fugiat sapiente magni impedit
           cum magnam dicta quibusdam veritatis.
         </p>
+        <UserInfo />
       </div>
     </MaxWidthWrapper>
   );

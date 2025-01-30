@@ -19,6 +19,7 @@ import { useAuthStore } from '@/store/auth-store';
 
 export default function Navbar() {
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16 backdrop-blur-lg">
@@ -88,7 +89,13 @@ export default function Navbar() {
                     <DropdownMenuItem>Profile</DropdownMenuItem>
                     <DropdownMenuItem>My students</DropdownMenuItem>
                     <Separator />
-                    <DropdownMenuItem>logout</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        logout();
+                      }}
+                    >
+                      logout
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
@@ -108,7 +115,7 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-            <MobileMenu user={user} />
+            <MobileMenu />
           </div>
         </MaxWidthWrapper>
       </header>

@@ -1,6 +1,6 @@
 'use client';
 
-import { RegisterFormData, registerSchema } from '@/lib/validations/auth';
+import { RegisterRequest, registerSchema } from '@/lib/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
@@ -23,7 +23,7 @@ import { useRouter } from 'next/navigation';
 export default function RegisterForm() {
   const router = useRouter();
 
-  const form = useForm<RegisterFormData>({
+  const form = useForm<RegisterRequest>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: '',
@@ -36,12 +36,14 @@ export default function RegisterForm() {
     mutationFn: register,
     onSuccess: () => {
       toast.success('Account created!');
-      router.push('/login');
+      router.push(
+        `/verify-code?email=${encodeURIComponent(form.getValues().email)}`
+      );
     },
     onError: (err) => toast.error(err.message),
   });
 
-  const onSubmit = (values: RegisterFormData) => {
+  const onSubmit = (values: RegisterRequest) => {
     mutation.mutate(values);
   };
 

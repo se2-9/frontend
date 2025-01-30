@@ -1,6 +1,6 @@
 'use client';
 
-import { LoginFormData, loginSchema } from '@/lib/validations/auth';
+import { LoginRequest, loginSchema } from '@/lib/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,14 +21,14 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth-store';
+import { DtoToUser } from '@/utils/mapper/user-mapper';
 
 export default function LoginForm() {
   const router = useRouter();
 
-  const setTokens = useAuthStore((state) => state.setToken);
-  const fetchUser = useAuthStore((state) => state.fetchUser);
+  const setAccessToken = useAuthStore((state) => state.login);
 
-  const form = useForm<LoginFormData>({
+  const form = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -45,8 +45,7 @@ export default function LoginForm() {
       }
 
       try {
-        setTokens(data.result.access_token, data.result.refresh_token);
-        await fetchUser();
+        setAccessToken(data.result.access_token, DtoToUser(data.result.user));
         toast.success('Logged in!');
         router.push('/');
       } catch (error) {
@@ -57,7 +56,7 @@ export default function LoginForm() {
     onError: (err) => toast.error(err.message),
   });
 
-  function onSubmit(values: LoginFormData) {
+  function onSubmit(values: LoginRequest) {
     mutation.mutate(values);
   }
 

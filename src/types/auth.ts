@@ -1,8 +1,8 @@
 import { ApiResponse } from './api';
 
 export type AuthToken = {
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
 };
 
 export type UserProfile = {

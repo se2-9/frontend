@@ -1,17 +1,18 @@
 import { ApiResponse } from './../../types/api';
 import { LoginResponse } from '@/types/auth';
 import {
-  LoginFormData,
+  LoginRequest,
   loginSchema,
-  RegisterFormData,
+  RegisterRequest,
   registerSchema,
+  VerifyEmailRequest,
 } from '../validations/auth';
 import { apiClient } from './axios';
 import { AxiosError } from 'axios';
 import { UserDTO } from '@/dtos/user';
 import { useAuthStore } from '@/store/auth-store';
 
-export async function register(data: RegisterFormData) {
+export async function register(data: RegisterRequest) {
   const validatedData = registerSchema.parse(data);
 
   try {
@@ -19,14 +20,11 @@ export async function register(data: RegisterFormData) {
 
     return res.data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.message || error.message);
-    }
-    throw new Error('Something went wrong');
+    throw handleAxiosError(error);
   }
 }
 
-export async function login(data: LoginFormData): Promise<LoginResponse> {
+export async function login(data: LoginRequest): Promise<LoginResponse> {
   const validatedData = loginSchema.parse(data);
 
   try {
@@ -37,10 +35,7 @@ export async function login(data: LoginFormData): Promise<LoginResponse> {
 
     return res.data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.message || error.message);
-    }
-    throw new Error('Something went wrong');
+    throw handleAxiosError(error);
   }
 }
 
@@ -56,26 +51,48 @@ export async function getUserProfile(): Promise<ApiResponse<UserDTO>> {
 
     return res.data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.message || error.message);
-    }
-    throw new Error('Something went wrong');
+    throw handleAxiosError(error);
   }
 }
 
 export async function logout() {
-  const token = useAuthStore.getState().refreshToken;
-
   try {
-    await apiClient.post('/auth/logout', null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await apiClient.post('/auth/logout', null, { withCredentials: true });
   } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.message || error.message);
-    }
-    throw new Error('Something went wrong');
+    throw handleAxiosError(error);
+  } finally {
+    useAuthStore.getState().logout();
   }
+}
+
+export async function verifyEmail(
+  data: VerifyEmailRequest
+): Promise<ApiResponse<{ verified: boolean }>> {
+  const { email, code } = data;
+  try {
+    const res = await apiClient.post('/auth/verify-email', {
+      email,
+      code,
+    });
+
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+}
+
+export async function refreshAccessToken() {
+  try {
+    const res = await apiClient.post('/auth/refresh-token');
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+}
+
+function handleAxiosError(error: unknown): Error {
+  if (error instanceof AxiosError) {
+    return new Error(error.response?.data.message || error.message);
+  }
+  return new Error('Something went wrong');
 }

@@ -11,5 +11,11 @@ export const loginSchema = z.object({
   password: z.string().min(4),
 });
 
-export type RegisterFormData = z.infer<typeof registerSchema>;
-export type LoginFormData = z.infer<typeof loginSchema>;
+export const verifyEmailSchema = z.object({
+  email: z.string().email(),
+  code: z.string().length(6),
+});
+
+export type RegisterRequest = z.infer<typeof registerSchema>;
+export type LoginRequest = z.infer<typeof loginSchema>;
+export type VerifyEmailRequest = z.infer<typeof verifyEmailSchema>;

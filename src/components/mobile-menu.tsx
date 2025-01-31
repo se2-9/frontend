@@ -12,16 +12,14 @@ import {
   SheetTrigger,
 } from './ui/sheet';
 import Link from 'next/link';
-import { User } from '@/types/user';
 import { useAuthStore } from '@/store/auth-store';
 
-interface MobileMenuProps {
-  user: User | null;
-}
-
-export default function MobileMenu({ user }: MobileMenuProps) {
+export default function MobileMenu() {
   const [isOpen, toggle] = useReducer((open) => !open, false);
+
+  const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+
   return (
     <Sheet
       open={isOpen}
@@ -83,7 +81,10 @@ export default function MobileMenu({ user }: MobileMenuProps) {
               size="sm"
               variant="secondary"
               className="text-primary bg-destructive/50 w-full"
-              onClick={logout}
+              onClick={() => {
+                logout();
+                toggle();
+              }}
             >
               <p>Logout</p>
             </Button>

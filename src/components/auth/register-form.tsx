@@ -12,12 +12,10 @@ import {
   FormLabel,
 } from '../ui/form';
 import { Input } from '../ui/input';
-import { Button, buttonVariants } from '../ui/button';
+import { Button } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { register } from '@/lib/api/auth';
 import { toast } from 'sonner';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterForm() {
@@ -51,7 +49,7 @@ export default function RegisterForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-2 w-full mx-auto px-4"
+        className="space-y-2 w-full mx-auto px-4 text-text"
       >
         <FormField
           name="name"
@@ -109,19 +107,10 @@ export default function RegisterForm() {
         />
         <Button
           type="submit"
-          className="w-full"
+          className="w-full text-text bg-lightbrown"
         >
           Register
         </Button>
-        <Link
-          className={cn(
-            buttonVariants({ variant: 'link' }),
-            'w-full text-center hover:underline'
-          )}
-          href="/login"
-        >
-          Already have an account? Login
-        </Link>
       </form>
     </Form>
   );

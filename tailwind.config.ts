@@ -20,10 +20,13 @@ export default {
         'caret-blink': 'caret-blink 1.25s ease-out infinite',
       },
       fontFamily: {
+        nunito_sans: 'var(--font-nunito-sans)',
         noto_sans_th: 'var(--font-noto-sans-thai)',
       },
       colors: {
-        background: 'hsl(var(--background))',
+        text: '#615956',
+        lightbrown: '#e1dad2',
+        background: '#f7f3f0',
         foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',

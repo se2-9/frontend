@@ -1,6 +1,9 @@
 'use client';
 
-import { RegisterRequest, registerSchema } from '@/lib/validations/auth';
+import {
+  RegisterStudentRequest,
+  registerStudentSchema,
+} from '@/lib/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
@@ -14,15 +17,15 @@ import {
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
-import { register } from '@/lib/api/auth';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { registerStudent } from '@/lib/api/auth';
 
 export default function RegisterForm() {
   const router = useRouter();
 
-  const form = useForm<RegisterRequest>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<RegisterStudentRequest>({
+    resolver: zodResolver(registerStudentSchema),
     defaultValues: {
       name: '',
       email: '',
@@ -31,7 +34,7 @@ export default function RegisterForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: register,
+    mutationFn: registerStudent,
     onSuccess: () => {
       toast.success('Account created!');
       router.push(
@@ -41,7 +44,7 @@ export default function RegisterForm() {
     onError: (err) => toast.error(err.message),
   });
 
-  const onSubmit = (values: RegisterRequest) => {
+  const onSubmit = (values: RegisterStudentRequest) => {
     mutation.mutate(values);
   };
 

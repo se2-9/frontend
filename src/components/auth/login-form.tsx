@@ -2,7 +2,7 @@
 
 import { LoginRequest, loginSchema } from '@/lib/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Form,
@@ -13,18 +13,19 @@ import {
   FormLabel,
 } from '../ui/form';
 import { Input } from '../ui/input';
-import { Button, buttonVariants } from '../ui/button';
+import { Button } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { login } from '@/lib/api/auth';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth-store';
 import { DtoToUser } from '@/utils/mapper/user-mapper';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
 export default function LoginForm() {
   const router = useRouter();
+
+  const [showPassword, setShowPassword] = useState(true);
 
   const setAccessToken = useAuthStore((state) => state.login);
 
@@ -64,7 +65,7 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-2 w-full mx-auto px-4"
+        className="space-y-2 w-full mx-auto px-4 text-text"
       >
         <FormField
           name="email"
@@ -74,6 +75,7 @@ export default function LoginForm() {
               <FormControl>
                 <Input
                   {...field}
+                  placeholder="Enter your email"
                   type="email"
                 />
               </FormControl>
@@ -90,10 +92,25 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                />
+                <div className="relative w-full">
+                  <Input
+                    {...field}
+                    placeholder="Enter your password"
+                    type={`${showPassword ? 'text' : 'password'}`}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="bg-background text-text h-fit absolute right-2 top-1/2 -translate-y-1/2 p-1"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </Button>
+                </div>
               </FormControl>
               <FormDescription className="text-destructive">
                 {form.formState.errors.password?.message}
@@ -104,19 +121,10 @@ export default function LoginForm() {
         />
         <Button
           type="submit"
-          className="w-full"
+          className="w-full text-text bg-lightbrown"
         >
           Login
         </Button>
-        <Link
-          className={cn(
-            buttonVariants({ variant: 'link' }),
-            'w-full text-center hover:underline'
-          )}
-          href="/register"
-        >
-          Don&apos;t have an account? Register
-        </Link>
       </form>
     </Form>
   );

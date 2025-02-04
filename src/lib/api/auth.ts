@@ -3,8 +3,8 @@ import { LoginResponse } from '@/types/auth';
 import {
   LoginRequest,
   loginSchema,
-  RegisterRequest,
-  registerSchema,
+  RegisterStudentRequest,
+  registerStudentSchema,
   VerifyEmailRequest,
 } from '../validations/auth';
 import { apiClient } from './axios';
@@ -12,11 +12,11 @@ import { AxiosError } from 'axios';
 import { UserDTO } from '@/dtos/user';
 import { useAuthStore } from '@/store/auth-store';
 
-export async function register(data: RegisterRequest) {
-  const validatedData = registerSchema.parse(data);
+export async function registerStudent(data: RegisterStudentRequest) {
+  const validatedData = registerStudentSchema.parse(data);
 
   try {
-    const res = await apiClient.post('/auth/register', validatedData);
+    const res = await apiClient.post('/auth/register-student', validatedData);
 
     return res.data;
   } catch (error) {

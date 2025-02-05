@@ -1,8 +1,10 @@
 'use client';
 
-import { LoginRequest, loginSchema } from '@/lib/validations/auth';
+import {
+  registerStudentSchema,
+  RegisterTutorRequest,
+} from '@/lib/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Form,
@@ -16,51 +18,40 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { login } from '@/lib/api/auth';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/auth-store';
-import { DtoToUser } from '@/utils/mapper/user-mapper';
+import { registerStudent } from '@/lib/api/auth';
+import { useState } from 'react';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
-export default function LoginForm() {
+export default function RegisterTutorForm() {
   const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(true);
 
-  const setAuth = useAuthStore((state) => state.setAuth);
-
-  const form = useForm<LoginRequest>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<RegisterTutorRequest>({
+    resolver: zodResolver(registerStudentSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: '',
+      educationLevel: '',
+      portfolio: '',
     },
   });
 
   const mutation = useMutation({
-    mutationFn: login,
-    onSuccess: async (data) => {
-      if (!data.result) {
-        toast.error('Something went wrong');
-        return;
-      }
-
-      try {
-        console.log(data);
-        setAuth(data.result.access_token, DtoToUser(data.result.user));
-        toast.success('Logged in!');
-        router.push('/profile');
-      } catch (error) {
-        console.error(error);
-        toast.error('Something went wrong');
-      }
+    mutationFn: registerStudent,
+    onSuccess: () => {
+      toast.success('Account created!');
+      router.push(
+        `/verify-code?email=${encodeURIComponent(form.getValues().email)}`
+      );
     },
     onError: (err) => toast.error(err.message),
   });
 
-  function onSubmit(values: LoginRequest) {
+  const onSubmit = (values: RegisterTutorRequest) => {
     mutation.mutate(values);
-  }
+  };
 
   return (
     <Form {...form}>
@@ -69,6 +60,25 @@ export default function LoginForm() {
         className="space-y-2 w-full mx-auto px-4 text-text"
       >
         <FormField
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="Enter your name"
+                />
+              </FormControl>
+              <FormDescription className="text-destructive">
+                {form.formState.errors.email?.message}
+              </FormDescription>
+            </FormItem>
+          )}
+          control={form.control}
+        />
+        <FormField
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -76,8 +86,8 @@ export default function LoginForm() {
               <FormControl>
                 <Input
                   {...field}
-                  placeholder="Enter your email"
                   type="email"
+                  placeholder="Enter your email"
                 />
               </FormControl>
               <FormDescription className="text-destructive">
@@ -120,11 +130,49 @@ export default function LoginForm() {
           )}
           control={form.control}
         />
+        <FormField
+          name="educationLevel"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Education Level</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="Enter your education level"
+                />
+              </FormControl>
+              <FormDescription className="text-destructive">
+                {form.formState.errors.password?.message}
+              </FormDescription>
+            </FormItem>
+          )}
+          control={form.control}
+        />
+        <FormField
+          name="portfolio"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Portfolio</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="Enter your portfolio"
+                />
+              </FormControl>
+              <FormDescription className="text-destructive">
+                {form.formState.errors.password?.message}
+              </FormDescription>
+            </FormItem>
+          )}
+          control={form.control}
+        />
         <Button
           type="submit"
-          className="w-full text-text bg-lightbrown"
+          className="w-full text-text bg-orange"
         >
-          Login
+          Register As Tutor
         </Button>
       </form>
     </Form>

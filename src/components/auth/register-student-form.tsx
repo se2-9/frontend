@@ -20,8 +20,11 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { registerStudent } from '@/lib/api/auth';
+import { useState } from 'react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
-export default function RegisterForm() {
+export default function RegisterStudentForm() {
+  const [showPassword, setShowPassword] = useState(true);
   const router = useRouter();
 
   const form = useForm<RegisterStudentRequest>({
@@ -63,6 +66,7 @@ export default function RegisterForm() {
                 <Input
                   {...field}
                   type="text"
+                  placeholder="Enter your name"
                 />
               </FormControl>
               <FormDescription className="text-destructive">
@@ -81,6 +85,7 @@ export default function RegisterForm() {
                 <Input
                   {...field}
                   type="email"
+                  placeholder="Enter your email"
                 />
               </FormControl>
               <FormDescription className="text-destructive">
@@ -96,10 +101,25 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                />
+                <div className="relative w-full">
+                  <Input
+                    {...field}
+                    placeholder="Enter your password"
+                    type={`${showPassword ? 'text' : 'password'}`}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="bg-background text-text h-fit absolute right-2 top-1/2 -translate-y-1/2 p-1"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </Button>
+                </div>
               </FormControl>
               <FormDescription className="text-destructive">
                 {form.formState.errors.password?.message}
@@ -110,9 +130,9 @@ export default function RegisterForm() {
         />
         <Button
           type="submit"
-          className="w-full text-text bg-lightbrown"
+          className="w-full text-text bg-blue"
         >
-          Register
+          Register As Student
         </Button>
       </form>
     </Form>

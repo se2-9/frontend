@@ -27,6 +27,10 @@ export default {
         text: '#615956',
         lightbrown: '#e1dad2',
         background: '#f7f3f0',
+        orange: '#e4c9b6',
+        blue: '#a4b1ba',
+        green: '#b7baa5',
+        red: '#d6a499',
         foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',

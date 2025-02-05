@@ -1,67 +1,52 @@
-import { getUserProfile, logout, refreshAccessToken } from '@/lib/api/auth';
-import { User } from '@/types/user';
 import { DtoToUser } from '@/utils/mapper/user-mapper';
 import { create } from 'zustand';
+import { apiClient } from '@/lib/api/axios';
+import { User } from '@/types/user';
+import { refreshAccessToken } from '@/lib/api/auth';
+import { ApiResponse } from '@/types/api';
+import { UserDTO } from '@/dtos/user';
 
-type AuthState = {
+interface AuthState {
   user: User | null;
   accessToken: string | null;
-  isAuth: boolean;
-  login: (token: string, user: User) => void;
-  logout: () => Promise<void>;
-  fetchUser: () => Promise<void>;
-  refreshAccessToken: () => Promise<void>;
-};
+  setAuth: (token: string | null, user: User | null) => void;
+  initializeAuth: () => Promise<void>;
+  logout: () => void;
+}
 
-export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
+export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
-  isAuth: false,
+  user: null,
 
-  login: (token, user) => {
-    set({ user, accessToken: token, isAuth: true });
+  setAuth: (token, user) => set({ accessToken: token, user }),
+
+  initializeAuth: async () => {
+    try {
+      const response = await refreshAccessToken();
+      const accessToken = response.result?.access_token;
+      apiClient.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+
+      const userProfileResp = await apiClient.get<ApiResponse<UserDTO>>(
+        '/auth/me',
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      set({
+        accessToken: accessToken,
+        user: DtoToUser(userProfileResp.data.result!),
+      });
+    } catch (error) {
+      console.error('Failed to refresh token, user needs to login: ', error);
+      set({ accessToken: null, user: null });
+    }
   },
 
   logout: async () => {
-    if (!get().isAuth) return;
-
-    set({ user: null, accessToken: null, isAuth: false });
-
-    try {
-      await logout();
-      set({ user: null, accessToken: null, isAuth: false });
-    } catch (error) {
-      console.error(error);
-    }
-
-    set({ user: null, accessToken: null, isAuth: false });
-  },
-
-  fetchUser: async () => {
-    if (!get().isAuth) return;
-
-    try {
-      const res = await getUserProfile();
-
-      set({ user: DtoToUser(res.result!), isAuth: true });
-    } catch (error) {
-      console.error(error);
-      set({ user: null, isAuth: false });
-    }
-  },
-
-  refreshAccessToken: async () => {
-    if (!get().isAuth) return;
-
-    try {
-      const response = await refreshAccessToken();
-      const accessToken = response.data.result.access_token;
-      set({ accessToken, isAuth: true });
-    } catch (error) {
-      console.error(error);
-
-      if (!get().isAuth) return;
-      get().logout();
-    }
+    await apiClient.post('/auth/logout');
+    set({ accessToken: null });
   },
 }));

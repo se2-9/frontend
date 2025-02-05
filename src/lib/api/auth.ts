@@ -1,3 +1,7 @@
+import {
+  RegisterTutorRequest,
+  registerTutorSchema,
+} from './../validations/auth';
 import { ApiResponse } from './../../types/api';
 import { LoginResponse } from '@/types/auth';
 import {
@@ -5,6 +9,7 @@ import {
   loginSchema,
   RegisterStudentRequest,
   registerStudentSchema,
+  RegisterTutorRequest,
   VerifyEmailRequest,
 } from '../validations/auth';
 import { apiClient } from './axios';
@@ -17,6 +22,18 @@ export async function registerStudent(data: RegisterStudentRequest) {
 
   try {
     const res = await apiClient.post('/auth/register-student', validatedData);
+
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+}
+
+export async function registerTutor(data: RegisterTutorRequest) {
+  const validatedData = registerTutorSchema.parse(data);
+
+  try {
+    const res = await apiClient.post('/auth/register-schema', validatedData);
 
     return res.data;
   } catch (error) {
@@ -81,11 +98,16 @@ export async function verifyEmail(
   }
 }
 
-export async function refreshAccessToken() {
+export async function refreshAccessToken(): Promise<LoginResponse> {
   try {
-    const res = await apiClient.post('/auth/refresh-token');
+    const res = await apiClient.get('/auth/refresh');
     return res.data;
   } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error.response?.data.message === 'token is expired') {
+        throw new Error('Token is expired');
+      }
+    }
     throw handleAxiosError(error);
   }
 }

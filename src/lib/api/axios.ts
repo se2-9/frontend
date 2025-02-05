@@ -1,30 +1,19 @@
 import { useAuthStore } from '@/store/auth-store';
 import axios from 'axios';
+import { refreshAccessToken } from './auth';
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
 
-const NO_AUTH_ROUTES = [
-  '/auth/login',
-  '/auth/register',
-  '/auth/forgot-password',
-  '/auth/verify-email',
-];
-
-apiClient.interceptors.request.use(
-  (config) => {
-    if (!NO_AUTH_ROUTES.some((route) => config.url?.includes(route))) {
-      const accessToken = useAuthStore.getState().accessToken;
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+apiClient.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
 
 apiClient.interceptors.response.use(
   (response) => response,
@@ -35,18 +24,16 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalReq._retry) {
       originalReq._retry = true;
 
-      if (!authStore.isAuth) return Promise.reject(error);
+      if (!authStore.accessToken) return Promise.reject(error);
 
       try {
-        await authStore.refreshAccessToken();
-        originalReq.headers.Authorization = `Bearer ${authStore.accessToken}`;
+        const res = await refreshAccessToken();
+        originalReq.headers.Authorization = `Bearer ${res.result?.access_token}`;
 
         return apiClient(originalReq);
-      } catch (error) {
-        if (!authStore.isAuth) return Promise.reject(error);
-        originalReq._retry = false;
+      } catch (refreshError) {
         authStore.logout();
-        return Promise.reject(error);
+        return Promise.reject(refreshError);
       }
     }
 

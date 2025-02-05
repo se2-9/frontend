@@ -17,8 +17,11 @@ import { Separator } from './ui/separator';
 import MobileMenu from './mobile-menu';
 import { useAuthStore } from '@/store/auth-store';
 import { Icons } from './icons';
+import { Badge } from './ui/badge';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
 
@@ -44,30 +47,41 @@ export default function Navbar() {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    {/* <Button variant="ghost" size="icon"> */}
                     <Avatar>
                       <AvatarImage
                         src=""
                         alt={user.email}
                       />
-                      <AvatarFallback>{user.email[0]}</AvatarFallback>
+                      <AvatarFallback>{user && user?.name?.[0]}</AvatarFallback>
                     </Avatar>
-                    {/* </Button> */}
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-full">
-                    <DropdownMenuGroup>
-                      <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+                    <DropdownMenuGroup className="space-y-2">
+                      <DropdownMenuLabel className="flex items-center gap-2">
+                        <p>{user.name}</p>
+                        <Badge
+                          className={cn('w-fit text-text', {
+                            'bg-orange': user.role === 'tutor',
+                            'bg-blue': user.role === 'student',
+                          })}
+                        >
+                          {user.role}
+                        </Badge>
+                      </DropdownMenuLabel>
                       <DropdownMenuLabel className="-mt-3 font-normal text-sm">
-                        macgeargear@gmail.com
+                        {user.email}
                       </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     <Separator />
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">Profile</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem>My students</DropdownMenuItem>
                     <Separator />
                     <DropdownMenuItem
                       onClick={() => {
                         logout();
+                        router.replace('/login');
                       }}
                     >
                       logout

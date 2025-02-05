@@ -13,8 +13,10 @@ import {
 } from './ui/sheet';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/auth-store';
+import { useRouter } from 'next/navigation';
 
 export default function MobileMenu() {
+  const router = useRouter();
   const [isOpen, toggle] = useReducer((open) => !open, false);
 
   const user = useAuthStore((state) => state.user);
@@ -41,9 +43,10 @@ export default function MobileMenu() {
         </SheetHeader>
         <nav className="flex flex-col space-y-4">
           {user ? (
-            <>
-              <span>{user.email}</span>
-            </>
+            <div className="py-2">
+              <p className="font-bold">{user.name}</p>
+              <p>{user.email}</p>
+            </div>
           ) : (
             <Button
               asChild
@@ -84,6 +87,7 @@ export default function MobileMenu() {
               onClick={() => {
                 logout();
                 toggle();
+                router.replace('/login');
               }}
             >
               <p>Logout</p>

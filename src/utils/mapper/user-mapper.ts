@@ -10,5 +10,8 @@ export function DtoToUser(dto: UserDTO): User {
     dateOfBirth: dto.date_of_birth,
     citizenId: dto.citizen_id,
     phoneNumber: dto.phone_number,
+    role: dto.role,
+    tutorPortfolio: dto.tutor_portfolio,
+    tutorEducationLevel: dto.tutor_education_level,
   };
 }

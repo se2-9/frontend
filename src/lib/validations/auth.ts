@@ -7,6 +7,13 @@ export const registerStudentSchema = z.object({
 });
 
 // TODO: registerTutorSchema
+export const registerTutorSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(4),
+  name: z.string().min(1),
+  educationLevel: z.string(),
+  portfolio: z.string(),
+});
 
 export const loginSchema = z.object({
   email: z.string().email(),
@@ -19,5 +26,6 @@ export const verifyEmailSchema = z.object({
 });
 
 export type RegisterStudentRequest = z.infer<typeof registerStudentSchema>;
+export type RegisterTutorRequest = z.infer<typeof registerTutorSchema>;
 export type LoginRequest = z.infer<typeof loginSchema>;
 export type VerifyEmailRequest = z.infer<typeof verifyEmailSchema>;

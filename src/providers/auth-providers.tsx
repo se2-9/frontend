@@ -16,14 +16,20 @@ export default function AuthProvider({
   const [loading, setLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
-    await initializeAuth();
-    const { accessToken, user } = useAuthStore.getState();
+    const { accessToken, expiresAt, user } = useAuthStore.getState();
 
-    if (!accessToken || !user) {
+    if (expiresAt && new Date(expiresAt) < new Date()) {
       toast.info('Session expired, please login again');
       router.replace('/login');
       return;
     }
+
+    if (!accessToken || !user) {
+      router.replace('/login');
+      return;
+    }
+
+    await initializeAuth();
   }, [initializeAuth, router]);
 
   useEffect(() => {

@@ -47,7 +47,11 @@ export default function LoginForm() {
 
       try {
         console.log(data);
-        setAuth(data.result.access_token, DtoToUser(data.result.user));
+        setAuth(
+          data.result.access_token,
+          data.result.expires_at,
+          DtoToUser(data.result.user)
+        );
         toast.success('Logged in!');
         router.push('/profile');
       } catch (error) {

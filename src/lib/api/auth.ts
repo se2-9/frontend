@@ -1,7 +1,4 @@
-import {
-  RegisterTutorRequest,
-  registerTutorSchema,
-} from './../validations/auth';
+import { registerTutorSchema } from './../validations/auth';
 import { ApiResponse } from './../../types/api';
 import { LoginResponse } from '@/types/auth';
 import {
@@ -104,7 +101,7 @@ export async function refreshAccessToken(): Promise<LoginResponse> {
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      if (error.response?.data.message === 'token is expired') {
+      if (error.response?.data.message === 'Unauthorized') {
         throw new Error('Token is expired');
       }
     }

@@ -34,7 +34,7 @@ export default function CreatePost() {
       Gender: '',
       OnlineOnsite: '',
       Place: '',
-      HourlyRate: '',
+      HourlyRate: 0,
       Description: '',
     },
   });
@@ -56,7 +56,7 @@ export default function CreatePost() {
     Gender: string;
     OnlineOnsite: string;
     Place: string;
-    HourlyRate: string;
+    HourlyRate: number;
     Description: string;
   }) {
     mutation.mutate(values);
@@ -229,11 +229,15 @@ export default function CreatePost() {
               name="HourlyRate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Hourly Rate ( Bath / Hour )</FormLabel>
+                  <FormLabel>Hourly Rate (Bath / Hour)</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
+                      type="number"
                       placeholder="Enter hourly rate"
+                      onChange={(e) =>
+                        field.onChange(parseInt(e.target.value, 10) || 0)
+                      }
                     />
                   </FormControl>
                   <FormDescription className="text-destructive">

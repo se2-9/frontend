@@ -1,4 +1,3 @@
-// pages/api/posts.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createPostSchema } from '../validations/posts'; // Import the validation schema
 import { z } from 'zod';
@@ -50,7 +49,6 @@ export default async function handler(
   return res.status(405).json({ error: 'Method Not Allowed' });
 }
 
-// lib/api/posts.ts
 import { CreatePostData } from '@/lib/validations/posts';
 
 export async function createPost(data: CreatePostData) {

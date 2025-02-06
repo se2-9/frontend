@@ -9,7 +9,7 @@ export default function Dashboard() {
   if (user == null) {
     return (
       <div className="min-h-screen grid place-content-center">
-        <Loader2Icon />
+        <Loader2Icon className="animate-spin" />
       </div>
     );
   }

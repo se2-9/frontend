@@ -6,11 +6,17 @@ import { User } from '@/types/user';
 import { refreshAccessToken } from '@/lib/api/auth';
 import { ApiResponse } from '@/types/api';
 import { UserDTO } from '@/dtos/user';
+import { scheduleTokenRefresh } from '@/utils/scheduleTokenRefresh';
 
 interface AuthState {
   user: User | null;
   accessToken: string | null;
-  setAuth: (token: string | null, user: User | null) => void;
+  expiresAt: number | null;
+  setAuth: (
+    token: string | null,
+    expiresIn: number | null,
+    user: User | null
+  ) => void;
   initializeAuth: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -20,12 +26,17 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       accessToken: null,
       user: null,
+      expiresAt: null,
 
-      setAuth: (token, user) => {
+      setAuth: (token, expiresAt, user) => {
         apiClient.defaults.headers['Authorization'] = token
           ? `Bearer ${token}`
           : '';
-        set({ accessToken: token, user });
+        set({ accessToken: token, user, expiresAt: expiresAt });
+
+        if (expiresAt) {
+          scheduleTokenRefresh(expiresAt);
+        }
       },
 
       initializeAuth: async () => {
@@ -60,11 +71,12 @@ export const useAuthStore = create<AuthState>()(
           console.error('Logout error:', error);
         } finally {
           set({ accessToken: null, user: null });
+          localStorage.removeItem('auth');
         }
       },
     }),
     {
-      name: 'auth-storage', // LocalStorage Key
+      name: 'auth',
     }
   )
 );

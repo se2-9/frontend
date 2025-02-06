@@ -43,6 +43,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           const response = await refreshAccessToken();
           const accessToken = response.result?.access_token;
+          const expiresAt = response.result?.expires_at;
 
           if (!accessToken) throw new Error('No access token received');
 
@@ -52,7 +53,8 @@ export const useAuthStore = create<AuthState>()(
             await apiClient.get<ApiResponse<UserDTO>>('/auth/me');
 
           set({
-            accessToken: accessToken,
+            accessToken,
+            expiresAt,
             user: DtoToUser(userProfileResp.data.result!),
           });
         } catch (error) {

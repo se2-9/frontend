@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth-store';
 import { toast } from 'sonner';
@@ -13,25 +13,24 @@ export default function AuthProvider({
 }) {
   const router = useRouter();
   const { initializeAuth } = useAuthStore();
-
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      await initializeAuth();
+  const checkAuth = useCallback(async () => {
+    await initializeAuth();
+    const { accessToken, user } = useAuthStore.getState();
 
-      const { accessToken, user } = useAuthStore.getState();
-
-      setLoading(false);
-
-      if (!accessToken || !user) {
-        toast.info('Session expired, please login again');
-        router.push('/login');
-      }
-    };
-
-    checkAuth();
+    if (!accessToken || !user) {
+      toast.info('Session expired, please login again');
+      router.replace('/login');
+      return;
+    }
   }, [initializeAuth, router]);
+
+  useEffect(() => {
+    checkAuth().then(() => {
+      setLoading(false);
+    });
+  }, [checkAuth, router]);
 
   if (loading) {
     return (

@@ -1,0 +1,25 @@
+import { z } from 'zod';
+
+export const EditUserProfileSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(4),
+  name: z.string().min(1),
+  tutor_education_level: z.string(),
+  tutor_portfolio: z.string(),
+  date_of_birth: z.string(),
+  verify_status: z.boolean(),
+  role: z.string(),
+  citizen_id: z.string(),
+  gender: z.string()
+});
+// TODO: registerTutorSchema
+export const EditUserProfileFormSchema = z.object({
+    password: z.string(),
+    name: z.string().min(1),
+    tutor_education_level: z.string(),
+    tutor_portfolio: z.string(),
+    date_of_birth: z.string(),
+    citizen_id: z.string(),
+})
+export type EditUserProfileRequest = z.infer<typeof EditUserProfileSchema>;
+export type EditUserProfileFormRequest = z.infer<typeof EditUserProfileFormSchema>

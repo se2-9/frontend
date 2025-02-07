@@ -3,7 +3,7 @@ import * as React from 'react';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
-
+import { deletePost } from '@/lib/api/posts';
 type Post = {
   id: string;
   title: string;
@@ -19,16 +19,7 @@ interface MyPostsProps {
 export default function MyPosts({ posts, setPosts }: MyPostsProps) {
   async function handleDelete(id: string) {
     try {
-      const response = await fetch('/api/posts', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete post');
-      }
-
+      await deletePost(id);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
       toast.success('Post deleted successfully!');
     } catch (error) {
@@ -48,20 +39,20 @@ export default function MyPosts({ posts, setPosts }: MyPostsProps) {
         ) : (
           posts.map((post) => (
             <Card key={post.id} className="p-4 mb-4 shadow-md">
-              <CardHeader>
+              <CardContent>
                 <div className="flex justify-between items-center">
                   <CardTitle>{post.title}</CardTitle>
                   <p className="text-md font-semibold">{post.HourlyRate} Bath</p>
                 </div>
                 <p className="text-sm text-gray-600">{post.OnlineOnsite}</p>
-              </CardHeader>
-              <CardContent className="flex justify-end">
-                <Button
-                  onClick={() => handleDelete(post.id)}
-                  variant="destructive"
-                >
-                  Delete
-                </Button>
+                <div className="flex justify-end mt-4">
+                  <Button
+                    onClick={() => handleDelete(post.id)}
+                    variant="destructive"
+                  >
+                    Delete
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))

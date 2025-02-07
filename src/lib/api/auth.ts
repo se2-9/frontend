@@ -30,7 +30,7 @@ export async function registerTutor(data: RegisterTutorRequest) {
   const validatedData = registerTutorSchema.parse(data);
 
   try {
-    const res = await apiClient.post('/auth/register-schema', validatedData);
+    const res = await apiClient.post('/auth/register-student', validatedData);
 
     return res.data;
   } catch (error) {

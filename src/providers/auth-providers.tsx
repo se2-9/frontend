@@ -17,7 +17,6 @@ export default function AuthProvider({
     const { accessToken, expiresAt, user } = useAuthStore.getState();
 
     if (expiresAt && new Date(expiresAt*1000) < new Date()) {
-      // console.log(new Date(expiresAt), new Date())
       toast.info('Session expired, please login again');
       router.replace('/login');
       return;

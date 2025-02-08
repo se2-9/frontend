@@ -63,7 +63,6 @@ export default function EditProfileForm() {
   });
 
   function onSubmit(values: EditUserProfileFormRequest) {
-    // console.log(values);
     mutation.mutate({
         role: currentUser?.role || "student",
         email: currentUser?.email || "myemail.gmail.com",

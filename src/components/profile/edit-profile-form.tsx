@@ -26,6 +26,7 @@ export default function EditProfileForm() {
       tutor_portfolio: "",
       date_of_birth: currentUser?.dateOfBirth.split('T')[0],
       citizen_id: "",
+      phone_number: ""
     },
   });
 
@@ -37,6 +38,7 @@ export default function EditProfileForm() {
         tutor_portfolio: currentUser.tutorPortfolio || "",
         date_of_birth: currentUser.dateOfBirth.split('T')[0] || "",
         citizen_id: currentUser.citizenId || "",
+        phone_number: currentUser.phoneNumber || "0000000000",
       });
     }
   }, []);
@@ -72,6 +74,7 @@ export default function EditProfileForm() {
         verify_status: true,
         citizen_id: values.citizen_id,
         name: values.name,
+        phone_number: values.phone_number,
         gender: currentUser?.gender || "male"
     })
   }
@@ -159,6 +162,7 @@ export default function EditProfileForm() {
                   {...field}
                   placeholder={currentUser?.tutorPortfolio || "Enter portfolio details"}
                   type="text"
+                  className="h-auto"
                 />
               </FormControl>
               <FormDescription className="text-destructive">
@@ -209,9 +213,27 @@ export default function EditProfileForm() {
           )}
           control={form.control}
         />
-
+        <FormField
+          name="phone_number"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={currentUser?.phoneNumber || "Enter your Phone number"}
+                  type="text"
+                />
+              </FormControl>
+              <FormDescription className="text-destructive">
+                {form.formState.errors.phone_number?.message}
+              </FormDescription>
+            </FormItem>
+          )}
+          control={form.control}
+        />
         <Button className="w-full text-text bg-lightbrown" type="submit">
-          Save Changes
+          Save Profile
         </Button>
       </form>
     </Form>

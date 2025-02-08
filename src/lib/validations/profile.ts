@@ -6,6 +6,7 @@ export const EditUserProfileSchema = z.object({
   name: z.string().min(1),
   tutor_education_level: z.string(),
   tutor_portfolio: z.string(),
+  phone_number: z.string().min(10).max(10),
   date_of_birth: z.string(),
   verify_status: z.boolean(),
   role: z.string(),
@@ -16,6 +17,7 @@ export const EditUserProfileSchema = z.object({
 export const EditUserProfileFormSchema = z.object({
     password: z.string(),
     name: z.string().min(1),
+    phone_number: z.string().max(10).min(10),
     tutor_education_level: z.string(),
     tutor_portfolio: z.string(),
     date_of_birth: z.string(),

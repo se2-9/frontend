@@ -11,8 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import ProfileCard from '@/components/profile/profile-card';
-export default function Dashboard() {
+import EditProfileForm from '@/components/profile/edit-profile-form';
+import ProfileHeader from '@/components/profile/profile-header';
+export default function DashBoard() {
   const user = useAuthStore((state) => state.user);
 
   if (user == null) {
@@ -24,21 +25,29 @@ export default function Dashboard() {
   }
 
   return (
-    <MaxWidthWrapper className="w-full h-screen flex flex-col items-center justify-center">
-      <Card className="w-full max-w-md bg-background py-2">
+    <MaxWidthWrapper className="w-full h-full flex flex-col items-center justify-center p-4 space-y-2">
+      <Card className="w-full max-w-lg bg-background py-2">
         <CardHeader className="px-10">
           <CardTitle className="text-2xl">Profile Page</CardTitle>
           <CardDescription className="font-bold">
-            อย่าหาว่าพี่สอน
           </CardDescription>
         </CardHeader>
         <CardContent>
-            <ProfileCard />   
+            <ProfileHeader />   
         </CardContent>
-        <CardFooter>
-          This is card footer
-        </CardFooter>
       </Card>
+      <Card className="w-full max-w-lg bg-background py-2">
+        <CardHeader className="px-10">
+          <CardTitle className="text-2xl"></CardTitle>
+          <CardDescription className="font-bold">
+            Information
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+            <EditProfileForm />   
+        </CardContent>
+      </Card>
+      
     </MaxWidthWrapper>
   );
 }

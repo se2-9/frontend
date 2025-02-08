@@ -12,11 +12,11 @@ import { EditUserProfileFormRequest, EditUserProfileFormSchema } from "@/lib/val
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
 
-export default function ProfileCard() {
+export default function EditProfileForm() {
   const [showPassword, setShowPassword] = useState(true);
   const currentUser = useAuthStore((state) => state.user);
   const setAuth = useAuthStore((state) => state.setAuth);
-
+  console.log(currentUser)
   const form = useForm<EditUserProfileFormRequest>({
     resolver: zodResolver(EditUserProfileFormSchema),
     defaultValues: {
@@ -32,7 +32,6 @@ export default function ProfileCard() {
   useEffect(() => {
     if (currentUser) {
       form.reset({
-        password: currentUser.password || "",
         name: currentUser.name || "",
         tutor_education_level: currentUser.tutorEducationLevel || "",
         tutor_portfolio: currentUser.tutorPortfolio || "",
@@ -50,9 +49,8 @@ export default function ProfileCard() {
         return;
       }
       try {
-        const newUser = DtoToUser(data.result)
-        // newUser.password = form.getValues().password
-        setAuth(useAuthStore.getState().accessToken, useAuthStore.getState().expiresAt,newUser);
+        const currUser = data.result
+        setAuth(useAuthStore.getState().accessToken, useAuthStore.getState().expiresAt,DtoToUser(currUser));
         toast.success("Updated");
       } catch (error) {
         console.error(error);
@@ -63,21 +61,21 @@ export default function ProfileCard() {
   });
 
   function onSubmit(values: EditUserProfileFormRequest) {
-    console.log(values);
+    // console.log(values);
     mutation.mutate({
-    role: currentUser?.role || "student",
-    email: currentUser?.email || "myemail.gmail.com",
-    password: values.password,
-    date_of_birth: values.date_of_birth+"T00:00:00+07:00",
-    tutor_education_level: values.tutor_education_level,
-    tutor_portfolio: values.tutor_portfolio,
-    verify_status: true,
-    citizen_id: values.citizen_id,
-    name: values.name,
-    gender: currentUser?.gender || "male"
-})
+        role: currentUser?.role || "student",
+        email: currentUser?.email || "myemail.gmail.com",
+        password: values.password,
+        date_of_birth: values.date_of_birth+"T00:00:00+07:00",
+        tutor_education_level: values.tutor_education_level,
+        tutor_portfolio: values.tutor_portfolio,
+        verify_status: true,
+        citizen_id: values.citizen_id,
+        name: values.name,
+        gender: currentUser?.gender || "male"
+    })
   }
-  console.log(form.formState.errors)
+//   console.log(form.formState.errors)
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} 
@@ -106,12 +104,12 @@ export default function ProfileCard() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>New Password</FormLabel>
               <FormControl>
                 <div className="relative w-full">
                   <Input
                     {...field}
-                    placeholder={currentUser?.password}
+                    placeholder="New Password"
                     type={showPassword ? "text" : "password"}
                   />
                   <Button

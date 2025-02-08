@@ -9,7 +9,6 @@ export function DtoToUser(dto: UserDTO): User {
     verifyStatus: dto.verify_status,
     dateOfBirth: dto.date_of_birth,
     citizenId: dto.citizen_id,
-    password: dto.password,
     phoneNumber: dto.phone_number,
     role: dto.role,
     gender: dto.gender,

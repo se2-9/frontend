@@ -90,7 +90,7 @@ export default function EditProfileForm() {
               <FormControl>
                 <Input
                   {...field}
-                  placeholder={currentUser?.name || "Enter your name"} 
+                  placeholder="Enter your name"
                   type="text"
                 />
               </FormControl>
@@ -139,7 +139,7 @@ export default function EditProfileForm() {
               <FormControl>
                 <Input
                   {...field}
-                  placeholder={currentUser?.tutorEducationLevel || "Enter education level"}
+                  placeholder="Enter education level"
                   type="text"
                 />
               </FormControl>
@@ -159,7 +159,7 @@ export default function EditProfileForm() {
               <FormControl>
                 <Input
                   {...field}
-                  placeholder={currentUser?.tutorPortfolio || "Enter portfolio details"}
+                  placeholder="Enter portfolio details"
                   type="text"
                   className="h-auto"
                 />
@@ -201,7 +201,7 @@ export default function EditProfileForm() {
               <FormControl>
                 <Input
                   {...field}
-                  placeholder={currentUser?.citizenId || "Enter your citizen ID"}
+                  placeholder= "Enter your citizen ID"
                   type="text"
                 />
               </FormControl>
@@ -220,7 +220,7 @@ export default function EditProfileForm() {
               <FormControl>
                 <Input
                   {...field}
-                  placeholder={currentUser?.phoneNumber || "Enter your Phone number"}
+                  placeholder="Enter your Phone number"
                   type="text"
                 />
               </FormControl>

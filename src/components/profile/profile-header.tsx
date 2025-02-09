@@ -7,10 +7,7 @@ export default function ProfileHeader() {
     return (
         <div>
             <div>
-                Email
-            </div>
-            <div>
-                {currentUser?.email}
+                Email {currentUser?.email}
             </div>
         </div>
         

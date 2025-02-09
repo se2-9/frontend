@@ -26,25 +26,26 @@ export default function DashBoard() {
 
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col items-center justify-center p-4 space-y-2">
-      <Card className="w-full max-w-lg bg-background py-2">
+      {/* <Card className="w-full max-w-lg bg-background py-2">
         <CardHeader className="px-10">
           <CardTitle className="text-2xl">Profile Page</CardTitle>
           <CardDescription className="font-bold">
           </CardDescription>
         </CardHeader>
         <CardContent>
-            <ProfileHeader />   
+              
         </CardContent>
-      </Card>
+      </Card> */}
       <Card className="w-full max-w-lg bg-background py-2">
         <CardHeader className="px-10">
-          <CardTitle className="text-2xl"></CardTitle>
+          <CardTitle className="text-2xl">Profile Page</CardTitle>
           <CardDescription className="font-bold">
             Information
           </CardDescription>
         </CardHeader>
         <CardContent>
-            <EditProfileForm />   
+          <ProfileHeader /> 
+          <EditProfileForm />   
         </CardContent>
       </Card>
       

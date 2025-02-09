@@ -33,7 +33,7 @@ export default function DashBoard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-              
+              <ProfileHeader />
         </CardContent>
       </Card> */}
       <Card className="w-full max-w-lg bg-background py-2">
@@ -43,10 +43,12 @@ export default function DashBoard() {
             Information
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className='space-y-4'>
           <ProfileHeader /> 
           <EditProfileForm />   
         </CardContent>
+        <CardFooter>
+        </CardFooter>
       </Card>
       
     </MaxWidthWrapper>

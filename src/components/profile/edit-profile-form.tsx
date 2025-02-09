@@ -11,6 +11,7 @@ import { Input } from "../ui/input";
 import { EditUserProfileFormRequest, EditUserProfileFormSchema } from "@/lib/validations/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
+import { Textarea } from "../ui/textarea";
 
 export default function EditProfileForm() {
   const [showPassword, setShowPassword] = useState(true);
@@ -137,10 +138,14 @@ export default function EditProfileForm() {
             <FormItem>
               <FormLabel>Education Level</FormLabel>
               <FormControl>
-                <Input
+                {/* <Input
                   {...field}
                   placeholder="Enter education level"
                   type="text"
+                /> */}
+                <Textarea 
+                {...field}
+                placeholder="Enter education level"
                 />
               </FormControl>
               <FormDescription className="text-destructive">
@@ -157,11 +162,15 @@ export default function EditProfileForm() {
             <FormItem>
               <FormLabel>Portfolio</FormLabel>
               <FormControl>
-                <Input
+                {/* <Input
                   {...field}
                   placeholder="Enter portfolio details"
                   type="text"
                   className="h-auto"
+                /> */}
+                <Textarea 
+                {...field}
+                placeholder="Enter portfolio details"
                 />
               </FormControl>
               <FormDescription className="text-destructive">

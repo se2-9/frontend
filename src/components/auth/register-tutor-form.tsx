@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  registerStudentSchema,
+  registerTutorSchema,
   RegisterTutorRequest,
 } from '@/lib/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,7 +19,7 @@ import { Button } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { registerStudent } from '@/lib/api/auth';
+import { registerTutor } from '@/lib/api/auth';
 import { useState } from 'react';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
@@ -28,7 +28,7 @@ export default function RegisterTutorForm() {
   const [showPassword, setShowPassword] = useState(true);
 
   const form = useForm<RegisterTutorRequest>({
-    resolver: zodResolver(registerStudentSchema),
+    resolver: zodResolver(registerTutorSchema),
     defaultValues: {
       name: '',
       email: '',
@@ -39,7 +39,7 @@ export default function RegisterTutorForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: registerStudent,
+    mutationFn: registerTutor,
     onSuccess: () => {
       toast.success('Account created!');
       router.push(

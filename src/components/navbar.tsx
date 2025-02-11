@@ -100,7 +100,7 @@ export default function Navbar() {
                     Login
                   </Link>
                   <Link
-                    href="/register"
+                    href="/"
                     className={cn(
                       'bg-background',
                       buttonVariants({ variant: 'ghost' })

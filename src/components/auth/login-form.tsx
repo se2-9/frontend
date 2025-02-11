@@ -53,7 +53,7 @@ export default function LoginForm() {
           DtoToUser(data.result.user)
         );
         toast.success('Logged in!');
-        router.push('/profile');
+        router.push('/profile/edit');
       } catch (error) {
         console.error(error);
         toast.error('Something went wrong');

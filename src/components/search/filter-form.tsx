@@ -14,23 +14,22 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { login } from '@/lib/api/auth';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth-store';
 import { DtoToUser } from '@/utils/mapper/user-mapper';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { PostBackendData, postBackendSchema } from '@/lib/validations/posts';
+import { CreatePostData, PostBackendData, postBackendSchema } from '@/lib/validations/posts';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
+import { fetchPosts } from '@/lib/api/search';
 
 export default function FilterForm() {
   const router = useRouter();
-
-  const [showPassword, setShowPassword] = useState(true);
-
   const setAuth = useAuthStore((state) => state.setAuth);
+  const [filters, setFilters] = useState({ subject: "", min_hourly_rate: 1 });
 
   const form = useForm<PostBackendData>({
     resolver: zodResolver(postBackendSchema),
@@ -43,42 +42,25 @@ export default function FilterForm() {
       hourly_rate: 1,
       min_hourly_rate: 1,
       max_hourly_rate: 10000,
+      description: '',
     },
   });
+  
+  const { data: posts, isLoading, isError, refetch } = useQuery({
+    queryKey: ["posts"], // Only refetch when explicitly called
+    queryFn: () => fetchPosts(), // Use current form values
+    enabled: false, // Don't fetch on mount
+  });
 
-  // const mutation = useMutation({
-  //   mutationFn: login,
-  //   onSuccess: async (data) => {
-  //     if (!data.result) {
-  //       toast.error('Something went wrong');
-  //       return;
-  //     }
-
-  //     try {
-  //       console.log(data);
-  //       setAuth(
-  //         data.result.access_token,
-  //         data.result.expires_at,
-  //         DtoToUser(data.result.user)
-  //       );
-  //       toast.success('Logged in!');
-  //       router.push('/profile');
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast.error('Something went wrong');
-  //     }
-  //   },
-  //   onError: (err) => toast.error(err.message),
-  // });
-
-  // function onSubmit(values: LoginRequest) {
-  //   mutation.mutate(values);
-  // }
+  function onSubmit(values: PostBackendData) {
+    console.log("Submitting with values:", values);
+    refetch(); // Fetch posts with the current form values
+  }
 
   return (
     <Form {...form}>
       <form
-        // onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-2 w-full mx-auto px-4 text-text font-[Nunito] "
         >
         <div className="flex flex-col gap-[24px] border-gray-400">
@@ -249,3 +231,5 @@ export default function FilterForm() {
     </Form>
   );
 }
+
+

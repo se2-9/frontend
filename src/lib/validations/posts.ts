@@ -1,14 +1,15 @@
 import { z } from 'zod';
 
 export const createPostSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  Subject: z.string().min(1, 'Subject is required'),
-  Gender: z.string().min(1, 'Gender is required'),
-  OnlineOnsite: z.string().min(1, 'Option is required'),
-  Place: z.string().min(1, 'Place is required'),
-  HourlyRate: z.number().min(1, 'Hourly rate must be at least 1'),
-  Description: z.string().min(1, 'Description is required'),
-  tags: z.string().array()
+    title: z.string().min(1, 'Title must be at least 3 characters'),
+    subject: z.string().min(1, 'Subject must be at least 3 characters'),
+    tutor_gender: z.string(),
+    is_online: z.boolean(),
+    place: z.string().optional(),
+    hourly_rate: z.number().min(1),
+    description: z.string(),
+    tags: z.any().array()
+
 });
 
 export const postBackendSchema = z.object({
@@ -28,13 +29,13 @@ export const postBackendSchema = z.object({
 export function transformData(input: PostBackendData): CreatePostData {
     return {
         title: input.title,
-        Subject: input.subject,
-        Gender: input.gender,
-        OnlineOnsite: input.is_online ? "Online" : "Onsite",
-        Place: input.place,
-        HourlyRate: Math.max(input.hourly_rate, 1),
-        Description: input.description,
-        tags: [input.subject, input.gender, input.is_online ? "Online" : "Onsite"]
+        subject: input.subject,
+        tutor_gender: input.gender,
+        is_online: input.is_online ? true : false,
+        place: input.place,
+        hourly_rate: Math.max(input.hourly_rate, 1),
+        description: input.description,
+        tags: [input.subject, input.gender, input.is_online ? true : false]
     };
 }
 

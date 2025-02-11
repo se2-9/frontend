@@ -7,8 +7,8 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 type Post = {
   id: string;
   title: string;
-  HourlyRate: number;
-  OnlineOnsite: string;
+  hourly_rate: number;
+  is_online: boolean;
 };
 
 export default function Page() {
@@ -16,15 +16,11 @@ export default function Page() {
 
   return (
     <MaxWidthWrapper className="w-full h-screen flex flex-col items-center justify-center">
-      {/* Container for side-by-side layout */}
       <div className="w-full max-w-5xl flex justify-between items-start gap-8 mt-[144px]">
-        {/* Left Side: Create Post */}
-        <div className="w-2/3"> {/* Takes 2/3 of the width */}
-          <CreatePost />
+        <div className="w-2/3">
+          <CreatePost setPosts={setPosts} /> 
         </div>
-
-        {/* Right Side: My Posts */}
-        <div className="w-1/3"> {/* Takes 1/3 of the width */}
+        <div className="w-1/3">
           <MyPosts posts={posts} setPosts={setPosts} />
         </div>
       </div>

@@ -20,3 +20,17 @@ function handleAxiosError(error: unknown): Error {
   }
   return new Error('Something went wrong');
 }
+
+export async function deletePost(postId: string) {
+  const response = await fetch('/api/posts', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: postId }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete post');
+  }
+
+  return { message: 'Post deleted successfully!', id: postId };
+}

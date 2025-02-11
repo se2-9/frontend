@@ -4,11 +4,12 @@ import { toast } from 'sonner';
 import { Button } from './ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { deletePost } from '@/lib/api/posts';
+
 type Post = {
   id: string;
   title: string;
-  HourlyRate: number;
-  OnlineOnsite: string;
+  hourly_rate: number; 
+  is_online: boolean;
 };
 
 interface MyPostsProps {
@@ -42,9 +43,11 @@ export default function MyPosts({ posts, setPosts }: MyPostsProps) {
               <CardContent>
                 <div className="flex justify-between items-center">
                   <CardTitle>{post.title}</CardTitle>
-                  <p className="text-md font-semibold">{post.HourlyRate} Bath</p>
+                  <p className="text-md font-semibold">{post.hourly_rate} Bath</p> {/* ✅ Updated field name */}
                 </div>
-                <p className="text-sm text-gray-600">{post.OnlineOnsite}</p>
+                <p className="text-sm text-gray-600">
+                  {post.is_online ? 'Online' : 'Onsite'} {/* ✅ Updated field name */}
+                </p>
                 <div className="flex justify-end mt-4">
                   <Button
                     onClick={() => handleDelete(post.id)}

@@ -217,7 +217,13 @@ export default function CreatePost() {
                       {...field}
                       type="number"
                       placeholder="0"
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      value={field.value === 0 ? '' : field.value} // Avoid displaying 0
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) {
+                          field.onChange(value ? Number(value) : ''); // Remove leading 0s
+                        }
+                      }}
                     />
                   </FormControl>
                 </FormItem>

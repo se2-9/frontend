@@ -74,14 +74,14 @@ export default function Navbar() {
                     </DropdownMenuGroup>
                     <Separator />
                     <DropdownMenuItem asChild>
-                      <Link href="/profile">Profile</Link>
+                      <Link href="/post">Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>My students</DropdownMenuItem>
                     <Separator />
                     <DropdownMenuItem
                       onClick={() => {
                         logout();
-                        router.replace('/login');
+                        router.replace('/post');
                       }}
                     >
                       logout

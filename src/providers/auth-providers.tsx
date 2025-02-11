@@ -16,7 +16,7 @@ export default function AuthProvider({
   const checkAuth = useCallback(async () => {
     const { accessToken, expiresAt, user } = useAuthStore.getState();
 
-    if (expiresAt && new Date(expiresAt*1000) < new Date()) {
+    if (expiresAt && new Date(expiresAt * 1000) < new Date()) {
       toast.info('Session expired, please login again');
       router.replace('/login');
       return;

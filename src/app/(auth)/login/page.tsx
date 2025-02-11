@@ -28,7 +28,7 @@ export default function Page() {
         <CardFooter className="px-10">
           <Link
             className={cn('w-full text-center hover:underline mt-10 text-sm')}
-            href="/register"
+            href="/"
           >
             Don&apos;t have an account?{'  '}
             <span className="font-bold hover:underline">Register</span>

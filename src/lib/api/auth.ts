@@ -1,4 +1,3 @@
-import { registerTutorSchema } from './../validations/auth';
 import { ApiResponse } from './../../types/api';
 import { LoginResponse } from '@/types/auth';
 import {
@@ -7,6 +6,7 @@ import {
   RegisterStudentRequest,
   registerStudentSchema,
   RegisterTutorRequest,
+  registerTutorSchema,
   VerifyEmailRequest,
 } from '../validations/auth';
 import { apiClient } from './axios';
@@ -16,7 +16,6 @@ import { useAuthStore } from '@/store/auth-store';
 
 export async function registerStudent(data: RegisterStudentRequest) {
   const validatedData = registerStudentSchema.parse(data);
-
   try {
     const res = await apiClient.post('/auth/register-student', validatedData);
 
@@ -28,9 +27,8 @@ export async function registerStudent(data: RegisterStudentRequest) {
 
 export async function registerTutor(data: RegisterTutorRequest) {
   const validatedData = registerTutorSchema.parse(data);
-
   try {
-    const res = await apiClient.post('/auth/register-student', validatedData);
+    const res = await apiClient.post('/auth/register-tutor', validatedData);
 
     return res.data;
   } catch (error) {

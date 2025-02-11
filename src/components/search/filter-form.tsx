@@ -23,6 +23,7 @@ import { DtoToUser } from '@/utils/mapper/user-mapper';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { PostBackendData, postBackendSchema } from '@/lib/validations/posts';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
 
 export default function FilterForm() {
   const router = useRouter();
@@ -82,6 +83,7 @@ export default function FilterForm() {
         >
         <div className="flex flex-col gap-[24px] border-gray-400">
           <h1 className="text-2xl font-bold">Filters</h1>
+
           <FormField
             name="subject"
             render={({ field }) => (
@@ -98,6 +100,7 @@ export default function FilterForm() {
             )}
             control={form.control}
           />
+
           <div className="flex justify-between gap-6">
             <div>
             <FormField
@@ -141,15 +144,48 @@ export default function FilterForm() {
             />
             </div>
           </div>
+
           <FormField
             name="gender"
+            control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold text-lg'>Tutor Gender</FormLabel>
+                <FormLabel>Tutor&apos;s Gender</FormLabel>
+                <FormControl>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="w-full text-text bg-lightbrown ">
+                        {field.value || 'Select Gender'}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuRadioGroup className='bg-lightbrown p-2 cursor-pointer'
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <DropdownMenuRadioItem value="Male" className='m-2 hover:bg-gray-300'>
+                          Male
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Female" className='m-2 hover:bg-gray-300'>
+                          Female
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="place"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='font-semibold text-lg'>Teaching Place</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter gender"
+                    placeholder="Enter place"
                     type="text"
                   />
                 </FormControl>
@@ -157,6 +193,51 @@ export default function FilterForm() {
             )}
             control={form.control}
           />
+
+          <FormField
+            name="is_online"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='font-semibold text-lg'>Online/Onsite</FormLabel>
+                <FormControl>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="w-full text-text bg-lightbrown">
+                        {field.value === undefined
+                          ? 'Select Option'
+                          : field.value
+                            ? 'Online'
+                            : 'Onsite'}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuRadioGroup className='bg-lightbrown p-2 cursor-pointer'
+                        value={
+                          field.value === undefined
+                            ? undefined
+                            : field.value
+                              ? 'Online'
+                              : 'Onsite'
+                        }
+                        onValueChange={(value) =>
+                          field.onChange(value === 'Online')
+                        }
+                      >
+                        <DropdownMenuRadioItem value="Online" className='m-2 hover:bg-gray-300'>
+                          Online
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Onsite" className='m-2 hover:bg-gray-300'>
+                          Onsite
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           <Button
             type="submit"
             className="w-full text-text bg-[#B7BAA5]"

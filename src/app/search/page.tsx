@@ -84,7 +84,7 @@ export default function PostPage() {
                 <CardDescription className="">
                   {post.description}
                 </CardDescription>
-                <Button className="text-text bg-[#A4B1BA]">Request</Button>
+                <Button className="text-text bg-blue">Request</Button>
               </CardContent>
             </Card>
           ))}

@@ -14,7 +14,7 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { QueryObserverResult, RefetchOptions, useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { login } from '@/lib/api/auth';
 import { useRouter } from 'next/navigation';
@@ -25,8 +25,14 @@ import { CreatePostData, PostBackendData, postBackendSchema } from '@/lib/valida
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
 import { fetchPosts } from '@/lib/api/search';
+import { ApiResponse } from '@/types/api';
+import { PostDTO } from '@/dtos/post';
 
-export default function FilterForm() {
+interface FilterFormProps {
+  refetch: (options?: RefetchOptions) => Promise<ApiResponse<PostDTO>>;
+}
+
+export default function FilterForm({ refetch }: FilterFormProps) {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [filters, setFilters] = useState({ subject: "", min_hourly_rate: 1 });
@@ -46,17 +52,13 @@ export default function FilterForm() {
     },
   });
   
-  const { data: posts, isLoading, isError, refetch } = useQuery({
-    queryKey: ["posts"], // Only refetch when explicitly called
-    queryFn: () => fetchPosts(), // Use current form values
-    enabled: false, // Don't fetch on mount
-  });
+  
 
   function onSubmit(values: PostBackendData) {
     console.log("Submitting with values:", values);
-    refetch(); // Fetch posts with the current form values
+    refetch()
   }
-
+  console.log(form.formState.errors)
   return (
     <Form {...form}>
       <form
@@ -95,7 +97,7 @@ export default function FilterForm() {
                       <Input
                         
                         {...field}
-                        placeholder="-"
+                        placeholder="1"
                       />
                       
                     </div>
@@ -115,7 +117,7 @@ export default function FilterForm() {
                     <div className="relative w-full">
                       <Input
                         {...field}
-                        placeholder="-"
+                        placeholder="10000"
                       />
                       
                     </div>
@@ -177,6 +179,56 @@ export default function FilterForm() {
           />
 
           <FormField
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='font-semibold text-lg'>Desc</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter subject"
+                    type="text"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+            control={form.control}
+          />
+
+          <FormField
+            name="is_online"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='font-semibold text-lg'>Online</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter subject"
+                    type="text"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+            control={form.control}
+          />
+
+          <FormField
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='font-semibold text-lg'>Title</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter subject"
+                    type="text"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+            control={form.control}
+          />
+          {/* <FormField
             name="is_online"
             control={form.control}
             render={({ field }) => (
@@ -218,7 +270,7 @@ export default function FilterForm() {
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
 
           <Button
             type="submit"

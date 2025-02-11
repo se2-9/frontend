@@ -3,21 +3,20 @@ import { CreatePostData, postBackendSchema, transformData } from '../validations
 import { useAuthStore } from '@/store/auth-store';
 import { apiClient } from './axios';
 import { AxiosError } from 'axios';
+import { ApiResponse } from "@/types/api";
+import { PostDTO } from "@/dtos/post";
 
 
-export async function fetchPosts(): Promise<CreatePostData[]> {
-  const token = useAuthStore.getState().accessToken;
+export async function fetchPosts(): Promise<ApiResponse<PostDTO>> {
+  // const token = useAuthStore.getState().accessToken;
   try {
     const res = await apiClient.get("/post", {
-        headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      //   headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
     });
-    const posts = []
-    for (var post of res.data) {
-        posts.push(transformData(postBackendSchema.parse(post)))
-    }
-    return posts;
+    console.log(res.data)
+    return res.data;
   } catch (error) {
     throw handleAxiosError(error);
   }

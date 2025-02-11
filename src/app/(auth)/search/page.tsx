@@ -17,45 +17,32 @@ import {
 import { fetchPosts } from '@/lib/api/search';
 import { CreatePostData } from '@/lib/validations/posts';
 import FilterForm from '@/components/search/filter-form';
+import { PostDTO } from '@/dtos/post';
+import { useQuery } from '@tanstack/react-query';
 
 
-var posts:CreatePostData[] = [
-  {
-    title: "string",
-    tags: ['Physics', 'Online', 'Women Only'],
-    Subject: "string",
-    Gender: "string",
-    OnlineOnsite: "Online",
-    Place: "string",
-    HourlyRate: 250,
-    Description: "Test",
-  },
-  {
-    title: "S",
-    tags: ['Physics', 'Online', 'Women Only'],
-    Subject: "string",
-    Gender: "string",
-    OnlineOnsite: "Online",
-    Place: "string",
-    HourlyRate: 250,
-    Description: "Test",
-  },
+var posts:PostDTO[] = [
 ];
 
 export default function PostPage() {
   const [search, setSearch] = useState('');
   const [subject, setSubject] = useState('');
-  const [filteredPosts, setFilteredPosts] = useState(posts);
+  // const [filteredPosts, setFilteredPosts] = useState(posts);
 
   const handleFilter = async () => {
-    posts = await fetchPosts();
+    const posts = await fetchPosts();
   };
-
+  
+  const { data: posts, isLoading, isError, refetch } = useQuery({
+      queryKey: ["posts"],
+      queryFn: fetchPosts,
+      enabled: false,
+  });
   return (
     <div className="flex gap-6 p-6">
 
       <section className="w-1/4 min-w-[200px] border-2 border-gray-400 p-4">
-        <FilterForm/>
+        <FilterForm refetch={refetch}/>
       </section>
       
       <section className="w-3/4 border-2 border-gray-400 p-4">
@@ -81,21 +68,21 @@ export default function PostPage() {
           </div>
           
           {filteredPosts.map((post) => (
-            <Card key={post.Description + post.title} className="pt-6 bg-transparent border-gray-400">
+            <Card key={post.user_id + post.created_at} className="pt-6 bg-transparent border-gray-400">
               <CardContent className="flex flex-col gap-[24px]">
                 <div className="font-[Nunito]">
                   <div className="flex flex-row justify-between mb-[10px]">
                     <p className="text-2xl font-semibold">{post.title}</p>
-                    <p className="text-2xl font-bold">{post.HourlyRate} Baht / Hour</p>
+                    <p className="text-2xl font-bold">{post.hourly_rate} Baht / Hour</p>
                   </div>
-                  <div className="flex gap-x-[24px]">
+                  {/* <div className="flex gap-x-[24px]">
                       {post.tags.map((tag) => (
                         <Badge key={tag} className="text-sm py-[4px]">{tag}</Badge>
                       ))}
-                    </div>
+                    </div> */}
                 </div>
                 <CardDescription className="">
-                  {post.Description}
+                  {post.description}
                 </CardDescription>
                 <Button className="text-text bg-[#A4B1BA]">Request</Button>
               </CardContent>

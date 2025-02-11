@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { usePostStore } from '@/store/use-post-store';
 import { createPostSchema, CreatePostData } from '@/lib/validations/post';
 import { createPost } from '@/lib/api/post';
 import { Button } from './ui/button';
@@ -24,13 +23,13 @@ export default function CreatePost() {
   const form = useForm<CreatePostData>({
     resolver: zodResolver(createPostSchema),
     defaultValues: {
-      Title: '',
-      Subject: '',
-      TutorGender: undefined,
-      IsOnline: undefined,
-      Place: '',
-      HourlyRate: 0,
-      Description: '',
+      title: '',
+      subject: '',
+      tutor_gender: undefined,
+      is_online: undefined,
+      place: '',
+      hourly_rate: 0,
+      description: '',
     },
   });
 
@@ -42,10 +41,8 @@ export default function CreatePost() {
         return;
       }
 
-      // Optionally reload posts after creating a new post
-      // usePostStore.getState().loadPosts(); // This will fetch posts from the backend again
       toast.success('Post created successfully!');
-      form.reset(); // Reset form after success
+      form.reset();
     },
     onError: (err) => {
       console.error('❌ Full error creating post:', err);
@@ -57,7 +54,6 @@ export default function CreatePost() {
     },
   });
 
-  // Submit handler
   function onSubmit(values: CreatePostData) {
     const token = useAuthStore.getState().accessToken;
     console.log('🔍 Token before request:', token); // Debugging
@@ -82,7 +78,7 @@ export default function CreatePost() {
           >
             {/* Title Field */}
             <FormField
-              name="Title"
+              name="title"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -99,7 +95,7 @@ export default function CreatePost() {
 
             {/* Subject Field */}
             <FormField
-              name="Subject"
+              name="subject"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -116,7 +112,7 @@ export default function CreatePost() {
 
             {/* Gender Field */}
             <FormField
-              name="TutorGender"
+              name="tutor_gender"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -149,7 +145,7 @@ export default function CreatePost() {
 
             {/* Online/Onsite Field */}
             <FormField
-              name="IsOnline"
+              name="is_online"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -194,7 +190,7 @@ export default function CreatePost() {
 
             {/* Place Field */}
             <FormField
-              name="Place"
+              name="place"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -211,7 +207,7 @@ export default function CreatePost() {
 
             {/* Hourly Rate Field */}
             <FormField
-              name="HourlyRate"
+              name="hourly_rate"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -230,7 +226,7 @@ export default function CreatePost() {
 
             {/* Description Field */}
             <FormField
-              name="Description"
+              name="description"
               control={form.control}
               render={({ field }) => (
                 <FormItem>

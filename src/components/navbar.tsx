@@ -76,11 +76,17 @@ export default function Navbar() {
                     <DropdownMenuItem asChild>
                       <Link href="/post">Profile</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>My students</DropdownMenuItem>
+                    <DropdownMenuItem>
+                      {user.role === 'student' ? (
+                        <Link href="/post">My posts</Link>
+                      ) : (
+                        <Link href="/post">My courses</Link>
+                      )}
+                    </DropdownMenuItem>
                     <Separator />
                     <DropdownMenuItem
-                      onClick={() => {
-                        logout();
+                      onClick={async () => {
+                        await logout();
                         router.replace('/post');
                       }}
                     >

@@ -2,7 +2,7 @@ type props = {
   params: { id: string };
 };
 
-export default function ProfilePage({ params }: props) {
+export default function Page({ params }: props) {
   const { id } = params;
   return (
     <div>

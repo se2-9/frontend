@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import EditProfileForm from '@/components/profile/edit-profile-form';
-import ProfileHeader from '@/components/profile/profile-header';
+import ProfileHeader from '@/components/profile/edit-profile-header';
 export default function DashBoard() {
   const user = useAuthStore((state) => state.user);
 

@@ -1,64 +1,35 @@
 'use client';
 
-import { LoginRequest, loginSchema } from '@/lib/validations/auth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React from 'react';
+import {UseFormReturn } from 'react-hook-form';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { QueryObserverResult, RefetchOptions, useMutation, useQuery } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { login } from '@/lib/api/auth';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/auth-store';
-import { DtoToUser } from '@/utils/mapper/user-mapper';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { CreatePostData, PostBackendData, postBackendSchema } from '@/lib/validations/posts';
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
-import { fetchPosts } from '@/lib/api/search';
 import { ApiResponse } from '@/types/api';
-import { PostDTO } from '@/dtos/post';
+import { FilterPostDTO, PostDTO } from '@/dtos/post';
 
 interface FilterFormProps {
-  refetch: (options?: RefetchOptions) => Promise<ApiResponse<PostDTO>>;
+  refetch: (
+    options?: RefetchOptions) => Promise<QueryObserverResult<ApiResponse<PostDTO[]>, Error>>;
+    form: UseFormReturn<FilterPostDTO, unknown, undefined>
 }
 
-export default function FilterForm({ refetch }: FilterFormProps) {
-  const router = useRouter();
-  const setAuth = useAuthStore((state) => state.setAuth);
-  const [filters, setFilters] = useState({ subject: "", min_hourly_rate: 1 });
 
-  const form = useForm<PostBackendData>({
-    resolver: zodResolver(postBackendSchema),
-    defaultValues: {
-      title: '',
-      subject: '',
-      gender: '',
-      is_online: '',
-      place: '',
-      hourly_rate: 1,
-      min_hourly_rate: 1,
-      max_hourly_rate: 10000,
-      description: '',
-    },
-  });
+export default function FilterForm({ refetch, form }: FilterFormProps) {
   
-  
-
-  function onSubmit(values: PostBackendData) {
-    console.log("Submitting with values:", values);
+  function onSubmit(values: FilterPostDTO) {
+    console.log(values)
     refetch()
   }
-  console.log(form.formState.errors)
+
   return (
     <Form {...form}>
       <form
@@ -67,6 +38,23 @@ export default function FilterForm({ refetch }: FilterFormProps) {
         >
         <div className="flex flex-col gap-[24px] border-gray-400">
           <h1 className="text-2xl font-bold">Filters</h1>
+
+          <FormField
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='font-semibold text-lg'>Title</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Enter subject"
+                    type="text"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+            control={form.control}
+          />
 
           <FormField
             name="subject"
@@ -88,7 +76,7 @@ export default function FilterForm({ refetch }: FilterFormProps) {
           <div className="flex justify-between gap-6">
             <div>
             <FormField
-              name="min_hourly_rate"
+              name="min_price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className='font-semibold text-lg'>Min cost</FormLabel>
@@ -109,7 +97,7 @@ export default function FilterForm({ refetch }: FilterFormProps) {
             </div>
             <div>
             <FormField
-              name="max_hourly_rate"
+              name="max_price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className='font-semibold text-lg'>Max cost</FormLabel>
@@ -130,32 +118,52 @@ export default function FilterForm({ refetch }: FilterFormProps) {
           </div>
 
           <FormField
-            name="gender"
+            name="tutor_gender"
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tutor&apos;s Gender</FormLabel>
+                <FormLabel className='font-semibold text-lg'>Tutor&apos;s Gender</FormLabel>
                 <FormControl>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button className="w-full text-text bg-lightbrown ">
-                        {field.value || 'Select Gender'}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuRadioGroup className='bg-lightbrown p-2 cursor-pointer'
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <DropdownMenuRadioItem value="Male" className='m-2 hover:bg-gray-300'>
-                          Male
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Female" className='m-2 hover:bg-gray-300'>
-                          Female
-                        </DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <Select
+                    value={String(field.value)}
+                    onValueChange={field.onChange} 
+                  >
+                    <SelectTrigger className="w-1/6 min-w-[140px] border-2 border-gray-400">
+                      <SelectValue defaultValue="male" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="is_online"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='font-semibold text-lg'>Online/Onsite</FormLabel>
+                <FormControl>
+                  <Select
+                    value={String(field.value)}
+                    onValueChange={(value) => field.onChange(value === 'true')} 
+                  >
+                    <SelectTrigger className="w-1/6 min-w-[140px] border-2 border-gray-400">
+                      <SelectValue defaultValue="true" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="true">Online</SelectItem>
+                        <SelectItem value="false">Onsite</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
               </FormItem>
             )}
@@ -195,82 +203,6 @@ export default function FilterForm({ refetch }: FilterFormProps) {
             control={form.control}
           />
 
-          <FormField
-            name="is_online"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='font-semibold text-lg'>Online</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter subject"
-                    type="text"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-            control={form.control}
-          />
-
-          <FormField
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='font-semibold text-lg'>Title</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter subject"
-                    type="text"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-            control={form.control}
-          />
-          {/* <FormField
-            name="is_online"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='font-semibold text-lg'>Online/Onsite</FormLabel>
-                <FormControl>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button className="w-full text-text bg-lightbrown">
-                        {field.value === undefined
-                          ? 'Select Option'
-                          : field.value
-                            ? 'Online'
-                            : 'Onsite'}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuRadioGroup className='bg-lightbrown p-2 cursor-pointer'
-                        value={
-                          field.value === undefined
-                            ? undefined
-                            : field.value
-                              ? 'Online'
-                              : 'Onsite'
-                        }
-                        onValueChange={(value) =>
-                          field.onChange(value === 'Online')
-                        }
-                      >
-                        <DropdownMenuRadioItem value="Online" className='m-2 hover:bg-gray-300'>
-                          Online
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Onsite" className='m-2 hover:bg-gray-300'>
-                          Onsite
-                        </DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </FormControl>
-              </FormItem>
-            )}
-          /> */}
 
           <Button
             type="submit"
@@ -283,5 +215,3 @@ export default function FilterForm({ refetch }: FilterFormProps) {
     </Form>
   );
 }
-
-

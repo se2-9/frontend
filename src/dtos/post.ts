@@ -11,3 +11,14 @@ export interface PostDTO {
     description: string,
     created_at: string
 }
+
+export interface FilterPostDTO {
+    title: string;
+    subject: string,
+    place: string,
+    min_price: number,
+    max_price: number,
+    is_online: boolean,
+    tutor_gender: string,
+    description: string,
+}

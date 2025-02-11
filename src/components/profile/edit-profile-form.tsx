@@ -78,7 +78,6 @@ export default function EditProfileForm() {
         gender: currentUser?.gender || "male"
     })
   }
-//   console.log(form.formState.errors)
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} 
@@ -162,12 +161,6 @@ export default function EditProfileForm() {
             <FormItem>
               <FormLabel>Portfolio</FormLabel>
               <FormControl>
-                {/* <Input
-                  {...field}
-                  placeholder="Enter portfolio details"
-                  type="text"
-                  className="h-auto"
-                /> */}
                 <Textarea 
                 {...field}
                 placeholder="Enter portfolio details"

@@ -1,21 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { CreatePostData, postBackendSchema, transformData } from '../validations/posts';
-import { useAuthStore } from '@/store/auth-store';
 import { apiClient } from './axios';
 import { AxiosError } from 'axios';
 import { ApiResponse } from "@/types/api";
-import { PostDTO } from "@/dtos/post";
+import { FilterPostDTO, PostDTO } from "@/dtos/post";
 
 
-export async function fetchPosts(): Promise<ApiResponse<PostDTO>> {
-  // const token = useAuthStore.getState().accessToken;
+export async function fetchPosts(req: FilterPostDTO): Promise<ApiResponse<PostDTO[]>> {
   try {
-    const res = await apiClient.get("/post", {
-      //   headers: {
-      //   Authorization: `Bearer ${token}`,
-      // },
+    const res = await apiClient.get("/post/search",{
+      params: req
     });
-    console.log(res.data)
     return res.data;
   } catch (error) {
     throw handleAxiosError(error);

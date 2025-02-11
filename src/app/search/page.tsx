@@ -3,46 +3,52 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 import { fetchPosts } from '@/lib/api/search';
-import { CreatePostData } from '@/lib/validations/posts';
 import FilterForm from '@/components/search/filter-form';
-import { PostDTO } from '@/dtos/post';
+import { FilterPostDTO} from '@/dtos/post';
 import { useQuery } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 
-
-var posts:PostDTO[] = [
-];
 
 export default function PostPage() {
   const [search, setSearch] = useState('');
-  const [subject, setSubject] = useState('');
-  // const [filteredPosts, setFilteredPosts] = useState(posts);
-
-  const handleFilter = async () => {
-    const posts = await fetchPosts();
-  };
-  
-  const { data: posts, isLoading, isError, refetch } = useQuery({
-      queryKey: ["posts"],
-      queryFn: fetchPosts,
-      enabled: false,
+  const form = useForm<FilterPostDTO>({
+    defaultValues: {
+      title: '',
+      subject: '',
+      tutor_gender: undefined,
+      is_online: undefined,
+      place: '',
+      min_price: 1,
+      max_price: 10000,
+      description: '',
+    },
   });
+  
+  const { data:posts, refetch } = useQuery({
+    queryKey: ['posts', form.watch()], 
+    queryFn: async ({ queryKey }) => {
+      const [, filters] = queryKey; 
+      return fetchPosts(filters as FilterPostDTO);
+    },
+    enabled: false, 
+  });
+
+  
   return (
     <div className="flex gap-6 p-6">
 
       <section className="w-1/4 min-w-[200px] border-2 border-gray-400 p-4">
-        <FilterForm refetch={refetch}/>
+        <FilterForm refetch={refetch} form={form}/>
       </section>
       
       <section className="w-3/4 border-2 border-gray-400 p-4">
@@ -67,7 +73,7 @@ export default function PostPage() {
             </Select>
           </div>
           
-          {filteredPosts.map((post) => (
+          {posts?.result?.map((post) => (
             <Card key={post.user_id + post.created_at} className="pt-6 bg-transparent border-gray-400">
               <CardContent className="flex flex-col gap-[24px]">
                 <div className="font-[Nunito]">
@@ -75,11 +81,7 @@ export default function PostPage() {
                     <p className="text-2xl font-semibold">{post.title}</p>
                     <p className="text-2xl font-bold">{post.hourly_rate} Baht / Hour</p>
                   </div>
-                  {/* <div className="flex gap-x-[24px]">
-                      {post.tags.map((tag) => (
-                        <Badge key={tag} className="text-sm py-[4px]">{tag}</Badge>
-                      ))}
-                    </div> */}
+                  
                 </div>
                 <CardDescription className="">
                   {post.description}

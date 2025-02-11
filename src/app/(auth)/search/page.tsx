@@ -14,22 +14,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { fetchPosts } from '@/lib/api/search';
+import { CreatePostData } from '@/lib/validations/posts';
+import FilterForm from '@/components/search/filter-form';
 
 
-const posts = [
+var posts:CreatePostData[] = [
   {
-    id: 1,
-    title: 'Physics for Elementary',
+    title: "string",
     tags: ['Physics', 'Online', 'Women Only'],
-    price: '250 Baht / Hour',
-    desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi ipsam fugiat, quibusdam inventore culpa corporis iusto? Maiores quae minima reprehenderit architecto at soluta in inventore error nam. Ipsa, sequi quidem."
+    Subject: "string",
+    Gender: "string",
+    OnlineOnsite: "Online",
+    Place: "string",
+    HourlyRate: 250,
+    Description: "Test",
   },
   {
-    id: 2,
-    title: 'Physics for Old',
+    title: "S",
     tags: ['Physics', 'Online', 'Women Only'],
-    price: '250 Baht / Hour',
-    desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi ipsam fugiat, quibusdam inventore culpa corporis iusto? Maiores quae minima reprehenderit architecto at soluta in inventore error nam. Ipsa, sequi quidem."
+    Subject: "string",
+    Gender: "string",
+    OnlineOnsite: "Online",
+    Place: "string",
+    HourlyRate: 250,
+    Description: "Test",
   },
 ];
 
@@ -38,25 +47,20 @@ export default function PostPage() {
   const [subject, setSubject] = useState('');
   const [filteredPosts, setFilteredPosts] = useState(posts);
 
-  const handleFilter = () => {
-    const filtered = posts.filter((post) =>
-      post.title.toLowerCase().includes(subject.toLowerCase())
-    );
-    setFilteredPosts(filtered);
+  const handleFilter = async () => {
+    posts = await fetchPosts();
   };
 
   return (
     <div className="flex gap-6 p-6">
-      <div className="w-1/4 bg-gray-100 p-4 rounded-lg">
-        <h3 className="text-lg font-semibold mb-2">Filters</h3>
-        <label className="block mb-2">Subject</label>
-        <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter subject" />
-        <Button className="mt-4 w-full" onClick={handleFilter}>Apply</Button>
-      </div>
+
+      <section className="w-1/4 min-w-[200px] border-2 border-gray-400 p-4">
+        <FilterForm/>
+      </section>
       
-      <section className="w-3/4">
+      <section className="w-3/4 border-2 border-gray-400 p-4">
         <div className="flex flex-col gap-[24px] ">
-          <p className="text-2xl">All Post</p>
+          <p className="text-2xl font-[Nunito] font-bold">All Post</p>
           <div className="flex justify-between items-center gap-[24px]">
             <Input className="px-[24px] py-[20px] w-5/6 border-2 border-gray-400"
               placeholder="Search..."
@@ -77,12 +81,12 @@ export default function PostPage() {
           </div>
           
           {filteredPosts.map((post) => (
-            <Card key={post.id} className="pt-6 bg-transparent border-gray-400">
+            <Card key={post.Description + post.title} className="pt-6 bg-transparent border-gray-400">
               <CardContent className="flex flex-col gap-[24px]">
                 <div className="font-[Nunito]">
                   <div className="flex flex-row justify-between mb-[10px]">
                     <p className="text-2xl font-semibold">{post.title}</p>
-                    <p className="text-2xl font-bold">{post.price}</p>
+                    <p className="text-2xl font-bold">{post.HourlyRate} Baht / Hour</p>
                   </div>
                   <div className="flex gap-x-[24px]">
                       {post.tags.map((tag) => (
@@ -91,9 +95,9 @@ export default function PostPage() {
                     </div>
                 </div>
                 <CardDescription className="">
-                  {post.desc}
+                  {post.Description}
                 </CardDescription>
-                <Button className="">Request</Button>
+                <Button className="text-text bg-[#A4B1BA]">Request</Button>
               </CardContent>
             </Card>
           ))}

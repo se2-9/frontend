@@ -38,7 +38,7 @@ export default function DashBoard() {
       </Card> */}
       <Card className="w-full max-w-lg bg-background py-2">
         <CardHeader className="px-10">
-          <CardTitle className="text-2xl">Profile Page</CardTitle>
+          <CardTitle className="text-2xl">Edit Profile Page</CardTitle>
           <CardDescription className="font-bold">
             Information
           </CardDescription>

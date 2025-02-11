@@ -47,6 +47,10 @@ export const useAuthStore = create<AuthState>()(
 
           if (!accessToken) throw new Error('No access token received');
 
+          if (new Date() < new Date(expiresAt! * 1000)) {
+            return;
+          }
+
           apiClient.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
           const userProfileResp =

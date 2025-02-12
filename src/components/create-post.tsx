@@ -129,10 +129,10 @@ export default function CreatePost() {
                           value={field.value}
                           onValueChange={field.onChange}
                         >
-                          <DropdownMenuRadioItem value="Male">
+                          <DropdownMenuRadioItem value="male">
                             Male
                           </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="Female">
+                          <DropdownMenuRadioItem value="female">
                             Female
                           </DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>

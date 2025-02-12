@@ -135,6 +135,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
                       <SelectGroup>
                         <SelectItem value="male">Male</SelectItem>
                         <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="any">Any</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -152,7 +153,14 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
                 <FormControl>
                   <Select
                     value={String(field.value)}
-                    onValueChange={(value) => field.onChange(value === 'true')} 
+                    onValueChange={(value) => {
+                        if (value == 'undefined'){
+                          field.onChange(undefined)
+                        }else{
+                          field.onChange(value === 'true')
+                        }
+                      }
+                    } 
                   >
                     <SelectTrigger className="w-1/6 min-w-[140px] border-2 border-gray-400">
                       <SelectValue defaultValue="true" />
@@ -161,6 +169,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
                       <SelectGroup>
                         <SelectItem value="true">Online</SelectItem>
                         <SelectItem value="false">Onsite</SelectItem>
+                        <SelectItem value="undefined">Any</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>

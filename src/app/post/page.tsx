@@ -23,10 +23,10 @@ export default function Page() {
     <div className="w-full flex items-center justify-center mt-10 max-h-lg gap-4">
       <MaxWidthWrapper>
         <div className="flex flex-col items-center">
-          <div className="w-full flex justify-end mb-2">
+          <div className="w-full flex justify-end mb-4">
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline">Create Post</Button>
+                <Button className="bg-lightbrown text-text">Create Post</Button>
               </DialogTrigger>
               <DialogContent className="w-full">
                 <DialogHeader>

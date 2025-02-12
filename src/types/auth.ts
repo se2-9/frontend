@@ -1,12 +1,8 @@
+import { UserDTO } from '@/dtos/user';
 import { ApiResponse } from './api';
 
-export type AuthToken = {
-  accessToken: string;
-  refreshToken: string;
-};
-
-export type UserProfile = {
-  email: string;
-};
-
-export type LoginResponse = ApiResponse<AuthToken>;
+export type LoginResponse = ApiResponse<{
+  access_token: string;
+  expires_at: number;
+  user: UserDTO;
+}>;

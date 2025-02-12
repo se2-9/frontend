@@ -1,6 +1,9 @@
 'use client';
 
-import { RegisterFormData, registerSchema } from '@/lib/validations/auth';
+import {
+  RegisterStudentRequest,
+  registerStudentSchema,
+} from '@/lib/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
@@ -12,19 +15,20 @@ import {
   FormLabel,
 } from '../ui/form';
 import { Input } from '../ui/input';
-import { Button, buttonVariants } from '../ui/button';
+import { Button } from '../ui/button';
 import { useMutation } from '@tanstack/react-query';
-import { register } from '@/lib/api/auth';
 import { toast } from 'sonner';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { registerStudent } from '@/lib/api/auth';
+import { useState } from 'react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
-export default function RegisterForm() {
+export default function RegisterStudentForm() {
+  const [showPassword, setShowPassword] = useState(true);
   const router = useRouter();
 
-  const form = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<RegisterStudentRequest>({
+    resolver: zodResolver(registerStudentSchema),
     defaultValues: {
       name: '',
       email: '',
@@ -33,15 +37,17 @@ export default function RegisterForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: register,
+    mutationFn: registerStudent,
     onSuccess: () => {
       toast.success('Account created!');
-      router.push('/login');
+      router.push(
+        `/verify-code?email=${encodeURIComponent(form.getValues().email)}`
+      );
     },
     onError: (err) => toast.error(err.message),
   });
 
-  const onSubmit = (values: RegisterFormData) => {
+  const onSubmit = (values: RegisterStudentRequest) => {
     mutation.mutate(values);
   };
 
@@ -49,7 +55,7 @@ export default function RegisterForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-2 w-full mx-auto px-4"
+        className="space-y-2 w-full mx-auto px-4 text-text"
       >
         <FormField
           name="name"
@@ -60,6 +66,7 @@ export default function RegisterForm() {
                 <Input
                   {...field}
                   type="text"
+                  placeholder="Enter your name"
                 />
               </FormControl>
               <FormDescription className="text-destructive">
@@ -78,6 +85,7 @@ export default function RegisterForm() {
                 <Input
                   {...field}
                   type="email"
+                  placeholder="Enter your email"
                 />
               </FormControl>
               <FormDescription className="text-destructive">
@@ -93,10 +101,25 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                />
+                <div className="relative w-full">
+                  <Input
+                    {...field}
+                    placeholder="Enter your password"
+                    type={`${showPassword ? 'text' : 'password'}`}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="bg-background text-text h-fit absolute right-2 top-1/2 -translate-y-1/2 p-1"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </Button>
+                </div>
               </FormControl>
               <FormDescription className="text-destructive">
                 {form.formState.errors.password?.message}
@@ -107,19 +130,10 @@ export default function RegisterForm() {
         />
         <Button
           type="submit"
-          className="w-full"
+          className="w-full text-text bg-blue"
         >
-          Register
+          Register As Student
         </Button>
-        <Link
-          className={cn(
-            buttonVariants({ variant: 'link' }),
-            'w-full text-center hover:underline'
-          )}
-          href="/login"
-        >
-          Already have an account? Login
-        </Link>
       </form>
     </Form>
   );

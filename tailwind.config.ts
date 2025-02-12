@@ -10,11 +10,27 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        'caret-blink': {
+          '0%,70%,100%': { opacity: '1' },
+          '20%,50%': { opacity: '0' },
+        },
+      },
+      animation: {
+        'caret-blink': 'caret-blink 1.25s ease-out infinite',
+      },
       fontFamily: {
+        nunito_sans: 'var(--font-nunito-sans)',
         noto_sans_th: 'var(--font-noto-sans-thai)',
       },
       colors: {
-        background: 'hsl(var(--background))',
+        text: '#615956',
+        lightbrown: '#e1dad2',
+        background: '#f7f3f0',
+        orange: '#e4c9b6',
+        blue: '#a4b1ba',
+        green: '#b7baa5',
+        red: '#d6a499',
         foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',

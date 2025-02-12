@@ -20,6 +20,7 @@ import { PostCard } from '@/components/posts/post-card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { FilterIcon, Search } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function PostPage() {
   const [search, setSearch] = useState('');
@@ -49,6 +50,11 @@ export default function PostPage() {
     },
     enabled: false,
   });
+
+  function onRequest(postId: string, tutorId: string) {
+    console.log('Requesting post', postId, 'from tutor', tutorId);
+    toast.success('Request sent successfully');
+  }
 
   useEffect(() => {
     if (posts) {
@@ -136,12 +142,13 @@ export default function PostPage() {
         </div>
 
         {/* Post Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post: PostDTO) => (
               <PostCard
                 key={`${post.user_id}-${post.created_at}`}
                 post={post}
+                onRequest={onRequest}
               />
             ))
           ) : (

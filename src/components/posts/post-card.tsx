@@ -18,15 +18,24 @@ import { ConfirmDialog } from '@/components/posts/confirm-dialog';
 import { PostDetailsDialog } from '@/components/posts/post-details-dialog';
 import { deletePost } from '@/lib/api/post';
 import type { PostDTO } from '@/dtos/post';
-import { Eye, Trash2, MapPin, DollarSign, User, BookOpen } from 'lucide-react';
+import {
+  Eye,
+  Trash2,
+  MapPin,
+  DollarSign,
+  User,
+  BookOpen,
+  SendIcon,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PostCardProps {
   post: PostDTO;
   onDelete?: (postId: string) => void;
+  onRequest?: (postId: string, tutorId: string) => void;
 }
 
-export const PostCard = ({ post, onDelete }: PostCardProps) => {
+export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -93,12 +102,12 @@ export const PostCard = ({ post, onDelete }: PostCardProps) => {
               />
               <span>{post.place}</span>
             </div>
-            <div className="flex items-center gap-2 font-medium">
+            <div className="flex items-center gap-1 font-medium">
               <DollarSign
                 size={16}
                 className="text-gray-500"
               />
-              <span>${post.hourly_rate} / hr</span>
+              <span className="leading-none">{post.hourly_rate} / hr</span>
             </div>
           </div>
           <p className="text-xs text-gray-500">
@@ -134,6 +143,16 @@ export const PostCard = ({ post, onDelete }: PostCardProps) => {
             >
               <Trash2 size={16} />
               Delete
+            </Button>
+          ) : null}
+          {onRequest ? (
+            <Button
+              size="sm"
+              className="flex items-center gap-2 bg-blue"
+              onClick={() => onRequest(post.post_id, '')}
+            >
+              <SendIcon size={16} />
+              Request
             </Button>
           ) : null}
         </CardFooter>

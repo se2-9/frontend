@@ -1,7 +1,7 @@
 'use client';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
 import CreatePost from '@/components/posts/create-post';
-import { PostCard } from '@/components/posts/post-card';
+import { PostList } from '@/components/posts/post-list';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -40,12 +40,7 @@ export default function Page() {
           </div>
 
           <div className="w-full flex flex-col items-center gap-4">
-            {data.result.map((post) => (
-              <PostCard
-                key={post.id}
-                {...post}
-              />
-            ))}
+            <PostList />
           </div>
         </div>
       </MaxWidthWrapper>

@@ -2,6 +2,8 @@ import { AxiosError } from 'axios';
 import { CreatePostData } from '../validations/post';
 import { createPostSchema } from '../validations/post';
 import { apiClient } from './axios';
+import { ApiResponse } from '@/types/api';
+import { PostDTO } from '@/dtos/post';
 
 export async function createPost(data: CreatePostData) {
   const validatedData = createPostSchema.parse(data);
@@ -14,7 +16,7 @@ export async function createPost(data: CreatePostData) {
   }
 }
 
-export async function getStudentPosts() {
+export async function getStudentPosts(): Promise<ApiResponse<PostDTO[]>> {
   try {
     const res = await apiClient.get('/post/student');
 

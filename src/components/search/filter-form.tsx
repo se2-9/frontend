@@ -34,10 +34,10 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-2 w-full mx-auto px-4 text-text font-[Nunito] "
+        className="space-y-2 w-full mx-auto px-4 text-text"
         >
         <div className="flex flex-col gap-[24px] border-gray-400">
-          <h1 className="text-2xl font-bold">Filters</h1>
+          {/* <h1 className="text-2xl font-bold">Filters</h1> */}
 
           <FormField
             name="title"

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -17,6 +17,7 @@ import FilterForm from '@/components/search/filter-form';
 import { FilterPostDTO} from '@/dtos/post';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+import MaxWidthWrapper from '@/components/max-width-wrapper';
 
 
 export default function PostPage() {
@@ -45,15 +46,27 @@ export default function PostPage() {
 
   
   return (
-    <div className="flex gap-6 p-6">
+    <MaxWidthWrapper className="w-full h-full flex flex-col p-4 justify-center items-center space-y-2 md:flex-row md:space-x-2 md:justify-start md:items-start">
 
-      <section className="w-1/4 min-w-[200px] border-2 border-gray-400 p-4">
-        <FilterForm refetch={refetch} form={form}/>
-      </section>
-      
-      <section className="w-3/4 border-2 border-gray-400 p-4">
-        <div className="flex flex-col gap-[24px] ">
-          <p className="text-2xl font-[Nunito] font-bold">All Post</p>
+      {/* <section className="w-3/4 min-w-[200px] border-2 border-gray-400 p-4 md:w-1/3"> */}
+      <Card className="w-3/4 bg-background p-4 md:w-2/5 border-2 border-gray-400 ">
+        <CardHeader>
+          <CardTitle className='text-2l'>
+            Filters
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FilterForm refetch={refetch} form={form}/>
+        </CardContent>
+      </Card>
+        
+      <Card className="w-3/4 border-2 border-gray-400 p-4 bg-background md:w-3/5">
+        <CardHeader>
+          <CardTitle>
+            All Posts
+          </CardTitle>
+        </CardHeader>
+        <CardContent className='space-y-4'>
           <div className="flex justify-between items-center gap-[24px]">
             <Input className="px-[24px] py-[20px] w-5/6 border-2 border-gray-400"
               placeholder="Search..."
@@ -90,8 +103,12 @@ export default function PostPage() {
               </CardContent>
             </Card>
           ))}
-        </div>
-      </section>
-    </div>
+        </CardContent>
+        {/* <div className="flex flex-col gap-[24px]"> */}
+          {/* <p className="text-2xl">All Post</p> */}
+          
+        {/* </div> */}
+      </Card>
+    </ MaxWidthWrapper>
   );
 }

@@ -5,7 +5,7 @@ export interface PostDTO {
   email: string;
   title: string;
   subject: string;
-  gender: string;
+  tutor_gender: string;
   is_online: boolean;
   place: string;
   hourly_rate: number;

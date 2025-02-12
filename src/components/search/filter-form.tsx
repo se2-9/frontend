@@ -1,54 +1,69 @@
 'use client';
-
-import React from 'react';
-import {UseFormReturn } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from '../ui/form';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { ApiResponse } from '@/types/api';
-import { FilterPostDTO, PostDTO } from '@/dtos/post';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import type {
+  QueryObserverResult,
+  RefetchOptions,
+} from '@tanstack/react-query';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import type { FilterPostDTO, PostDTO } from '@/dtos/post';
+import { X } from 'lucide-react';
 
 interface FilterFormProps {
   refetch: (
-    options?: RefetchOptions) => Promise<QueryObserverResult<ApiResponse<PostDTO[]>, Error>>;
-    form: UseFormReturn<FilterPostDTO, unknown, undefined>
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<PostDTO[], Error>>;
+  form: UseFormReturn<FilterPostDTO, unknown, undefined>;
 }
 
-
 export default function FilterForm({ refetch, form }: FilterFormProps) {
-  
   function onSubmit(values: FilterPostDTO) {
-    console.log(values)
-    refetch()
+    console.log(values);
+    refetch();
+  }
+
+  function onReset() {
+    form.reset();
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-2 w-full mx-auto px-4 text-text"
-        >
-        <div className="flex flex-col gap-[24px] border-gray-400">
-          {/* <h1 className="text-2xl font-bold">Filters</h1> */}
+        className="flex flex-col space-y-4"
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">Filter Posts</h2>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold'>Title</FormLabel>
+                <FormLabel className="font-semibold text-gray-700">
+                  Title
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter subject"
-                    type="text"
+                    placeholder="Enter title"
+                    className="border-gray-300"
                   />
                 </FormControl>
               </FormItem>
@@ -60,86 +75,89 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
             name="subject"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold text-lg'>Subject</FormLabel>
+                <FormLabel className="font-semibold text-gray-700">
+                  Subject
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     placeholder="Enter subject"
-                    type="text"
+                    className="border-gray-300"
                   />
                 </FormControl>
               </FormItem>
             )}
             control={form.control}
           />
+        </div>
 
-          <div className="flex justify-between gap-6">
-            <div>
+        <div className="space-y-2">
+          <FormLabel className="font-semibold text-gray-700">
+            Price Range
+          </FormLabel>
+          <div className="flex items-center space-x-4">
             <FormField
               name="min_price"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='font-semibold'>Min cost</FormLabel>
+                <FormItem className="flex-1">
                   <FormControl>
-                    <div className="relative w-full">
-                      <Input
-                        
-                        {...field}
-                        placeholder="1"
-                      />
-                      
-                    </div>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Min"
+                      className="border-gray-300"
+                    />
                   </FormControl>
                 </FormItem>
               )}
               control={form.control}
             />
-            </div>
-            <div>
+            <span className="text-gray-500">to</span>
             <FormField
               name="max_price"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='font-semibold'>Max cost</FormLabel>
+                <FormItem className="flex-1">
                   <FormControl>
-                    <div className="relative w-full">
-                      <Input
-                        {...field}
-                        placeholder="10000"
-                      />
-                      
-                    </div>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Max"
+                      className="border-gray-300"
+                    />
                   </FormControl>
                 </FormItem>
               )}
               control={form.control}
             />
-            </div>
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             name="tutor_gender"
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold'>Tutor&apos;s Gender</FormLabel>
-                <FormControl>
+                <FormLabel className="font-semibold text-gray-700">
+                  Tutor&apos;s Gender
+                </FormLabel>
                 <Select
-                    value={String(field.value)}
-                    onValueChange={field.onChange} 
-                  >
-                    <SelectTrigger className="w-1/6 min-w-[140px] border-2 border-gray-400">
-                      <SelectValue defaultValue="male" />
+                  value={String(field.value)}
+                  onValueChange={field.onChange}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border-gray-300">
+                      <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="any">Any</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="any">Any</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </FormItem>
             )}
           />
@@ -149,77 +167,92 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold'>Online/Onsite</FormLabel>
-                <FormControl>
-                  <Select
-                    value={String(field.value)}
-                    onValueChange={(value) => {
-                        if (value == 'undefined'){
-                          field.onChange(undefined)
-                        }else{
-                          field.onChange(value === 'true')
-                        }
-                      }
-                    } 
-                  >
-                    <SelectTrigger className="w-1/6 min-w-[140px] border-2 border-gray-400">
-                      <SelectValue defaultValue="true" />
+                <FormLabel className="font-semibold text-gray-700">
+                  Lesson Type
+                </FormLabel>
+                <Select
+                  value={
+                    field.value === undefined ? 'any' : String(field.value)
+                  }
+                  onValueChange={(value) => {
+                    if (value === 'any') {
+                      field.onChange(undefined);
+                    } else {
+                      field.onChange(value === 'true');
+                    }
+                  }}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border-gray-300">
+                      <SelectValue placeholder="Select type" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="true">Online</SelectItem>
-                        <SelectItem value="false">Onsite</SelectItem>
-                        <SelectItem value="undefined">Any</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="true">Online</SelectItem>
+                      <SelectItem value="false">In-person</SelectItem>
+                      <SelectItem value="any">Any</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </FormItem>
             )}
           />
-
-          <FormField
-            name="place"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='font-semibold'>Teaching Place</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter place"
-                    type="text"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-            control={form.control}
-          />
-
-          <FormField
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='font-semibold'>Description</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter subject"
-                    type="text"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-            control={form.control}
-          />
-
-
-          <Button
-            type="submit"
-            className="w-full text-text bg-[#B7BAA5]"
-          >
-            Apply
-          </Button>
         </div>
+
+        <FormField
+          name="place"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold text-gray-700">
+                Teaching Place
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="Enter place"
+                  className="border-gray-300"
+                />
+              </FormControl>
+            </FormItem>
+          )}
+          control={form.control}
+        />
+
+        <FormField
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold text-gray-700">
+                Description
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="Enter description"
+                  className="border-gray-300"
+                />
+              </FormControl>
+            </FormItem>
+          )}
+          control={form.control}
+        />
+
+        <Button
+          type="submit"
+          className="w-full bg-lightbrown text-text hover:text-white"
+        >
+          Apply Filters
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onReset}
+          className="text-gray-500 hover:text-gray-700"
+        >
+          <X className="w-4 h-4 mr-2" />
+          Reset
+        </Button>
       </form>
     </Form>
   );

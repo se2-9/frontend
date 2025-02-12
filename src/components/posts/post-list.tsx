@@ -1,16 +1,13 @@
-import { usePosts } from '@/hooks/usePosts';
 import { PostCard } from '@/components/posts/post-card';
 import { useState } from 'react';
 import { PostDTO } from '@/dtos/post';
 
-export const PostList = () => {
-  const { data: posts, isLoading, error } = usePosts();
-  const [postList, setPostList] = useState<PostDTO[]>(posts?.result || []);
+interface PostListProps {
+  posts: PostDTO[];
+}
 
-  console.log(postList);
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+export const PostList = ({ posts }: PostListProps) => {
+  const [postList, setPostList] = useState<PostDTO[]>(posts || []);
 
   const handleDelete = (postId: string) => {
     setPostList((prev) => prev.filter((post) => post.post_id !== postId));

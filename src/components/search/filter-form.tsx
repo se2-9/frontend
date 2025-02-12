@@ -190,7 +190,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold text-lg'>Desc</FormLabel>
+                <FormLabel className='font-semibold text-lg'>Description</FormLabel>
                 <FormControl>
                   <Input
                     {...field}

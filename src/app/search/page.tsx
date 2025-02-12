@@ -26,7 +26,7 @@ export default function PostPage() {
     defaultValues: {
       title: '',
       subject: '',
-      tutor_gender: undefined,
+      tutor_gender: '',
       is_online: undefined,
       place: '',
       min_price: 1,

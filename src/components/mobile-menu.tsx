@@ -1,7 +1,7 @@
 'use client';
 
 import { useReducer } from 'react';
-import { MenuIcon } from 'lucide-react';
+import { MenuIcon, PencilIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   Sheet,
@@ -44,7 +44,16 @@ export default function MobileMenu() {
         <nav className="flex flex-col space-y-4">
           {user ? (
             <div className="py-2">
-              <p className="font-bold">{user.name}</p>
+              <Link
+                href="/profile/edit"
+                className="flex items-center gap-4 hover:underline"
+              >
+                <p className="font-bold">{user.name}</p>
+                <PencilIcon
+                  className="h-4 w-4"
+                  strokeWidth={3}
+                />
+              </Link>
               <p>{user.email}</p>
             </div>
           ) : (
@@ -58,7 +67,7 @@ export default function MobileMenu() {
             </Button>
           )}
           <Link
-            href="/"
+            href="/post"
             onClick={toggle}
             className="hover:underline"
           >
@@ -71,13 +80,15 @@ export default function MobileMenu() {
           >
             Learning
           </Link>
-          <Link
-            href="/"
-            onClick={toggle}
-            className="hover:underline"
-          >
-            Students
-          </Link>
+          {user && user.role === 'tutor' && (
+            <Link
+              href="/"
+              onClick={toggle}
+              className="hover:underline"
+            >
+              Students
+            </Link>
+          )}
           {user ? (
             <Button
               asChild

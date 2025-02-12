@@ -74,13 +74,13 @@ export default function Navbar() {
                     </DropdownMenuGroup>
                     <Separator />
                     <DropdownMenuItem asChild>
-                      <Link href="/post">Profile</Link>
+                      <Link href="/profile/edit">Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       {user.role === 'student' ? (
                         <Link href="/post">My posts</Link>
                       ) : (
-                        <Link href="/post">My courses</Link>
+                        <Link href="/search">My students</Link>
                       )}
                     </DropdownMenuItem>
                     <Separator />

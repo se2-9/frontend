@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -11,19 +9,25 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 import { fetchPosts } from '@/lib/api/search';
 import FilterForm from '@/components/search/filter-form';
-import { FilterPostDTO, PostDTO} from '@/dtos/post';
+import { FilterPostDTO, PostDTO } from '@/dtos/post';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
-
+import { PostCard } from '@/components/posts/post-card';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { FilterIcon, Search } from 'lucide-react';
 
 export default function PostPage() {
   const [search, setSearch] = useState('');
-  const [sortFromHigh, setSortFromHigh] = useState("Highest Rate")
-  const [postsShow, setPostsShow] = useState<PostDTO[]>([])
+  const [sortOrder, setSortOrder] = useState<'Highest Rate' | 'Lowest Rate'>(
+    'Highest Rate'
+  );
+  const [filteredPosts, setFilteredPosts] = useState<PostDTO[]>([]);
+
   const form = useForm<FilterPostDTO>({
     defaultValues: {
       title: '',
@@ -36,56 +40,90 @@ export default function PostPage() {
       description: '',
     },
   });
-  
-  const { data:posts, refetch } = useQuery({
-    queryKey: ['posts'], 
+
+  const { data: posts, refetch } = useQuery({
+    queryKey: ['posts'],
     queryFn: async () => {
-      const p = (await fetchPosts(form.getValues() as FilterPostDTO))
-      if (p?.result){
-        p.result= [...p.result].sort((a:PostDTO, b:PostDTO)=> sortFromHigh ==="Highest Rate"?b.hourly_rate-a.hourly_rate:a.hourly_rate-b.hourly_rate)
-      }
-      
-      return p
+      const p = await fetchPosts(form.getValues() as FilterPostDTO);
+      return p?.result ?? [];
     },
-    enabled:false
-    });
-  useEffect(()=>{
-    console.log(sortFromHigh)
-    if (posts?.result){
-      setPostsShow([...posts.result].sort((a:PostDTO, b:PostDTO)=> sortFromHigh === "Highest Rate"?b.hourly_rate-a.hourly_rate:a.hourly_rate-b.hourly_rate))
-      // console.log(posts.result)
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (posts) {
+      const sortedPosts = [...posts];
+
+      sortedPosts.sort((a, b) =>
+        sortOrder === 'Highest Rate'
+          ? b.hourly_rate - a.hourly_rate
+          : a.hourly_rate - b.hourly_rate
+      );
+
+      setFilteredPosts(
+        sortedPosts.filter(
+          (post) =>
+            post.title.toLowerCase().includes(search.toLowerCase()) ||
+            post.subject.toLowerCase().includes(search.toLowerCase()) ||
+            post.username.toLowerCase().includes(search.toLowerCase())
+        )
+      );
     }
-  }, [sortFromHigh, posts, setPostsShow])
-  
+  }, [sortOrder, search, posts]);
+
   return (
-    <MaxWidthWrapper className="w-full h-full flex flex-col p-4 justify-center items-center space-y-2 md:flex-row md:space-x-2 md:items-start">
-      <Card className="w-full p-4 md:w-2/5 bg-background mt-2">
-        <CardHeader>
-          <CardTitle className='text-2l'>
-            Filters
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FilterForm refetch={refetch} form={form}/>
-        </CardContent>
-      </Card>
-        
-      <Card className="w-full p-4 bg-background md:w-3/5">
-        <CardHeader>
-          <CardTitle>
-            All Posts
-          </CardTitle>
-        </CardHeader>
-        <CardContent className='space-y-4'>
-          <div className="flex justify-between items-center space-x-2">
-            <Input className="px-5 py-5 w-5/6"
-              placeholder="Search..."
-              value={search}  
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Select value={sortFromHigh} onValueChange={setSortFromHigh} defaultValue="Highest Rate">
-              <SelectTrigger className="w-1/5 min-w-20 ">
-                <SelectValue/>
+    <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-4 space-y-4 md:space-x-6">
+      {/* Sidebar Filter (large screen) */}
+      <aside className="hidden lg:block max-w-md bg-white rounded-lg shadow-md p-6 h-fit my-auto">
+        <FilterForm
+          refetch={refetch}
+          form={form}
+        />
+      </aside>
+
+      <div className="flex-1 space-y-4">
+        {/* Mobile Filter Dialog */}
+        <div className="lg:hidden flex justify-between">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 mr-4"
+              >
+                <FilterIcon size={16} /> Filter
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <FilterForm
+                refetch={refetch}
+                form={form}
+              />
+            </DialogContent>
+          </Dialog>
+
+          {/* Search & Sorting */}
+          <div className="flex w-full items-center justify-between space-x-2">
+            <div className="relative w-full md:w-80">
+              <Search
+                className="absolute left-3 top-3 text-gray-500"
+                size={18}
+              />
+              <Input
+                className="pl-10 pr-4 py-2 w-full rounded-md"
+                placeholder="Search by title, subject, or tutor..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+
+            <Select
+              value={sortOrder}
+              onValueChange={(value) =>
+                setSortOrder(value as 'Highest Rate' | 'Lowest Rate')
+              }
+            >
+              <SelectTrigger className="w-44">
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -95,28 +133,24 @@ export default function PostPage() {
               </SelectContent>
             </Select>
           </div>
-          
-          {postsShow.map((post:PostDTO) => (
-            <Card key={post.user_id + post.created_at} className="pt-6 bg-transparent">
-              <CardContent className="flex flex-col gap-[24px]">
-                <div className="flex flex-col items-end justify-end">
-                    <p className="text-lg font-semibold">{post.title}</p>
-                    <p className="text-lg font-semibold">{post.hourly_rate} Baht / Hour</p>
-                  
-                </div>
-                <CardDescription className="">
-                  {post.description}
-                </CardDescription>
-                <Button className="text-text bg-blue">Request</Button>
-              </CardContent>
-            </Card>
-          ))}
-        </CardContent>
-        {/* <div className="flex flex-col gap-[24px]"> */}
-          {/* <p className="text-2xl">All Post</p> */}
-          
-        {/* </div> */}
-      </Card>
-    </ MaxWidthWrapper>
+        </div>
+
+        {/* Post Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post: PostDTO) => (
+              <PostCard
+                key={`${post.user_id}-${post.created_at}`}
+                post={post}
+              />
+            ))
+          ) : (
+            <p className="text-center text-gray-500 col-span-full">
+              No posts found.
+            </p>
+          )}
+        </div>
+      </div>
+    </MaxWidthWrapper>
   );
 }

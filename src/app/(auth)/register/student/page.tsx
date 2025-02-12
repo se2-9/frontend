@@ -32,7 +32,7 @@ export default function Page() {
             )}
             href="/login"
           >
-            Don&apos;t have an account?{'  '}
+            Have an account?{' '}
             <span className="font-bold hover:underline">Login</span>
           </Link>
         </CardFooter>

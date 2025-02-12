@@ -46,10 +46,11 @@ export default function PostPage() {
 
   
   return (
-    <MaxWidthWrapper className="w-full h-full flex flex-col p-4 justify-center items-center space-y-2 md:flex-row md:space-x-2 md:justify-start md:items-start">
+    <MaxWidthWrapper className="w-full h-full flex flex-col p-4 justify-center items-center space-y-2 md:flex-row md:space-x-2 md:items-start">
+
 
       {/* <section className="w-3/4 min-w-[200px] border-2 border-gray-400 p-4 md:w-1/3"> */}
-      <Card className="w-3/4 bg-background p-4 md:w-2/5 border-2 border-gray-400 ">
+      <Card className="w-3/4 p-4 md:w-2/5 border-2 bg-background border-gray-400 mt-2">
         <CardHeader>
           <CardTitle className='text-2l'>
             Filters

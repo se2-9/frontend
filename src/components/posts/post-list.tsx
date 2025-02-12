@@ -5,7 +5,7 @@ import { PostDTO } from '@/dtos/post';
 
 export const PostList = () => {
   const { data: posts, isLoading, error } = usePosts();
-  const [postList, setPostList] = useState<PostDTO[]>(posts.result || []);
+  const [postList, setPostList] = useState<PostDTO[]>(posts?.result || []);
 
   console.log(postList);
 

@@ -1,12 +1,8 @@
-type props = {
-  params: { id: string };
-};
+type Params = Promise<{ id: string }>
 
-export default function Page({ params }: props) {
-  const { id } = params;
-  return (
-    <div>
-      {id}
-    </div>
-  );
+export default async function Page({ params }: { params: Params }) {  
+  const { id } = await params
+  return <div>
+    {id}
+  </div>
 }

@@ -23,6 +23,7 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 export default function PostPage() {
   const [search, setSearch] = useState('');
   const [sortFromHigh, setSortFromHigh] = useState("Highest Rate")
+  const [postsShow, setPostsShow] = useState<PostDTO[]>([])
   const form = useForm<FilterPostDTO>({
     defaultValues: {
       title: '',
@@ -37,17 +38,24 @@ export default function PostPage() {
   });
   
   const { data:posts, refetch } = useQuery({
-    queryKey: ['posts', form.watch()], 
-    queryFn: async ({ queryKey }) => {
-      const [, filters] = queryKey; 
-      return fetchPosts(filters as FilterPostDTO);
+    queryKey: ['posts'], 
+    queryFn: async () => {
+      const p = (await fetchPosts(form.getValues() as FilterPostDTO))
+      if (p?.result){
+        p.result= [...p.result].sort((a:PostDTO, b:PostDTO)=> sortFromHigh ==="Highest Rate"?b.hourly_rate-a.hourly_rate:a.hourly_rate-b.hourly_rate)
+      }
+      
+      return p
     },
-    enabled: false, 
-  });
+    enabled:false
+    });
   useEffect(()=>{
-    posts?.result?.sort((a:PostDTO, b:PostDTO)=> sortFromHigh =="Highest Rate"?a.hourly_rate-b.hourly_rate:b.hourly_rate-a.hourly_rate)
-  }, [sortFromHigh, posts])
-
+    console.log(sortFromHigh)
+    if (posts?.result){
+      setPostsShow([...posts.result].sort((a:PostDTO, b:PostDTO)=> sortFromHigh === "Highest Rate"?b.hourly_rate-a.hourly_rate:a.hourly_rate-b.hourly_rate))
+      // console.log(posts.result)
+    }
+  }, [sortFromHigh, posts, setPostsShow])
   
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col p-4 justify-center items-center space-y-2 md:flex-row md:space-x-2 md:items-start">
@@ -88,7 +96,7 @@ export default function PostPage() {
             </Select>
           </div>
           
-          {posts?.result?.map((post) => (
+          {postsShow.map((post:PostDTO) => (
             <Card key={post.user_id + post.created_at} className="pt-6 bg-transparent">
               <CardContent className="flex flex-col gap-[24px]">
                 <div className="flex flex-col items-end justify-end">

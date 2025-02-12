@@ -1,0 +1,15 @@
+services:
+  frontend:
+    image: '${IMAGE_NAME:-ghcr.io/se2-9/frontend:latest}'
+    container_name: se2_frontend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '3000:3000'
+    networks:
+      - se2_network
+
+networks:
+  se2_network:
+    external: true

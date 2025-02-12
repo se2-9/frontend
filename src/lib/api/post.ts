@@ -14,6 +14,16 @@ export async function createPost(data: CreatePostData) {
   }
 }
 
+export async function getStudentPosts() {
+  try {
+    const res = await apiClient.get('/post/student');
+
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+}
+
 function handleAxiosError(error: unknown): Error {
   if (error instanceof AxiosError) {
     return new Error(error.response?.data.message || error.message);

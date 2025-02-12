@@ -7,9 +7,14 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Button } from '../ui/button';
+import { useMutation } from '@tanstack/react-query';
+import { deletePost } from '@/lib/api/post';
+import { toast } from 'sonner';
 
 interface PostCardProps {
   user_id: string;
+  post_id: string;
   username: string;
   email: string;
   title: string;
@@ -23,6 +28,8 @@ interface PostCardProps {
 }
 
 export const PostCard = ({
+  user_id,
+  post_id,
   username,
   email,
   title,
@@ -34,10 +41,24 @@ export const PostCard = ({
   description,
   created_at,
 }: PostCardProps) => {
+  const mutation = useMutation({
+    mutationFn: (postId: string) => deletePost(postId),
+    onSuccess: () => {
+      toast.success('Post deleted');
+    },
+  });
   return (
     <Card className="w-full rounded-2xl shadow-md hover:shadow-lg transition-shadow">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <div className="flex justify-between">
+          <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+          <Button
+            variant="destructive"
+            onClick={() => mutation.mutate(post_id)}
+          >
+            Delete
+          </Button>
+        </div>
         <CardDescription>{subject}</CardDescription>
         <Badge
           variant={is_online ? 'default' : 'secondary'}

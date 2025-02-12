@@ -41,15 +41,16 @@ export const useAuthStore = create<AuthState>()(
 
       initializeAuth: async () => {
         try {
+          if (
+            new Date() < new Date(useAuthStore.getState().expiresAt! * 1000)
+          ) {
+            return;
+          }
           const response = await refreshAccessToken();
           const accessToken = response.result?.access_token;
           const expiresAt = response.result?.expires_at;
 
           if (!accessToken) throw new Error('No access token received');
-
-          if (new Date() < new Date(expiresAt! * 1000)) {
-            return;
-          }
 
           apiClient.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 

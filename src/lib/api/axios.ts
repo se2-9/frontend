@@ -3,7 +3,8 @@ import axios from 'axios';
 // import { refreshAccessToken } from './auth';
 
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  // baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: 'http://18.211.57.246:8080/api/v1',
   withCredentials: true,
 });
 

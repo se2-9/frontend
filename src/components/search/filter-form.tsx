@@ -43,7 +43,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold text-lg'>Title</FormLabel>
+                <FormLabel className='font-semibold'>Title</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -79,7 +79,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
               name="min_price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-semibold text-lg'>Min cost</FormLabel>
+                  <FormLabel className='font-semibold'>Min cost</FormLabel>
                   <FormControl>
                     <div className="relative w-full">
                       <Input
@@ -100,7 +100,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
               name="max_price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-semibold text-lg'>Max cost</FormLabel>
+                  <FormLabel className='font-semibold'>Max cost</FormLabel>
                   <FormControl>
                     <div className="relative w-full">
                       <Input
@@ -122,7 +122,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold text-lg'>Tutor&apos;s Gender</FormLabel>
+                <FormLabel className='font-semibold'>Tutor&apos;s Gender</FormLabel>
                 <FormControl>
                 <Select
                     value={String(field.value)}
@@ -149,7 +149,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold text-lg'>Online/Onsite</FormLabel>
+                <FormLabel className='font-semibold'>Online/Onsite</FormLabel>
                 <FormControl>
                   <Select
                     value={String(field.value)}
@@ -182,7 +182,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
             name="place"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold text-lg'>Teaching Place</FormLabel>
+                <FormLabel className='font-semibold'>Teaching Place</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -199,7 +199,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-semibold text-lg'>Description</FormLabel>
+                <FormLabel className='font-semibold'>Description</FormLabel>
                 <FormControl>
                   <Input
                     {...field}

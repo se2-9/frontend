@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select"
 import { fetchPosts } from '@/lib/api/search';
 import FilterForm from '@/components/search/filter-form';
-import { FilterPostDTO} from '@/dtos/post';
+import { FilterPostDTO, PostDTO} from '@/dtos/post';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
@@ -22,6 +22,7 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 
 export default function PostPage() {
   const [search, setSearch] = useState('');
+  const [sortFromHigh, setSortFromHigh] = useState("Highest Rate")
   const form = useForm<FilterPostDTO>({
     defaultValues: {
       title: '',
@@ -43,14 +44,14 @@ export default function PostPage() {
     },
     enabled: false, 
   });
+  useEffect(()=>{
+    posts?.result?.sort((a:PostDTO, b:PostDTO)=> sortFromHigh =="Highest Rate"?a.hourly_rate-b.hourly_rate:b.hourly_rate-a.hourly_rate)
+  }, [sortFromHigh, posts])
 
   
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col p-4 justify-center items-center space-y-2 md:flex-row md:space-x-2 md:items-start">
-
-
-      {/* <section className="w-3/4 min-w-[200px] border-2 border-gray-400 p-4 md:w-1/3"> */}
-      <Card className="w-3/4 p-4 md:w-2/5 border-2 bg-background border-gray-400 mt-2">
+      <Card className="w-full p-4 md:w-2/5 bg-background mt-2">
         <CardHeader>
           <CardTitle className='text-2l'>
             Filters
@@ -61,21 +62,21 @@ export default function PostPage() {
         </CardContent>
       </Card>
         
-      <Card className="w-3/4 border-2 border-gray-400 p-4 bg-background md:w-3/5">
+      <Card className="w-full p-4 bg-background md:w-3/5">
         <CardHeader>
           <CardTitle>
             All Posts
           </CardTitle>
         </CardHeader>
         <CardContent className='space-y-4'>
-          <div className="flex justify-between items-center gap-[24px]">
-            <Input className="px-[24px] py-[20px] w-5/6 border-2 border-gray-400"
+          <div className="flex justify-between items-center space-x-2">
+            <Input className="px-5 py-5 w-5/6"
               placeholder="Search..."
               value={search}  
               onChange={(e) => setSearch(e.target.value)}
             />
-            <Select defaultValue="Highest Rate">
-              <SelectTrigger className="w-1/6 min-w-[140px] border-2 border-gray-400">
+            <Select value={sortFromHigh} onValueChange={setSortFromHigh} defaultValue="Highest Rate">
+              <SelectTrigger className="w-1/5 min-w-20 ">
                 <SelectValue/>
               </SelectTrigger>
               <SelectContent>
@@ -88,13 +89,11 @@ export default function PostPage() {
           </div>
           
           {posts?.result?.map((post) => (
-            <Card key={post.user_id + post.created_at} className="pt-6 bg-transparent border-gray-400">
+            <Card key={post.user_id + post.created_at} className="pt-6 bg-transparent">
               <CardContent className="flex flex-col gap-[24px]">
-                <div className="font-[Nunito]">
-                  <div className="flex flex-row justify-between mb-[10px]">
-                    <p className="text-2xl font-semibold">{post.title}</p>
-                    <p className="text-2xl font-bold">{post.hourly_rate} Baht / Hour</p>
-                  </div>
+                <div className="flex flex-col items-end justify-end">
+                    <p className="text-lg font-semibold">{post.title}</p>
+                    <p className="text-lg font-semibold">{post.hourly_rate} Baht / Hour</p>
                   
                 </div>
                 <CardDescription className="">

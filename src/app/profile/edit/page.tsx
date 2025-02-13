@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuthStore } from '@/store/auth-store';
-import { Loader2Icon } from 'lucide-react';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
 import {
   Card,
@@ -13,13 +12,14 @@ import {
 } from '@/components/ui/card';
 import EditProfileForm from '@/components/profile/edit-profile-form';
 import ProfileHeader from '@/components/profile/edit-profile-header';
+import { Icons } from '@/components/icons';
 export default function DashBoard() {
   const user = useAuthStore((state) => state.user);
 
   if (user == null) {
     return (
       <div className="min-h-screen grid place-content-center">
-        <Loader2Icon className="animate-spin" />
+        <Icons.logo className="animate-spin" />
       </div>
     );
   }
@@ -39,18 +39,14 @@ export default function DashBoard() {
       <Card className="w-full max-w-lg bg-background py-2">
         <CardHeader className="px-10">
           <CardTitle className="text-2xl">Edit Profile Page</CardTitle>
-          <CardDescription className="font-bold">
-            Information
-          </CardDescription>
+          <CardDescription className="font-bold">Information</CardDescription>
         </CardHeader>
-        <CardContent className='space-y-4'>
-          <ProfileHeader /> 
-          <EditProfileForm />   
+        <CardContent className="space-y-4">
+          <ProfileHeader />
+          <EditProfileForm />
         </CardContent>
-        <CardFooter>
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Card>
-      
     </MaxWidthWrapper>
   );
 }

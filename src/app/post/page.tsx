@@ -1,5 +1,6 @@
 'use client';
 
+import { Icons } from '@/components/icons';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
 import CreatePost from '@/components/posts/create-post';
 import { PostList } from '@/components/posts/post-list';
@@ -12,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { usePosts } from '@/hooks/usePosts';
-import { Loader2Icon, PlusIcon, ScrollTextIcon } from 'lucide-react';
+import { PlusIcon, ScrollTextIcon } from 'lucide-react';
 
 export default function Page() {
   const { data, isLoading } = usePosts();
@@ -21,7 +22,7 @@ export default function Page() {
     return (
       <MaxWidthWrapper>
         <div className="h-[calc(100vh-80px)] grid place-items-center">
-          <Loader2Icon className="animate-spin h-8 w-8 text-primary" />
+          <Icons.logo className="animate-spin" />
         </div>
       </MaxWidthWrapper>
     );

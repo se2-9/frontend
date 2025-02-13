@@ -14,6 +14,8 @@ import {
 import Link from 'next/link';
 import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
+import { Badge } from './ui/badge';
+import { cn } from '@/lib/utils';
 
 export default function MobileMenu() {
   const router = useRouter();
@@ -43,19 +45,29 @@ export default function MobileMenu() {
         </SheetHeader>
         <nav className="flex flex-col space-y-4">
           {user ? (
-            <div className="py-2">
-              <Link
-                href="/profile/edit"
-                className="flex items-center gap-4 hover:underline"
+            <>
+              <div className="mt-4">
+                <Link
+                  href="/profile/edit"
+                  className="flex items-center gap-4 hover:underline"
+                >
+                  <p className="font-bold">{user.name}</p>
+                  <PencilIcon
+                    className="h-4 w-4"
+                    strokeWidth={3}
+                  />
+                </Link>
+                <p>{user.email}</p>
+              </div>
+              <Badge
+                className={cn('w-fit', {
+                  'bg-orange': user.role === 'tutor',
+                  'bg-blue': user.role === 'student',
+                })}
               >
-                <p className="font-bold">{user.name}</p>
-                <PencilIcon
-                  className="h-4 w-4"
-                  strokeWidth={3}
-                />
-              </Link>
-              <p>{user.email}</p>
-            </div>
+                {user.role === 'tutor' ? 'Tutor' : 'Student'}
+              </Badge>
+            </>
           ) : (
             <Button
               asChild
@@ -66,29 +78,40 @@ export default function MobileMenu() {
               <Link href="/login">Login</Link>
             </Button>
           )}
-          <Link
-            href="/"
-            onClick={toggle}
-            className="hover:underline"
-          >
-            My students
-          </Link>
           {user && user.role === 'tutor' ? (
-            <Link
-              href="/search"
-              onClick={toggle}
-              className="hover:underline"
-            >
-              Search posts
-            </Link>
+            <div className="flex flex-col items-start space-y-2">
+              <Link
+                href="/"
+                onClick={toggle}
+                className="hover:underline"
+              >
+                My students
+              </Link>
+              <Link
+                href="/post/search"
+                onClick={toggle}
+                className="hover:underline"
+              >
+                Search posts
+              </Link>
+            </div>
           ) : (
-            <Link
-              href="/post"
-              onClick={toggle}
-              className="hover:underline"
-            >
-              My Posts
-            </Link>
+            <div className="flex flex-col items-start space-y-2">
+              <Link
+                href="/learning"
+                onClick={toggle}
+                className="hover:underline"
+              >
+                Learning
+              </Link>
+              <Link
+                href="/post"
+                onClick={toggle}
+                className="hover:underline"
+              >
+                Posts
+              </Link>
+            </div>
           )}
           {user ? (
             <Button

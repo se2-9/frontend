@@ -4,7 +4,7 @@ export type Post = {
   id: string;
   Title: string;
   Subject: string;
-  TutorGender: 'Male' | 'Female'; // Assuming limited options for gender
+  TutorGender: 'male' | 'female'; // Assuming limited options for gender
   IsOnline: boolean; // True = Online, False = Onsite
   Place: string;
   HourlyRate: number;

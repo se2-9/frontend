@@ -45,7 +45,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col space-y-4 h-[480px] overflow-scroll"
+        className="flex flex-col space-y-4 h-[480px] overflow-scroll scrollbar-hide"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">Filter Posts</h2>
@@ -190,7 +190,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
                   <SelectContent>
                     <SelectGroup>
                       <SelectItem value="true">Online</SelectItem>
-                      <SelectItem value="false">In-person</SelectItem>
+                      <SelectItem value="false">Onsite</SelectItem>
                       <SelectItem value="any">Any</SelectItem>
                     </SelectGroup>
                   </SelectContent>

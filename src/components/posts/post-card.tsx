@@ -26,8 +26,12 @@ import {
   User,
   BookOpen,
   SendIcon,
+  AtSignIcon,
 } from 'lucide-react';
+
 import { cn } from '@/lib/utils';
+import { Icons } from '../icons';
+import Link from 'next/link';
 
 interface PostCardProps {
   post: PostDTO;
@@ -63,7 +67,7 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
 
   return (
     <>
-      <Card className="w-full rounded-2xl shadow-md hover:shadow-lg transition-shadow bg-white text-text p-4">
+      <Card className="w-full flex flex-col h-full rounded-2xl shadow-md hover:shadow-lg transition-shadow bg-white text-text p-4">
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <div>
@@ -79,7 +83,14 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
                   size={14}
                   className="text-gray-500"
                 />
-                {post.username} ({post.tutor_gender || 'N/A'})
+                {post.username}
+                <AtSignIcon size={14} />
+                <Link
+                  href={`/profile/${post.email}`}
+                  className="hover:underline"
+                >
+                  {post.email}
+                </Link>
               </CardDescription>
             </div>
             <Badge
@@ -88,12 +99,15 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
                 'bg-green text-green-600': post.is_online,
               })}
             >
-              {post.is_online ? 'Online' : 'Offline'}
+              {post.is_online ? 'Online' : 'Onsite'}
             </Badge>
           </div>
+          <p className="text-sm text-muted-foreground">
+            Created on: {new Date(post.created_at).toLocaleDateString()}
+          </p>
         </CardHeader>
 
-        <CardContent className="space-y-3">
+        <CardContent className="flex-grow space-y-1 mt-2">
           <div className="flex flex-wrap items-center justify-between text-sm text-gray-700">
             <div className="flex items-center gap-2">
               <MapPin
@@ -103,19 +117,35 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
               <span>{post.place}</span>
             </div>
             <div className="flex items-center gap-1 font-medium">
-              <DollarSign
-                size={16}
-                className="text-gray-500"
-              />
-              <span className="leading-none">{post.hourly_rate} / hr</span>
+              <DollarSign className="text-text" />
+              <span className="leading-none text-text">
+                {post.hourly_rate} / hr
+              </span>
             </div>
           </div>
-          <p className="text-xs text-gray-500">
-            Created on: {new Date(post.created_at).toLocaleDateString()}
-          </p>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-gray-700">
+            {post.tutor_gender === 'male' ? (
+              <Icons.male
+                size={8}
+                className="text-text font-medium"
+              />
+            ) : post.tutor_gender === 'female' ? (
+              <Icons.female
+                size={8}
+                className="text-text font-medium"
+              />
+            ) : (
+              <Icons.any
+                size={8}
+                className="text-text font-medium"
+              />
+            )}
+            <span>{post.tutor_gender}</span>
+          </div>
 
-          <Separator />
+          <Separator className="my-2" />
 
+          <p className="font-semibold">Description</p>
           <p className="text-sm text-muted-foreground line-clamp-2">
             {post.description}
           </p>

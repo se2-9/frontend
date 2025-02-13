@@ -24,6 +24,8 @@ import {
   Edit2Icon,
   SearchIcon,
   SendIcon,
+  StarIcon,
+  TriangleAlertIcon,
   Users2Icon,
 } from 'lucide-react';
 
@@ -38,7 +40,7 @@ export default function Navbar() {
         <MaxWidthWrapper>
           <div className="flex h-16 items-center justify-between text-text">
             {/* left */}
-            <div className="ml-4 flex items-center gap-2 lg:ml-0">
+            <div className="ml-4 flex items-center gap-2">
               <Link
                 href="/"
                 className="flex items-center gap-2 mr-4 font-bold"
@@ -50,7 +52,7 @@ export default function Navbar() {
               </Link>
             </div>
             {/* rights */}
-            <div className="hidden md:ml-4 md:flex items-center gap-2 lg:ml-0">
+            <div className="lg:hidden ml-4 flex items-center gap-2">
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -90,14 +92,26 @@ export default function Navbar() {
                       <>
                         <DropdownMenuItem>
                           <div className="flex items-center gap-2">
-                            <BookIcon size={16} />
-                            <Link href="/learning">Learning</Link>
+                            <SendIcon size={16} />
+                            <Link href="/student/posts">Posts</Link>
                           </div>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <div className="flex items-center gap-2">
-                            <SendIcon size={16} />
-                            <Link href="/post">Posts</Link>
+                            <BookIcon size={16} />
+                            <Link href="/student/requests">Requests</Link>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <div className="flex items-center gap-2">
+                            <StarIcon size={16} />
+                            <Link href="/student/reviews">Reviews</Link>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <div className="flex items-center gap-2">
+                            <TriangleAlertIcon size={16} />
+                            <Link href="/reports">Reports</Link>
                           </div>
                         </DropdownMenuItem>
                       </>
@@ -106,13 +120,25 @@ export default function Navbar() {
                         <DropdownMenuItem asChild>
                           <div className="flex items-center gap-2">
                             <SearchIcon size={16} />
-                            <Link href="/post/search">Find students</Link>
+                            <Link href="/tutor/search">Searchs</Link>
                           </div>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <div className="flex items-center gap-2">
                             <Users2Icon size={16} />
-                            <Link href="/">My students</Link>
+                            <Link href="/tutor/requests">Requests</Link>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <div className="flex items-center gap-2">
+                            <StarIcon size={16} />
+                            <Link href="/tutor/reviews">Reviews</Link>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <div className="flex items-center gap-2">
+                            <TriangleAlertIcon size={16} />
+                            <Link href="/reports">Reports</Link>
                           </div>
                         </DropdownMenuItem>
                       </>

@@ -21,13 +21,13 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { FilterIcon, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import { Icons } from '@/components/icons';
 
-export default function PostPage() {
+export default function Page() {
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState<'Highest Rate' | 'Lowest Rate'>(
     'Highest Rate'
   );
-  const [filteredPosts, setFilteredPosts] = useState<PostDTO[]>([]);
 
   const form = useForm<FilterPostDTO>({
     defaultValues: {
@@ -42,14 +42,20 @@ export default function PostPage() {
     },
   });
 
-  const { data: posts, refetch } = useQuery({
+  const {
+    data: posts,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
       const p = await fetchPosts(form.getValues() as FilterPostDTO);
       return p?.result ?? [];
     },
-    enabled: false,
+    enabled: true,
   });
+
+  const [filteredPosts, setFilteredPosts] = useState<PostDTO[]>(posts ?? []);
 
   function onRequest(postId: string, tutorId: string) {
     console.log('Requesting post', postId, 'from tutor', tutorId);
@@ -77,15 +83,27 @@ export default function PostPage() {
     }
   }, [sortOrder, search, posts]);
 
+  if (isLoading) {
+    return (
+      <MaxWidthWrapper>
+        <div className="h-[calc(100vh-80px)] grid place-items-center">
+          <Icons.logo className="animate-spin" />
+        </div>
+      </MaxWidthWrapper>
+    );
+  }
+
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-4 space-y-4 md:space-x-6">
       {/* Sidebar Filter (large screen) */}
-      <aside className="hidden lg:block max-w-md bg-white rounded-lg shadow-md p-6 h-fit my-auto">
-        <FilterForm
-          refetch={refetch}
-          form={form}
-        />
-      </aside>
+      <div className="hidden lg:block w-[360px] sticky top-4 self-start mt-8">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <FilterForm
+            refetch={refetch}
+            form={form}
+          />
+        </div>
+      </div>
 
       <div className="flex-1 space-y-4">
         {/* Mobile Filter Dialog */}
@@ -109,6 +127,7 @@ export default function PostPage() {
 
           {/* Search & Sorting */}
           <div className="flex w-full items-center justify-between space-x-2">
+            <div className="hidden lg:flex">Hello</div>
             <div className="relative w-full md:w-80">
               <Search
                 className="absolute left-3 top-3 text-gray-500"

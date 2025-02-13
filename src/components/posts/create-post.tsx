@@ -66,7 +66,7 @@ export default function CreatePost() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 h-[480px] overflow-scrol"
+          className="space-y-4 h-[480px] overflow-scroll"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField

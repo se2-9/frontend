@@ -73,13 +73,21 @@ export default function MobileMenu() {
           >
             My students
           </Link>
-          {user && user.role === 'tutor' && (
+          {user && user.role === 'tutor' ? (
             <Link
               href="/search"
               onClick={toggle}
               className="hover:underline"
             >
               Search posts
+            </Link>
+          ) : (
+            <Link
+              href="/post"
+              onClick={toggle}
+              className="hover:underline"
+            >
+              My Posts
             </Link>
           )}
           {user ? (

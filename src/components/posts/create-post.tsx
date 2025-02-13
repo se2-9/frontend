@@ -66,7 +66,7 @@ export default function CreatePost() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4"
+          className="space-y-4 h-[480px] overflow-scrol"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
@@ -116,8 +116,9 @@ export default function CreatePost() {
                         <SelectValue placeholder="Select gender" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Male">Male</SelectItem>
-                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="any">Any</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

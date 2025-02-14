@@ -1,7 +1,16 @@
 'use client';
 
 import { useReducer } from 'react';
-import { MenuIcon, PencilIcon } from 'lucide-react';
+import {
+  BookIcon,
+  HomeIcon,
+  MenuIcon,
+  PencilIcon,
+  SearchIcon,
+  SendIcon,
+  StarIcon,
+  TriangleAlertIcon,
+} from 'lucide-react';
 import { Button } from './ui/button';
 import {
   Sheet,
@@ -14,8 +23,7 @@ import {
 import Link from 'next/link';
 import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
-import { Badge } from './ui/badge';
-import { cn } from '@/lib/utils';
+import RoleBadge from './role-badge';
 
 export default function MobileMenu() {
   const router = useRouter();
@@ -29,13 +37,15 @@ export default function MobileMenu() {
       open={isOpen}
       onOpenChange={toggle}
     >
-      <SheetTrigger asChild>
+      <SheetTrigger
+        asChild
+        className="hidden lg:flex lg:items-center lg:justify-center"
+      >
         <Button
           variant="secondary"
           size="icon"
-          className="md:hidden"
         >
-          <MenuIcon className="size-6" />
+          <MenuIcon className="w-6 h-6" />
         </Button>
       </SheetTrigger>
       <SheetContent className="mb-2">
@@ -59,14 +69,14 @@ export default function MobileMenu() {
                 </Link>
                 <p>{user.email}</p>
               </div>
-              <Badge
-                className={cn('w-fit', {
-                  'bg-orange': user.role === 'tutor',
-                  'bg-blue': user.role === 'student',
-                })}
+              <RoleBadge role={user.role} />
+              <Link
+                href={user.role === 'student' ? '/student' : '/tutor'}
+                className="flex items-center gap-4 hover:underline"
               >
-                {user.role === 'tutor' ? 'Tutor' : 'Student'}
-              </Badge>
+                <HomeIcon size={16} />
+                <p>Home</p>
+              </Link>
             </>
           ) : (
             <Button
@@ -81,36 +91,92 @@ export default function MobileMenu() {
           {user && user.role === 'tutor' ? (
             <div className="flex flex-col items-start space-y-2">
               <Link
-                href="/"
+                href="/tutor/search"
                 onClick={toggle}
                 className="hover:underline"
               >
-                My students
+                <div className="flex items-center gap-2">
+                  <SearchIcon size={16} />
+                  <p>Search posts</p>
+                </div>
               </Link>
               <Link
-                href="/post/search"
+                href="/tutor/requests"
                 onClick={toggle}
                 className="hover:underline"
               >
-                Search posts
+                <div className="flex items-center gap-2">
+                  <SendIcon size={16} />
+                  <p>Requests</p>
+                </div>
+              </Link>
+              <Link
+                href="/tutor/reviews"
+                onClick={toggle}
+                className="hover:underline"
+              >
+                <div className="flex items-center gap-2">
+                  <StarIcon size={16} />
+                  <p>Reviews</p>
+                </div>
+              </Link>
+              <Link
+                href="/reports"
+                onClick={toggle}
+                className="hover:underline"
+              >
+                <div className="flex items-center gap-2">
+                  <TriangleAlertIcon size={16} />
+                  <p>Reports</p>
+                </div>
               </Link>
             </div>
           ) : (
             <div className="flex flex-col items-start space-y-2">
-              <Link
-                href="/learning"
-                onClick={toggle}
-                className="hover:underline"
-              >
-                Learning
-              </Link>
-              <Link
-                href="/post"
-                onClick={toggle}
-                className="hover:underline"
-              >
-                Posts
-              </Link>
+              {user ? (
+                <>
+                  <Link
+                    href="/student/posts"
+                    onClick={toggle}
+                    className="hover:underline"
+                  >
+                    <div className="flex items-center gap-2">
+                      <BookIcon size={16} />
+                      <p>Posts</p>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/student/requests"
+                    onClick={toggle}
+                    className="hover:underline"
+                  >
+                    <div className="flex items-center gap-2">
+                      <SendIcon size={16} />
+                      <p>Request</p>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/student/reviews"
+                    onClick={toggle}
+                    className="hover:underline"
+                  >
+                    <div className="flex items-center gap-2">
+                      <StarIcon size={16} />
+                      <p>Review</p>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/reports"
+                    onClick={toggle}
+                    className="hover:underline"
+                  >
+                    <div className="flex items-center gap-2">
+                      <TriangleAlertIcon size={16} />
+                      <p>Report</p>
+                    </div>
+                  </Link>
+                </>
+              ) : null}
             </div>
           )}
           {user ? (

@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { FilterIcon, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -18,10 +20,9 @@ import { useForm } from 'react-hook-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { PostCard } from '@/components/posts/post-card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { FilterIcon, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { Icons } from '@/components/icons';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 
 export default function Page() {
   const [search, setSearch] = useState('');
@@ -95,8 +96,7 @@ export default function Page() {
 
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-4 space-y-4 md:space-x-6">
-      {/* Sidebar Filter (large screen) */}
-      <div className="hidden lg:block w-[360px] sticky top-4 self-start mt-8">
+      <div className="hidden lg:block w-[400px] sticky top-4 self-start mt-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <FilterForm
             refetch={refetch}
@@ -105,62 +105,69 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex-1 space-y-4">
-        {/* Mobile Filter Dialog */}
-        <div className="lg:hidden flex justify-between">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 mr-4"
+      <div className="flex-1">
+        <Breadcrumbs
+          items={[{ label: 'Home', href: '/tutor' }, { label: 'Search' }]}
+          className="mt-4"
+        />
+        <h1 className="text-3xl font-semibold my-2">Find Student Posts</h1>
+
+        <div className="flex items-center justify-between">
+          {/* mobile filter popup */}
+          <div className="lg:hidden flex items-center space-x-4">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <FilterIcon size={16} /> Filter
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <FilterForm
+                  refetch={refetch}
+                  form={form}
+                />
+              </DialogContent>
+            </Dialog>
+
+            {/* search and sort */}
+            <div className="flex w-full items-center space-x-2">
+              <div className="relative w-full md:w-80">
+                <Search
+                  className="absolute left-3 top-3 text-gray-500"
+                  size={18}
+                />
+                <Input
+                  className="pl-10 pr-4 py-2 w-full rounded-md"
+                  placeholder="Search by title, subject, or tutor..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+
+              <Select
+                value={sortOrder}
+                onValueChange={(value) =>
+                  setSortOrder(value as 'Highest Rate' | 'Lowest Rate')
+                }
               >
-                <FilterIcon size={16} /> Filter
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <FilterForm
-                refetch={refetch}
-                form={form}
-              />
-            </DialogContent>
-          </Dialog>
-
-          {/* Search & Sorting */}
-          <div className="flex w-full items-center justify-between space-x-2">
-            <div className="hidden lg:flex">Hello</div>
-            <div className="relative w-full md:w-80">
-              <Search
-                className="absolute left-3 top-3 text-gray-500"
-                size={18}
-              />
-              <Input
-                className="pl-10 pr-4 py-2 w-full rounded-md"
-                placeholder="Search by title, subject, or tutor..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+                <SelectTrigger className="w-44">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="Highest Rate">Highest Rate</SelectItem>
+                    <SelectItem value="Lowest Rate">Lowest Rate</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
-
-            <Select
-              value={sortOrder}
-              onValueChange={(value) =>
-                setSortOrder(value as 'Highest Rate' | 'Lowest Rate')
-              }
-            >
-              <SelectTrigger className="w-44">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="Highest Rate">Highest Rate</SelectItem>
-                  <SelectItem value="Lowest Rate">Lowest Rate</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 
-        {/* Post Cards */}
+        {/* posts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post: PostDTO) => (

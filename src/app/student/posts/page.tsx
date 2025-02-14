@@ -61,7 +61,10 @@ export default function Page() {
                 </div>
               )}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent
+              className="sm:max-w-[425px]"
+              aria-description="Create your post"
+            >
               <DialogHeader>
                 <DialogTitle>Create Your Post</DialogTitle>
               </DialogHeader>

@@ -17,20 +17,25 @@ import { Separator } from './ui/separator';
 import MobileMenu from './mobile-menu';
 import { useAuthStore } from '@/store/auth-store';
 import { Icons } from './icons';
-import { Badge } from './ui/badge';
 import { useRouter } from 'next/navigation';
 import {
   BookIcon,
   Edit2Icon,
+  HomeIcon,
   SearchIcon,
   SendIcon,
+  StarIcon,
+  TriangleAlertIcon,
   Users2Icon,
 } from 'lucide-react';
+import RoleBadge from './role-badge';
 
 export default function Navbar() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+
+  const home = user?.role === 'student' ? '/student' : '/tutor';
 
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16 !backdrop-blur-lg bg-lightbrown/50">
@@ -38,7 +43,7 @@ export default function Navbar() {
         <MaxWidthWrapper>
           <div className="flex h-16 items-center justify-between text-text">
             {/* left */}
-            <div className="ml-4 flex items-center gap-2 lg:ml-0">
+            <div className="ml-4 flex items-center gap-2">
               <Link
                 href="/"
                 className="flex items-center gap-2 mr-4 font-bold"
@@ -50,7 +55,7 @@ export default function Navbar() {
               </Link>
             </div>
             {/* rights */}
-            <div className="hidden md:ml-4 md:flex items-center gap-2 lg:ml-0">
+            <div className="lg:hidden ml-4 flex items-center gap-2">
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -64,22 +69,21 @@ export default function Navbar() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-full">
                     <DropdownMenuGroup className="space-y-2">
-                      <DropdownMenuLabel className="flex items-center gap-2">
+                      <DropdownMenuLabel className="flex items-center gap-2 text-text">
                         <p>{user.name}</p>
-                        <Badge
-                          className={cn('w-fit text-text', {
-                            'bg-orange': user.role === 'tutor',
-                            'bg-blue': user.role === 'student',
-                          })}
-                        >
-                          {user.role}
-                        </Badge>
+                        <RoleBadge role={user.role} />
                       </DropdownMenuLabel>
                       <DropdownMenuLabel className="-mt-3 font-normal text-sm">
                         {user.email}
                       </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     <Separator />
+                    <DropdownMenuItem asChild>
+                      <div className="flex items-center gap-2">
+                        <HomeIcon className="h-4 w-4" />
+                        <Link href={home}>Home</Link>
+                      </div>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <div className="flex items-center gap-2">
                         <Edit2Icon className="h-4 w-4" />
@@ -90,14 +94,26 @@ export default function Navbar() {
                       <>
                         <DropdownMenuItem>
                           <div className="flex items-center gap-2">
-                            <BookIcon size={16} />
-                            <Link href="/learning">Learning</Link>
+                            <SendIcon size={16} />
+                            <Link href="/student/posts">Posts</Link>
                           </div>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <div className="flex items-center gap-2">
-                            <SendIcon size={16} />
-                            <Link href="/post">Posts</Link>
+                            <BookIcon size={16} />
+                            <Link href="/student/requests">Requests</Link>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <div className="flex items-center gap-2">
+                            <StarIcon size={16} />
+                            <Link href="/student/reviews">Reviews</Link>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <div className="flex items-center gap-2">
+                            <TriangleAlertIcon size={16} />
+                            <Link href="/reports">Reports</Link>
                           </div>
                         </DropdownMenuItem>
                       </>
@@ -106,13 +122,25 @@ export default function Navbar() {
                         <DropdownMenuItem asChild>
                           <div className="flex items-center gap-2">
                             <SearchIcon size={16} />
-                            <Link href="/post/search">Find students</Link>
+                            <Link href="/tutor/search">Searchs</Link>
                           </div>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <div className="flex items-center gap-2">
                             <Users2Icon size={16} />
-                            <Link href="/">My students</Link>
+                            <Link href="/tutor/requests">Requests</Link>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <div className="flex items-center gap-2">
+                            <StarIcon size={16} />
+                            <Link href="/tutor/reviews">Reviews</Link>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <div className="flex items-center gap-2">
+                            <TriangleAlertIcon size={16} />
+                            <Link href="/reports">Reports</Link>
                           </div>
                         </DropdownMenuItem>
                       </>

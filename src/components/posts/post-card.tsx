@@ -14,7 +14,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { ConfirmDialog } from '@/components/posts/confirm-dialog';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { PostDetailsDialog } from '@/components/posts/post-details-dialog';
 import { deletePost } from '@/lib/api/post';
 import type { PostDTO } from '@/dtos/post';

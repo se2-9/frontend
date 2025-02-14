@@ -17,22 +17,25 @@ import { Separator } from './ui/separator';
 import MobileMenu from './mobile-menu';
 import { useAuthStore } from '@/store/auth-store';
 import { Icons } from './icons';
-import { Badge } from './ui/badge';
 import { useRouter } from 'next/navigation';
 import {
   BookIcon,
   Edit2Icon,
+  HomeIcon,
   SearchIcon,
   SendIcon,
   StarIcon,
   TriangleAlertIcon,
   Users2Icon,
 } from 'lucide-react';
+import RoleBadge from './role-badge';
 
 export default function Navbar() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+
+  const home = user?.role === 'student' ? '/student' : '/tutor';
 
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16 !backdrop-blur-lg bg-lightbrown/50">
@@ -66,22 +69,21 @@ export default function Navbar() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-full">
                     <DropdownMenuGroup className="space-y-2">
-                      <DropdownMenuLabel className="flex items-center gap-2">
+                      <DropdownMenuLabel className="flex items-center gap-2 text-text">
                         <p>{user.name}</p>
-                        <Badge
-                          className={cn('w-fit text-text', {
-                            'bg-orange': user.role === 'tutor',
-                            'bg-blue': user.role === 'student',
-                          })}
-                        >
-                          {user.role}
-                        </Badge>
+                        <RoleBadge role={user.role} />
                       </DropdownMenuLabel>
                       <DropdownMenuLabel className="-mt-3 font-normal text-sm">
                         {user.email}
                       </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     <Separator />
+                    <DropdownMenuItem asChild>
+                      <div className="flex items-center gap-2">
+                        <HomeIcon className="h-4 w-4" />
+                        <Link href={home}>Home</Link>
+                      </div>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <div className="flex items-center gap-2">
                         <Edit2Icon className="h-4 w-4" />

@@ -3,6 +3,7 @@
 import { useReducer } from 'react';
 import {
   BookIcon,
+  HomeIcon,
   MenuIcon,
   PencilIcon,
   SearchIcon,
@@ -22,8 +23,7 @@ import {
 import Link from 'next/link';
 import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
-import { Badge } from './ui/badge';
-import { cn } from '@/lib/utils';
+import RoleBadge from './role-badge';
 
 export default function MobileMenu() {
   const router = useRouter();
@@ -69,14 +69,14 @@ export default function MobileMenu() {
                 </Link>
                 <p>{user.email}</p>
               </div>
-              <Badge
-                className={cn('w-fit', {
-                  'bg-orange': user.role === 'tutor',
-                  'bg-blue': user.role === 'student',
-                })}
+              <RoleBadge role={user.role} />
+              <Link
+                href={user.role === 'student' ? '/student' : '/tutor'}
+                className="flex items-center gap-4 hover:underline"
               >
-                {user.role === 'tutor' ? 'Tutor' : 'Student'}
-              </Badge>
+                <HomeIcon size={16} />
+                <p>Home</p>
+              </Link>
             </>
           ) : (
             <Button

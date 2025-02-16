@@ -1,11 +1,10 @@
 import { useAuthStore } from '@/store/auth-store';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 // import { refreshAccessToken } from './auth';
 
 export const apiClient = axios.create({
-  // baseURL: process.env.NEXT_PUBLIC_API_URL,
-  // baseURL: 'http://18.211.57.246:8080/api/v1',
-  baseURL: 'https://api.findmytutor.macgeargear.dev/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  // baseURL: 'https://api.findmytutor.macgeargear.dev/api/v1',
   withCredentials: true,
 });
 
@@ -43,3 +42,10 @@ apiClient.interceptors.request.use((config) => {
 //     return Promise.reject(error);
 //   }
 // );
+
+export function handleAxiosError(error: unknown): Error {
+  if (error instanceof AxiosError) {
+    return new Error(error.response?.data.message || error.message);
+  }
+  return new Error('Something went wrong');
+}

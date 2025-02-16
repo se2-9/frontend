@@ -1,7 +1,6 @@
-import { AxiosError } from 'axios';
 import { CreatePostData } from '../validations/post';
 import { createPostSchema } from '../validations/post';
-import { apiClient } from './axios';
+import { apiClient, handleAxiosError } from './axios';
 import { ApiResponse } from '@/types/api';
 import { PostDTO } from '@/dtos/post';
 
@@ -34,11 +33,4 @@ export async function deletePost(postId: string) {
   } catch (error) {
     throw handleAxiosError(error);
   }
-}
-
-function handleAxiosError(error: unknown): Error {
-  if (error instanceof AxiosError) {
-    return new Error(error.response?.data.message || error.message);
-  }
-  return new Error('Something went wrong');
 }

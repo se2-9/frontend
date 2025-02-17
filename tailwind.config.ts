@@ -46,8 +46,14 @@ export default {
         noto_sans_th: 'var(--font-noto-sans-thai)',
       },
       colors: {
-        text: '#615956',
-        lightbrown: '#e1dad2',
+        app: {
+          text: '#615956',
+          lightbrown: '#e1dad2',
+          orange: '#e4c9b6',
+          blue: '#a4b1ba',
+          green: '#b7baa5',
+          red: '#d6a499',
+        },
         background: '#f7f3f0',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -96,5 +102,13 @@ export default {
       },
     },
   },
+  safelist: [
+    'bg-app-orange',
+    'bg-app-blue',
+    'bg-app-green',
+    'bg-app-red',
+    'bg-app-lightbrown',
+    'text-app-text',
+  ],
   plugins: [tailwindAnimate],
 } satisfies Config;

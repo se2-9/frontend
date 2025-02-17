@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/auth-store';
 import Link from 'next/link';
 import { Mail, Star, Users, Search, Send } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
+import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -45,8 +46,16 @@ export default function DashboardPage() {
       </div>
 
       <div className="flex flex-col w-full">
-        <Breadcrumbs items={[{ label: 'Home' }]} />
-        <h1 className="text-3xl font-semibold mb-6">Tutor Dashboard</h1>
+        <div className="flex items-center gap-4">
+          {user && <AvatarDropdownProfile user={user} />}
+          <div className="flex flex-col">
+            <Breadcrumbs
+              items={[{ label: 'Home' }]}
+              className="mt-4"
+            />
+            <h1 className="text-3xl font-semibold mb-6">Tutor Dashboard</h1>
+          </div>
+        </div>
 
         {/* dash board stat */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">

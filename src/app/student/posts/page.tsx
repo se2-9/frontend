@@ -40,7 +40,7 @@ export default function Page() {
             <DialogTrigger asChild>
               {hasPosts ? (
                 <div className="flex justify-center">
-                  <Button className="bg-lightbrown text-lightbrown-foreground hover:text-white">
+                  <Button className="bg-app-lightbrown text-lightbrown-foreground hover:text-white">
                     <PlusIcon className="mr-2 h-4 w-4" />
                     Create Post
                   </Button>
@@ -54,7 +54,7 @@ export default function Page() {
                   <p className="text-muted-foreground mb-4">
                     Create your first post to get started!
                   </p>
-                  <Button className="bg-lightbrown text-lightbrown-foreground transition-colors">
+                  <Button className="bg-app-lightbrown text-lightbrown-foreground transition-colors">
                     <PlusIcon className="mr-2 h-4 w-4" />
                     Create Post
                   </Button>

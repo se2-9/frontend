@@ -29,7 +29,7 @@ export const PostDetailsDialog = ({
       open={isOpen}
       onOpenChange={onClose}
     >
-      <DialogContent className="max-w-lg p-6">
+      <DialogContent className="w-full max-w-md md:max-w-lg p-6 max-h-[80vh]">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-center">
             {post.title}
@@ -65,7 +65,9 @@ export const PostDetailsDialog = ({
 
           <Separator />
 
-          <p className="text-sm text-muted-foreground">{post.description}</p>
+          <p className="px-2 max-w-sm md:max-w-md text-sm text-muted-foreground break-words">
+            {post.description}
+          </p>
         </div>
 
         <DialogFooter className="flex justify-center">

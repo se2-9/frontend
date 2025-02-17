@@ -1,15 +1,20 @@
 import { cn } from '@/lib/utils';
 import { Badge } from './ui/badge';
 
-export default function RoleBadge({ role }: { role: string }) {
+interface RoleBadgeProps {
+  role: 'student' | 'tutor';
+}
+
+export default function RoleBadge({ role }: RoleBadgeProps) {
   return (
     <Badge
-      className={cn('w-fit text-text', {
-        'bg-orange': role === 'tutor',
-        'bg-blue': role === 'student',
+      variant="default"
+      className={cn('w-fit px-3 py-1 rounded-md font-medium text-sm', {
+        'bg-app-blue text-blue-900': role === 'student', // Student: Muted Blue
+        'bg-app-lightbrown text-brown-900': role === 'tutor', // Tutor: Light Brown
       })}
     >
-      {role}
+      {role === 'student' ? 'Student' : 'Tutor'}
     </Badge>
   );
 }

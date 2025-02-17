@@ -7,6 +7,7 @@ import { ProfileCard } from '@/components/profile/profile-card';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import { RequestsTable } from '@/components/requests/requests-table';
 import { RequestDTO } from '@/dtos/request';
+import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 
 export default function StudentRequestsPage() {
   const user = useAuthStore((state) => state.user);
@@ -80,12 +81,20 @@ export default function StudentRequestsPage() {
       </div>
 
       <div className="flex flex-col w-full">
-        <Breadcrumbs
-          items={[{ label: 'Home', href: '/student' }, { label: 'Requests' }]}
-          className="mt-4"
-        />
+        <div className="flex items-center gap-4">
+          {user && <AvatarDropdownProfile user={user} />}
+          <div className="flex flex-col">
+            <Breadcrumbs
+              items={[
+                { label: 'Home', href: '/student' },
+                { label: 'Requests' },
+              ]}
+              className="mt-4"
+            />
 
-        <h1 className="text-3xl font-semibold mb-6">Requests from Tutors</h1>
+            <h1 className="text-3xl font-semibold mb-6">Student Requests</h1>
+          </div>
+        </div>
 
         <RequestsTable data={requestsFromTutors} />
       </div>

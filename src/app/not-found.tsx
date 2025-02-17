@@ -19,7 +19,10 @@ export default function NotFound() {
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link
               href="/"
-              className={cn(buttonVariants(), 'bg-lightbrown text-foreground')}
+              className={cn(
+                buttonVariants(),
+                'bg-app-lightbrown text-foreground'
+              )}
             >
               <HomeIcon className="mr-2 h-4 w-4" />
               Go to Homepage

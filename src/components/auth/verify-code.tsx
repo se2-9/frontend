@@ -24,11 +24,10 @@ export default function VerifyCode() {
     mutationFn: verifyEmail,
     onSuccess: () => {
       toast.success('Email verified');
-      router.push('/');
+      router.push('/login');
     },
     onError: (err) => {
       toast.error(err.message);
-      // router.push('/register')
     },
   });
 
@@ -44,7 +43,7 @@ export default function VerifyCode() {
   return (
     <MaxWidthWrapper className="flex justify-center items-center h-screen">
       <div className="flex flex-col items-center gap-4">
-        <p className="text-lg font-medium">Entered OTP{code}</p>
+        <p className="text-lg font-medium">Entered OTP</p>
         <InputOTP
           maxLength={6}
           onChange={setCode}

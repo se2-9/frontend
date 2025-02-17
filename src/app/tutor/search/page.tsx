@@ -23,8 +23,11 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { Icons } from '@/components/icons';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
+import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
+import { useAuthStore } from '@/store/auth-store';
 
 export default function Page() {
+  const user = useAuthStore((state) => state.user);
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState<'Highest Rate' | 'Lowest Rate'>(
     'Highest Rate'
@@ -106,11 +109,18 @@ export default function Page() {
       </div>
 
       <div className="flex-1">
-        <Breadcrumbs
-          items={[{ label: 'Home', href: '/tutor' }, { label: 'Search' }]}
-          className="mt-4"
-        />
-        <h1 className="text-3xl font-semibold my-2">Find Student Posts</h1>
+        <div className="flex items-center gap-4">
+          {user && <AvatarDropdownProfile user={user} />}
+          <div className="flex flex-col">
+            <Breadcrumbs
+              items={[{ label: 'Home', href: '/tutor' }, { label: 'Search' }]}
+              className="mt-4"
+            />
+            <h1 className="text-3xl font-semibold mb-6">
+              Search Student Posts
+            </h1>
+          </div>
+        </div>
 
         <div className="flex items-center justify-between">
           {/* mobile filter popup */}
@@ -133,7 +143,7 @@ export default function Page() {
             </Dialog>
 
             {/* search and sort */}
-            <div className="flex w-full items-center space-x-2">
+            <div className="flex w-full items-center space-x-2 my-4">
               <div className="relative w-full md:w-80">
                 <Search
                   className="absolute left-3 top-3 text-gray-500"

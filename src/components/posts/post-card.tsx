@@ -11,7 +11,6 @@ import {
   CardDescription,
   CardFooter,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/confirm-dialog';
@@ -29,9 +28,9 @@ import {
   AtSignIcon,
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
 import { Icons } from '../icons';
 import Link from 'next/link';
+import PostStatusBadge from './post-status-badge';
 
 interface PostCardProps {
   post: PostDTO;
@@ -93,14 +92,7 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
                 </Link>
               </CardDescription>
             </div>
-            <Badge
-              variant={post.is_online ? 'default' : 'secondary'}
-              className={cn('w-fit', {
-                'bg-green text-green-600': post.is_online,
-              })}
-            >
-              {post.is_online ? 'Online' : 'Onsite'}
-            </Badge>
+            <PostStatusBadge isOnline={post.is_online} />
           </div>
           <p className="text-sm text-muted-foreground">
             Created on: {new Date(post.created_at).toLocaleDateString()}
@@ -178,7 +170,7 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
           {onRequest ? (
             <Button
               size="sm"
-              className="flex items-center gap-2 bg-blue"
+              className="flex items-center gap-2 bg-app-blue"
               onClick={() => onRequest(post.post_id, '')}
             >
               <SendIcon size={16} />

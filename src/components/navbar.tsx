@@ -38,7 +38,7 @@ export default function Navbar() {
   const home = user?.role === 'student' ? '/student' : '/tutor';
 
   return (
-    <div className="sticky z-50 top-0 inset-x-0 h-16 !backdrop-blur-lg bg-lightbrown/50">
+    <div className="sticky z-50 top-0 inset-x-0 h-16 !backdrop-blur-xl bg-lightbrown/50">
       <header className="relative border-b">
         <MaxWidthWrapper>
           <div className="flex h-16 items-center justify-between text-text">
@@ -67,7 +67,7 @@ export default function Navbar() {
                       <AvatarFallback>{user && user?.name?.[0]}</AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-full">
+                  <DropdownMenuContent className="w-full -translate-x-2">
                     <DropdownMenuGroup className="space-y-2">
                       <DropdownMenuLabel className="flex items-center gap-2 text-text">
                         <p>{user.name}</p>
@@ -164,7 +164,7 @@ export default function Navbar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="flex gap-8 items-center">
+                <div className="flex lg:gap-4 items-center">
                   <Link
                     href="/login"
                     className={cn(

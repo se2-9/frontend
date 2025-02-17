@@ -5,6 +5,7 @@ import { ProfileCard } from '@/components/profile/profile-card';
 import { useAuthStore } from '@/store/auth-store';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
+import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 
 export default function TutorRequestsPage() {
   const user = useAuthStore((state) => state.user);
@@ -50,11 +51,19 @@ export default function TutorRequestsPage() {
       </div>
 
       <div className="flex flex-col w-full">
-        <Breadcrumbs
-          items={[{ label: 'Home', href: '/tutor' }, { label: 'Request' }]}
-        />
-
-        <h1 className="text-3xl font-semibold mb-6">Requests Sent</h1>
+        <div className="flex items-center gap-4">
+          {user && <AvatarDropdownProfile user={user} />}
+          <div className="flex flex-col">
+            <Breadcrumbs
+              items={[
+                { label: 'Home', href: '/tutor' },
+                { label: 'Tutor Requests' },
+              ]}
+              className="mt-4"
+            />
+            <h1 className="text-3xl font-semibold mb-6">Tutor Dashboard</h1>
+          </div>
+        </div>
 
         <Tabs defaultValue="pending">
           <TabsList className="grid grid-cols-5 w-full bg-gray-100 p-2 rounded-lg">

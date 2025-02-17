@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/store/auth-store';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 // import { refreshAccessToken } from './auth';
 
 export const apiClient = axios.create({
@@ -43,3 +43,10 @@ apiClient.interceptors.request.use((config) => {
 //     return Promise.reject(error);
 //   }
 // );
+
+export function handleAxiosError(error: unknown): Error {
+  if (error instanceof AxiosError) {
+    return new Error(error.response?.data.message || error.message);
+  }
+  return new Error('Something went wrong');
+}

@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/auth-store';
 import Link from 'next/link';
 import { Send, ClipboardList, Users, FileText } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
+import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);
@@ -47,12 +48,17 @@ export default function Page() {
       </div>
 
       <div className="flex flex-col w-full">
-        <Breadcrumbs
-          items={[{ label: 'Home', href: '/student' }, { label: 'Search' }]}
-          className="mt-4"
-        />
+        <div className="flex items-center gap-4">
+          {user && <AvatarDropdownProfile user={user} />}
+          <div className="flex flex-col">
+            <Breadcrumbs
+              items={[{ label: 'Home' }]}
+              className="mt-4"
+            />
 
-        <h1 className="text-3xl font-semibold mb-6">Student Dashboard</h1>
+            <h1 className="text-3xl font-semibold mb-6">Student Dashboard</h1>
+          </div>
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">

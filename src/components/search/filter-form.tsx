@@ -45,7 +45,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col space-y-4 h-[480px] overflow-scroll scrollbar-hide"
+        className="flex flex-col space-y-4 h-[480px] overflow-scroll scrollbar-hide px-2"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">Filter Posts</h2>
@@ -240,7 +240,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
 
         <Button
           type="submit"
-          className="w-full bg-lightbrown text-text hover:text-white"
+          className="w-full bg-app-lightbrown text-text hover:text-white"
         >
           Apply Filters
         </Button>

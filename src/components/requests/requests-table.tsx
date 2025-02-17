@@ -91,7 +91,7 @@ export function RequestsTable({ data }: RequestsTableProps) {
     {
       header: 'Actions',
       cell: () => (
-        <Button className="bg-emerald-400 hober:bg-emerald-600">Accept</Button>
+        <Button className="bg-green-500 hover:bg-green-700">Accept</Button>
       ),
     },
   ];

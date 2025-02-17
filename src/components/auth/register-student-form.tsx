@@ -130,7 +130,7 @@ export default function RegisterStudentForm() {
         />
         <Button
           type="submit"
-          className="w-full text-text bg-blue"
+          className="w-full text-text bg-app-blue"
         >
           Register As Student
         </Button>

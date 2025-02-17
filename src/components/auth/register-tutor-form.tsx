@@ -170,7 +170,7 @@ export default function RegisterTutorForm() {
         />
         <Button
           type="submit"
-          className="w-full text-text bg-orange"
+          className="w-full text-text bg-app-orange"
         >
           Register As Tutor
         </Button>

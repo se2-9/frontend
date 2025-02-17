@@ -16,28 +16,28 @@ export default function Page() {
 
       <div className="grid place-items-center mx-auto grid-cols-1 md:grid-cols-2 text-text text-center line-clamp-4 gap-12 md:gap-44 mt-8">
         <div className="flex flex-col items-center justify-center max-w-md gap-2 md:gap-6">
-          <Icons.welcomeTutor className="bg-orange w-32 h-32 p-4 rounded-lg" />
+          <Icons.welcomeTutor className="bg-app-orange w-32 h-32 p-4 rounded-lg" />
           <h1 className="font-bold text-lg">For Tutors</h1>
           <p>
             Join our community of expert tutors and share your knowledge with
             eager learners.
           </p>
           <Link
-            className={cn(buttonVariants(), 'bg-orange text-text mt-8')}
+            className={cn(buttonVariants(), 'text-text mt-8')}
             href="/register/tutor"
           >
             Register as a Tutors
           </Link>
         </div>
         <div className="flex flex-col items-center justify-center max-w-md gap-2 md:gap-6">
-          <Icons.welcomeStudent className="bg-blue w-32 h-32 p-4 rounded-lg" />
+          <Icons.welcomeStudent className="bg-app-blue w-32 h-32 p-4 rounded-lg" />
           <h1 className="font-bold text-lg">For Students</h1>
           <p>
             Find the perfect tutor to help you achieve your learning goals,
             anytime, anywhere.
           </p>
           <Link
-            className={cn(buttonVariants(), 'bg-blue text-text mt-8')}
+            className={cn(buttonVariants(), 'bg-app-orange text-text mt-8')}
             href="/register/student"
           >
             Register as a Student

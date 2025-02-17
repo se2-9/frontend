@@ -126,7 +126,7 @@ export default function LoginForm() {
         />
         <Button
           type="submit"
-          className="w-full text-text bg-lightbrown"
+          className="w-full text-text bg-app-lightbrown"
         >
           Login
         </Button>

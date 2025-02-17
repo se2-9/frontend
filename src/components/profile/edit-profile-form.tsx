@@ -257,7 +257,7 @@ export default function EditProfileForm() {
           control={form.control}
         />
         <Button
-          className="w-full text-text bg-lightbrown"
+          className="w-full text-text bg-app-lightbrown"
           type="submit"
         >
           Save Profile

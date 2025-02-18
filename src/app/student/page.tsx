@@ -7,9 +7,14 @@ import Link from 'next/link';
 import { Send, ClipboardList, Users, FileText } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
+import StudentRequestNotification from '../../components/requests/student-request-noficiation';
+import { useState } from 'react';
+import StudentRequestCard from '@/components/requests/student-request-card';
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);
+
+  const [reqCount, setReqCount] = useState(0);
 
   const stats = {
     requestsFromTutors: 8,
@@ -43,6 +48,12 @@ export default function Page() {
 
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
+      {user && (
+        <StudentRequestNotification
+          studentID={user.id}
+          setReqCount={setReqCount}
+        />
+      )}
       <div className="hidden lg:block w-[480px] sticky top-4 self-start mt-6">
         {user && <ProfileCard user={user} />}
       </div>
@@ -61,13 +72,14 @@ export default function Page() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">
+          <StudentRequestCard num={reqCount} />
+          {/* <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">
             <Send className="text-green-600 w-6 h-6" />
             <div>
               <p className="text-lg font-bold">{stats.requestsFromTutors}</p>
               <p className="text-sm text-gray-500">Requests from Tutors</p>
             </div>
-          </div>
+          </div> */}
           <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">
             <ClipboardList className="text-blue-600 w-6 h-6" />
             <div>

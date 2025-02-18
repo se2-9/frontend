@@ -5,4 +5,9 @@ export const AcceptRequestSchema = z.object({
   tutor_id: z.string(),
 });
 
+export const CreateRequestSchema = z.object({
+  post_id: z.string(),
+});
+
 export type AcceptRequest = z.infer<typeof AcceptRequestSchema>;
+export type CreateRequest = z.infer<typeof CreateRequestSchema>;

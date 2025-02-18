@@ -31,17 +31,20 @@ import {
 import { Icons } from '../icons';
 import Link from 'next/link';
 import PostStatusBadge from './post-status-badge';
+import { createRequest } from '@/lib/api/request';
+import { useAuthStore } from '@/store/auth-store';
 
 interface PostCardProps {
   post: PostDTO;
   onDelete?: (postId: string) => void;
-  onRequest?: (postId: string, tutorId: string) => void;
+  isRequest: boolean;
 }
 
-export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
+export const PostCard = ({ post, onDelete, isRequest }: PostCardProps) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  console.log('post: ', post);
 
   const mutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
@@ -56,6 +59,15 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
       );
     },
   });
+
+  const createRequestMutation = useMutation({
+    mutationFn: (data: { post_id: string }) => {
+      console.log(data);
+      return createRequest(data);
+    },
+  });
+
+  const user = useAuthStore((state) => state.user);
 
   if (isDeleted) return null;
 
@@ -167,11 +179,14 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
               Delete
             </Button>
           ) : null}
-          {onRequest ? (
+          {isRequest ? (
             <Button
               size="sm"
               className="flex items-center gap-2 bg-app-blue"
-              onClick={() => onRequest(post.post_id, '')}
+              onClick={() => {
+                console.log('request to ', post.post_id);
+                createRequestMutation.mutate({ post_id: post.post_id });
+              }}
             >
               <SendIcon size={16} />
               Request

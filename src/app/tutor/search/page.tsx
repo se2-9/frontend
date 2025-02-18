@@ -15,7 +15,7 @@ import {
 import { fetchPosts } from '@/lib/api/search';
 import FilterForm from '@/components/search/filter-form';
 import { FilterPostDTO, PostDTO } from '@/dtos/post';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { PostCard } from '@/components/posts/post-card';
@@ -25,6 +25,7 @@ import { Icons } from '@/components/icons';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 import { useAuthStore } from '@/store/auth-store';
+import { createRequest } from '@/lib/api/request';
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);
@@ -59,11 +60,26 @@ export default function Page() {
     enabled: true,
   });
 
+  console.log('posts: ', posts);
+
   const [filteredPosts, setFilteredPosts] = useState<PostDTO[]>(posts ?? []);
 
-  function onRequest(postId: string, tutorId: string) {
-    console.log('Requesting post', postId, 'from tutor', tutorId);
-    toast.success('Request sent successfully');
+  const createRequestMutation = useMutation({
+    mutationFn: (data: { post_id: string }) => {
+      console.log(data);
+      return createRequest(data);
+    },
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
+  console.log('filter posts: ', filteredPosts);
+
+  function onRequest(postId: string) {
+    console.log('Requesting post', postId, 'from tutor', user?.id);
+    createRequestMutation.mutate({ post_id: postId });
+    toast.success(`Request sent successfully: ${postId}`);
   }
 
   useEffect(() => {
@@ -184,7 +200,8 @@ export default function Page() {
               <PostCard
                 key={`${post.user_id}-${post.created_at}`}
                 post={post}
-                onRequest={onRequest}
+                isRequest={true}
+                // onRequest={() => onRequest(post.post_id)}
               />
             ))
           ) : (

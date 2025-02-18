@@ -17,6 +17,7 @@ export const PostList = ({ posts }: PostListProps) => {
     <div className="w-full flex flex-col gap-4">
       {postList.map((post) => (
         <PostCard
+          isRequest={false}
           key={post.post_id}
           post={post}
           onDelete={handleDelete}

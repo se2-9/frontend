@@ -4,7 +4,7 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { ProfileCard } from '@/components/profile/profile-card';
 import { useAuthStore } from '@/store/auth-store';
 import Link from 'next/link';
-import { Send, ClipboardList, Users, FileText } from 'lucide-react';
+import { Send, ClipboardList, Users, FileText, AlertTriangle } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 
@@ -38,6 +38,12 @@ export default function Page() {
       title: 'Review Matched Posts',
       description:
         'Check posts that have been successfully matched with tutors.',
+    },
+    {
+      href: '/report',
+      icon: <AlertTriangle className="w-6 h-6 text-yellow-500" />,
+      title: 'View Report',
+      description: 'Send inquiry for problem occuring in the platform',
     },
   ];
 

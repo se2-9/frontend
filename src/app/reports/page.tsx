@@ -8,6 +8,8 @@ import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 import { ReportsTable } from '@/components/reports/reports-table';
 import { ReportDTO } from '@/dtos/report';
+import { useReports } from '@/hooks/useReports';
+import { Icons } from '@/components/icons';
 
 export default function ReportsPage() {
   const user = useAuthStore((state) => state.user);
@@ -45,6 +47,19 @@ export default function ReportsPage() {
     ],
     []
   );
+  const { data, isLoading } = useReports();
+
+  if (isLoading) {
+    return (
+      <MaxWidthWrapper>
+        <div className="h-[calc(100vh-80px)] grid place-items-center">
+          <Icons.logo className="animate-spin" />
+        </div>
+      </MaxWidthWrapper>
+    );
+  }
+
+  const hasReports = data?.result && data.result.length > 0;
 
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
@@ -68,7 +83,11 @@ export default function ReportsPage() {
           </div>
         </div>
 
-        <ReportsTable data={reportsFromUser} />
+        {hasReports && (
+          <div className="w-full space-y-6">
+            {data.result ? <ReportsTable data={data.result} /> : null}
+          </div>
+        )}
       </div>
     </MaxWidthWrapper>
   );

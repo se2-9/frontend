@@ -23,11 +23,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { RequestDTO } from '@/dtos/request';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { ReportStatusBadge } from './report-status-badge';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, PlusIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ReportDTO } from '@/dtos/report';
+import CreateReport from './create-report';
 
 interface ReportsTableProps {
   data: ReportDTO[];
@@ -53,7 +60,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
 
   const columns: ColumnDef<ReportDTO>[] = [
     {
-      accessorKey: 'created_at',
+      accessorKey: 'create_at',
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -64,7 +71,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
       ),
       cell: (info) => (
         <span className="text-gray-600">
-          {(info.getValue() as string) ?? 'N/A'}
+          {Intl.DateTimeFormat("en-CA").format(new Date((info.getValue() as string))) ?? 'N/A'}
         </span>
       ),
     },
@@ -80,13 +87,16 @@ export function ReportsTable({ data }: ReportsTableProps) {
     
     {
       accessorKey: 'status',
+      id: "status",
       header: 'Status',
       cell: (info) => <ReportStatusBadge status={info.getValue() as string} />,
     },
     {
+      accessorKey: 'status',
+      id: "delete_button",
       header: 'Actions',
-      cell: () => (
-        <Button className="bg-green-500 hover:bg-green-700">Accept</Button>
+      cell: (info) => ((info.getValue() as string).match("pending") ?
+        <Button className="bg-red-500 hover:bg-red-700">Delete</Button> : <></>
       ),
     },
   ];
@@ -103,34 +113,57 @@ export function ReportsTable({ data }: ReportsTableProps) {
   return (
     <div className="bg-white shadow-md rounded-lg p-4">
       {/* Search and Filter Inputs */}
-      <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
-        <Input
-          placeholder="Search by report name or status..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-96"
-        />
+      <div className="flex flex-row justify-between">
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
+          <Input
+            placeholder="Search by report content or status..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full md:w-96"
+          />
 
-        <Select
-          value={statusFilter}
-          onValueChange={setStatusFilter}
-        >
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="not paid">Not Paid</SelectItem>
-            <SelectItem value="paid">Paid</SelectItem>
-            <SelectItem value="payment failed">Payment Failed</SelectItem>
-            <SelectItem value="replaced">Replaced</SelectItem>
-            <SelectItem value="cancelled">Cancelled</SelectItem>
-            <SelectItem value="processing other">Processing Other</SelectItem>
-          </SelectContent>
-        </Select>
+          <Select
+            value={statusFilter}
+            onValueChange={setStatusFilter}
+          >
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="resolved">Resolved</SelectItem>
+              <SelectItem value="processing">Processing</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
+        <Dialog>
+            <DialogTrigger asChild>
+              {
+                <Button className="bg-app-lightbrown text-lightbrown-foreground hover:text-white">
+                  <PlusIcon className="mr-2 h-4 w-4" />
+                  Create Report
+                </Button>
+              }
+            </DialogTrigger>
+            <DialogContent
+              className="sm:max-w-[425px]"
+              aria-description="Create your post"
+            >
+              <DialogHeader>
+                <DialogTitle>Create Your Post</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <CreateReport />
+              </div>
+            </DialogContent>
+          </Dialog>
+          
+        </div>
       </div>
-
+      
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>

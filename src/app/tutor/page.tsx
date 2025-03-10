@@ -4,7 +4,7 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { ProfileCard } from '@/components/profile/profile-card';
 import { useAuthStore } from '@/store/auth-store';
 import Link from 'next/link';
-import { Mail, Star, Users, Search, Send } from 'lucide-react';
+import { Mail, Star, Users, Search, Send, AlertTriangle } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 
@@ -36,6 +36,12 @@ export default function DashboardPage() {
       icon: <Star className="w-6 h-6 text-yellow-500" />,
       title: 'View Reviews',
       description: 'See feedback from students about your tutoring sessions.',
+    },
+    {
+      href: '/report',
+      icon: <AlertTriangle className="w-6 h-6 text-yellow-500" />,
+      title: 'View Report',
+      description: 'Send inquiry for problem occuring in the platform',
     },
   ];
 

@@ -24,15 +24,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RequestDTO } from '@/dtos/request';
-import { StatusBadge } from './status-badge';
+import { ReportStatusBadge } from './report-status-badge';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
+import { ReportDTO } from '@/dtos/report';
 
-interface RequestsTableProps {
-  data: RequestDTO[];
+interface ReportsTableProps {
+  data: ReportDTO[];
 }
 
-export function RequestsTable({ data }: RequestsTableProps) {
+export function ReportsTable({ data }: ReportsTableProps) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
@@ -40,7 +41,7 @@ export function RequestsTable({ data }: RequestsTableProps) {
   const filteredData = useMemo(() => {
     return data.filter((req) => {
       const matchesSearch =
-        req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
+        req.content.toLowerCase().includes(search.toLowerCase()) ||
         req.status.toLowerCase().includes(search.toLowerCase());
 
       const matchesStatus =
@@ -50,23 +51,7 @@ export function RequestsTable({ data }: RequestsTableProps) {
     });
   }, [search, statusFilter, data]);
 
-  const columns: ColumnDef<RequestDTO>[] = [
-    {
-      accessorKey: 'tutor_id',
-      header: ({ column }) => (
-        <button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="flex items-center gap-1 font-medium"
-        >
-          Tutor <ArrowUpDown className="w-4 h-4" />
-        </button>
-      ),
-      cell: (info) => (
-        <span className="font-medium">
-          {(info.getValue() as string) ?? 'N/A'}
-        </span>
-      ),
-    },
+  const columns: ColumnDef<ReportDTO>[] = [
     {
       accessorKey: 'created_at',
       header: ({ column }) => (
@@ -84,9 +69,19 @@ export function RequestsTable({ data }: RequestsTableProps) {
       ),
     },
     {
+      accessorKey: 'content',
+      header: 'Content',
+      cell: (info) => (
+        <span className="font-medium">
+          {(info.getValue() as string) ?? 'N/A'}
+        </span>
+      ),
+    },
+    
+    {
       accessorKey: 'status',
       header: 'Status',
-      cell: (info) => <StatusBadge status={info.getValue() as string} />,
+      cell: (info) => <ReportStatusBadge status={info.getValue() as string} />,
     },
     {
       header: 'Actions',
@@ -172,7 +167,7 @@ export function RequestsTable({ data }: RequestsTableProps) {
                   colSpan={columns.length}
                   className="text-center text-gray-500 py-4"
                 >
-                  No requests found.
+                  No reports found.
                 </TableCell>
               </TableRow>
             )}

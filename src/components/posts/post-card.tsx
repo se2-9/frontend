@@ -209,11 +209,11 @@ export const PostCard = ({ post, tutorInfo, onDelete, onRequest }: PostCardProps
         post={post}
       />
 
-      <TutorContactDialog
+      {tutorInfo &&(<TutorContactDialog
         isOpen={isTutorContactOpen}
         onClose={() => setIsTutorContactOpen(false)}
         tutorInfo={tutorInfo||undefined}
-      />
-    </>
+      />)}
+    </> 
   );
 };

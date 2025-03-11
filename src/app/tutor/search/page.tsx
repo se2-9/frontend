@@ -81,7 +81,7 @@ export default function Page() {
           (post) =>
             post.title.toLowerCase().includes(search.toLowerCase()) ||
             post.subject.toLowerCase().includes(search.toLowerCase()) ||
-            post.username.toLowerCase().includes(search.toLowerCase())
+            post.user?.name.toLowerCase().includes(search.toLowerCase())
         )
       );
     }
@@ -182,7 +182,7 @@ export default function Page() {
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post: PostDTO) => (
               <PostCard
-                key={`${post.user_id}-${post.created_at}`}
+                key={`${post.user?.id}-${post.created_at}`}
                 post={post}
                 onRequest={onRequest}
               />

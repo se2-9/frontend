@@ -27,18 +27,22 @@ import { RequestDTO } from '@/dtos/request';
 import { StatusBadge } from './status-badge';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
+import { acceptRequest } from '@/lib/api/request';
+import { useMutation} from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 interface RequestsTableProps {
-  data: RequestDTO[];
+  data: RequestDTO[] | undefined;
+  refetch : ()=>void;
 }
 
-export function RequestsTable({ data }: RequestsTableProps) {
+export function RequestsTable({ data, refetch }: RequestsTableProps) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
 
   const filteredData = useMemo(() => {
-    return data.filter((req) => {
+    return data?.filter((req) => {
       const matchesSearch =
         req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
         req.status.toLowerCase().includes(search.toLowerCase());
@@ -48,11 +52,34 @@ export function RequestsTable({ data }: RequestsTableProps) {
 
       return matchesSearch && matchesStatus;
     });
-  }, [search, statusFilter, data]);
+  }, [search, statusFilter, data]) || [];
+  const mutation = useMutation({
+      mutationFn: acceptRequest,
+      onSuccess: (data) => {
+        if (!data.result) {
+          toast.error('Something went wrong');
+          return;
+        }
+        toast.success('Accept successfully!');
+        refetch()
+      },
+      onError: (err) => {
+        console.error('❌ Full error accepting request:', err);
+        if (err instanceof Error) {
+          toast.error(err.message || 'Error accepting request');
+        } else {
+          toast.error('Unexpected error');
+        }
+      },
+    });
+  const handleAcceptRequest=(request_id:string, tutor_id: string) =>{
+    mutation.mutate({request_id:request_id, tutor_id: tutor_id})
+
+  }
 
   const columns: ColumnDef<RequestDTO>[] = [
     {
-      accessorKey: 'tutor_id',
+      accessorKey: 'tutor_name',
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -90,9 +117,12 @@ export function RequestsTable({ data }: RequestsTableProps) {
     },
     {
       header: 'Actions',
-      cell: () => (
-        <Button className="bg-green-500 hover:bg-green-700">Accept</Button>
-      ),
+      cell: (info) => {
+        const request_id = info.row.original.id;
+        const tutor_id = info.row.original.tutor_id
+        return ( 
+        <Button onClick={()=>handleAcceptRequest(request_id, tutor_id)} className="bg-green-500 hover:bg-green-700">Accept</Button>)
+      },
     },
   ];
 

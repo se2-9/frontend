@@ -70,7 +70,6 @@ export function ReportsTable({ data }: ReportsTableProps) {
       return matchesSearch && matchesStatus;
     });
   }, [search, statusFilter, data]);
-
   const columns: ColumnDef<ReportDTO>[] = [
     {
       accessorKey: 'create_at',
@@ -90,14 +89,13 @@ export function ReportsTable({ data }: ReportsTableProps) {
     },
     {
       accessorKey: 'content',
-      header: 'Content',
+      header: 'content',
       cell: (info) => (
         <span className="font-medium">
           {(info.getValue() as string) ?? 'N/A'}
         </span>
       ),
     },
-    
     {
       accessorKey: 'status',
       id: "status",
@@ -110,7 +108,6 @@ export function ReportsTable({ data }: ReportsTableProps) {
       header: "Actions",
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
-        console.log(row)
         const id = row.getValue("report_id") as string;
 
         return status === "pending" ? (
@@ -124,7 +121,6 @@ export function ReportsTable({ data }: ReportsTableProps) {
       },
     },
   ];
-
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -133,7 +129,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
-
+  
   return (
     <div className="bg-white shadow-md rounded-lg p-4">
       {/* Search and Filter Inputs */}
@@ -195,10 +191,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -210,20 +203,14 @@ export function ReportsTable({ data }: ReportsTableProps) {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center text-gray-500 py-4"
-                >
+                <TableCell colSpan={columns.length} className="text-center text-gray-500 py-4">
                   No reports found.
                 </TableCell>
               </TableRow>

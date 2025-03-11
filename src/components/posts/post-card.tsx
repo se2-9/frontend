@@ -85,13 +85,13 @@ export const PostCard = ({ post, tutorInfo, onDelete, onRequest }: PostCardProps
                   size={14}
                   className="text-gray-500"
                 />
-                {post.username}
+                {post.user?.name}
                 <AtSignIcon size={14} />
                 <Link
-                  href={`/profile/${post.email}`}
+                  href={`/profile/${post.user?.email}`}
                   className="hover:underline"
                 >
-                  {post.email}
+                  {post.user?.email}
                 </Link>
               </CardDescription>
             </div>

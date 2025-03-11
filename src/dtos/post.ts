@@ -1,8 +1,8 @@
+import { UserDTO } from "./user";
+
 export interface PostDTO {
   post_id: string;
-  user_id: string;
-  username: string;
-  email: string;
+  user :UserDTO|undefined;
   title: string;
   subject: string;
   tutor_gender: string;

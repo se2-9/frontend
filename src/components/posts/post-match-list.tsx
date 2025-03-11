@@ -12,9 +12,7 @@ export const PostMatchedList = ({ posts }: PostWithTutorListProps) => {
       {posts.map((post) => {
         const postData: PostDTO = {
           post_id: post.post_id,
-          user_id: "", 
-          username:  "",
-          email:  "",
+          user: undefined,
           title: post.title,
           subject: post.subject,
           tutor_gender: post.tutor_gender,

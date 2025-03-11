@@ -9,7 +9,6 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { User, PhoneCallIcon, MailIcon} from 'lucide-react';
 import { TutorContactDTO } from '@/dtos/user';
 

@@ -106,7 +106,7 @@ export function RequestsTable({ data, refetch }: RequestsTableProps) {
       ),
       cell: (info) => (
         <span className="text-gray-600">
-          {(info.getValue() as string) ?? 'N/A'}
+          {(info.getValue() as string).slice(0,10) ?? 'N/A'}
         </span>
       ),
     },

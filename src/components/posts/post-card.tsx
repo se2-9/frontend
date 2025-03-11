@@ -17,6 +17,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog';
 import { PostDetailsDialog } from '@/components/posts/post-details-dialog';
 import { deletePost } from '@/lib/api/post';
 import { createRequest } from '@/lib/api/request';
+import { submitRating } from '@/lib/api/post';
 import type { PostDTO } from '@/dtos/post';
 import {
   Eye,
@@ -27,6 +28,7 @@ import {
   BookOpen,
   SendIcon,
   AtSignIcon,
+  Star,
 } from 'lucide-react';
 
 import { Icons } from '../icons';
@@ -34,6 +36,7 @@ import Link from 'next/link';
 import PostStatusBadge from './post-status-badge';
 import { TutorContactDTO } from '@/dtos/user';
 import { TutorContactDialog } from './tutor-contact-dialog';
+import { RatingForm } from '@/components/ui/rating-form';
 
 interface PostCardProps {
   post: PostDTO;
@@ -52,6 +55,8 @@ export const PostCard = ({
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isTutorContactOpen, setIsTutorContactOpen] = useState(false);
+  const [isRatingOpen, setIsRatingOpen] = useState(false);
+
   const mutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
     onSuccess: () => {
@@ -93,6 +98,18 @@ export const PostCard = ({
   const handleDelete = () => {
     setIsConfirmOpen(false);
     mutation.mutate(post.post_id);
+  };
+
+  const handleRatingSubmit = async (rating: number, feedback: string) => {
+    try {
+      await submitRating(tutorInfo!.id, post.post_id, rating, feedback);
+      toast.success('Rating submitted successfully!');
+      setIsRatingOpen(false); // Close form after submission
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to submit rating.'
+      );
+    }
   };
 
   return (
@@ -201,6 +218,31 @@ export const PostCard = ({
               View Tutor Contact Info
             </Button>
           )}
+
+          {/* Rating Button (Only show if tutor exists) */}
+          {tutorInfo && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setIsRatingOpen(!isRatingOpen)}
+              className="flex items-center gap-2"
+            >
+              <Star
+                size={16}
+                className="text-yellow-500"
+              />
+              {isRatingOpen ? 'Hide Rating' : 'Rate Tutor'}
+            </Button>
+          )}
+
+          {/* Rating Form (Only visible when `isRatingOpen` is true) */}
+          {isRatingOpen && tutorInfo && (
+            <RatingForm
+              onRatingSubmit={handleRatingSubmit}
+              className="mt-2"
+            />
+          )}
+
           {onDelete ? (
             <Button
               variant="destructive"

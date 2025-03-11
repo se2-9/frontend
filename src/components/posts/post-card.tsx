@@ -16,9 +16,7 @@ import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { PostDetailsDialog } from '@/components/posts/post-details-dialog';
 import { deletePost } from '@/lib/api/post';
-import { reviewPost } from '@/lib/api/post';
 import { createRequest } from '@/lib/api/request';
-import { submitRating } from '@/lib/api/post';
 import type { PostDTO } from '@/dtos/post';
 import {
   Eye,
@@ -37,8 +35,8 @@ import Link from 'next/link';
 import PostStatusBadge from './post-status-badge';
 import { TutorContactDTO } from '@/dtos/user';
 import { TutorContactDialog } from './tutor-contact-dialog';
-import ReviewForm from '@/components/ui/review-form';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import ReviewForm from '../review/review-form';
 
 interface PostCardProps {
   post: PostDTO;
@@ -57,7 +55,6 @@ export const PostCard = ({
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isTutorContactOpen, setIsTutorContactOpen] = useState(false);
-  const [isRatingOpen, setIsRatingOpen] = useState(false);
 
   const mutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
@@ -100,18 +97,6 @@ export const PostCard = ({
   const handleDelete = () => {
     setIsConfirmOpen(false);
     mutation.mutate(post.post_id);
-  };
-
-  const handleRatingSubmit = async (rating: number, feedback: string) => {
-    try {
-      await reviewPost(tutorInfo!.id, post.post_id, rating, feedback);
-      toast.success('Rating submitted successfully!');
-      setIsRatingOpen(false); // Close form after submission
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to submit rating.'
-      );
-    }
   };
 
   return (

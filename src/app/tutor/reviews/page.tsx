@@ -12,6 +12,7 @@ import ReviewCard from '@/components/review/review-card';
 import ReviewsLoadingSkeleton from '@/components/review/review-loading-skeleton';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
+import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 
 export default function TutorReviewsPage() {
   const user = useAuthStore((state) => state.user);
@@ -40,6 +41,12 @@ export default function TutorReviewsPage() {
 
       <div className="flex flex-col w-full">
         <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:items-center md:justify-between mb-6">
+          {user && (
+            <AvatarDropdownProfile
+              className="lg:hidden"
+              user={user}
+            />
+          )}
           <div>
             <Breadcrumbs
               items={[{ label: 'Home', href: '/tutor' }, { label: 'Reviews' }]}

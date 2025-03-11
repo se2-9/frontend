@@ -6,10 +6,17 @@ import {
 } from '../ui/dropdown-menu';
 import { User } from '@/types/user';
 import { ProfileCard } from './profile-card';
+import { cn } from '@/lib/utils';
 
-export default function AvatarDropdownProfile({ user }: { user: User }) {
+export default function AvatarDropdownProfile({
+  user,
+  className,
+}: {
+  user: User;
+  className?: string;
+}) {
   return (
-    <div className="w-12 h-12">
+    <div className={cn('w-12 h-12', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="w-12 h-12">

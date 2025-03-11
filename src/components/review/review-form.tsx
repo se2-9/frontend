@@ -3,10 +3,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Form, FormControl, FormField, FormItem, FormLabel } from './form';
-import { Button } from './button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
 import { StarIcon } from 'lucide-react';
-import { Textarea } from './textarea';
+import { Textarea } from '@/components/ui/textarea';
 import { reviewPost } from '@/lib/api/review';
 
 interface ReviewFormProps {

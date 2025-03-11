@@ -53,7 +53,12 @@ export default function DashboardPage() {
 
       <div className="flex flex-col w-full">
         <div className="flex items-center gap-4">
-          {user && <AvatarDropdownProfile user={user} />}
+          {user && (
+            <AvatarDropdownProfile
+              className="lg:hidden"
+              user={user}
+            />
+          )}
           <div className="flex flex-col">
             <Breadcrumbs
               items={[{ label: 'Home' }]}
@@ -93,9 +98,9 @@ export default function DashboardPage() {
             <Link
               key={index}
               href={link.href}
-              className="group"
+              className="group h-full"
             >
-              <div className="p-5 border rounded-lg shadow-md flex items-center space-x-4 bg-white hover:bg-gray-100 transition-all duration-200 cursor-pointer">
+              <div className="p-5 border rounded-lg shadow-md flex items-start space-x-4 bg-white hover:bg-gray-100 transition-all duration-200 cursor-pointer h-full">
                 {link.icon}
                 <div>
                   <h3 className="text-lg font-semibold">{link.title}</h3>

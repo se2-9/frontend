@@ -24,7 +24,7 @@ export default function ReportsPage() {
   }
 
   const reportsData = data?.result ?? [];
-  
+
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
       <div className="hidden lg:block w-[480px] sticky top-4 self-start mt-6">
@@ -33,7 +33,12 @@ export default function ReportsPage() {
 
       <div className="flex flex-col w-full">
         <div className="flex items-center gap-4">
-          {user && <AvatarDropdownProfile user={user} />}
+          {user && (
+            <AvatarDropdownProfile
+              className="lg:hidden"
+              user={user}
+            />
+          )}
           <div className="flex flex-col">
             <Breadcrumbs
               items={[

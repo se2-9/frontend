@@ -44,7 +44,12 @@ export default function TutorRequestsPage() {
 
       <div className="flex flex-col w-full">
         <div className="flex items-center gap-4">
-          {user && <AvatarDropdownProfile user={user} />}
+          {user && (
+            <AvatarDropdownProfile
+              className="lg:hidden"
+              user={user}
+            />
+          )}
           <div className="flex flex-col">
             <Breadcrumbs
               items={[
@@ -54,7 +59,7 @@ export default function TutorRequestsPage() {
               className="mt-4"
             />
 
-            <h1 className="text-3xl font-semibold mb-6">Student Requests</h1>
+            <h1 className="text-3xl font-semibold mb-6">My Requests</h1>
           </div>
         </div>
 

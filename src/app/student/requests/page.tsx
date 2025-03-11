@@ -44,7 +44,12 @@ export default function StudentRequestsPage() {
 
       <div className="flex flex-col w-full">
         <div className="flex items-center gap-4">
-          {user && <AvatarDropdownProfile user={user} />}
+          {user && (
+            <AvatarDropdownProfile
+              className="lg:hidden"
+              user={user}
+            />
+          )}
           <div className="flex flex-col">
             <Breadcrumbs
               items={[

@@ -28,12 +28,12 @@ import { StatusBadge } from './status-badge';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { acceptRequest } from '@/lib/api/request';
-import { useMutation} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 interface RequestsTableProps {
   data: RequestDTO[] | undefined;
-  refetch : ()=>void;
+  refetch: () => void;
 }
 
 export function RequestsTable({ data, refetch }: RequestsTableProps) {
@@ -41,41 +41,41 @@ export function RequestsTable({ data, refetch }: RequestsTableProps) {
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
 
-  const filteredData = useMemo(() => {
-    return data?.filter((req) => {
-      const matchesSearch =
-        req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
-        req.status.toLowerCase().includes(search.toLowerCase());
+  const filteredData =
+    useMemo(() => {
+      return data?.filter((req) => {
+        const matchesSearch =
+          req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
+          req.status.toLowerCase().includes(search.toLowerCase());
 
-      const matchesStatus =
-        statusFilter === 'all' || req.status === statusFilter;
+        const matchesStatus =
+          statusFilter === 'all' || req.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
-    });
-  }, [search, statusFilter, data]) || [];
+        return matchesSearch && matchesStatus;
+      });
+    }, [search, statusFilter, data]) || [];
   const mutation = useMutation({
-      mutationFn: acceptRequest,
-      onSuccess: (data) => {
-        if (!data.result) {
-          toast.error('Something went wrong');
-          return;
-        }
-        toast.success('Accept successfully!');
-        refetch()
-      },
-      onError: (err) => {
-        console.error('❌ Full error accepting request:', err);
-        if (err instanceof Error) {
-          toast.error(err.message || 'Error accepting request');
-        } else {
-          toast.error('Unexpected error');
-        }
-      },
-    });
-  const handleAcceptRequest=(request_id:string, tutor_id: string) =>{
-    mutation.mutate({request_id:request_id, tutor_id: tutor_id})
-
-  }
+    mutationFn: acceptRequest,
+    onSuccess: (data) => {
+      if (!data.result) {
+        toast.error('Something went wrong');
+        return;
+      }
+      toast.success('Accept successfully!');
+      refetch();
+    },
+    onError: (err) => {
+      console.error('❌ Full error accepting request:', err);
+      if (err instanceof Error) {
+        toast.error(err.message || 'Error accepting request');
+      } else {
+        toast.error('Unexpected error');
+      }
+    },
+  });
+  const handleAcceptRequest = (request_id: string, tutor_id: string) => {
+    mutation.mutate({ request_id: request_id, tutor_id: tutor_id });
+  };
 
   const columns: ColumnDef<RequestDTO>[] = [
     {
@@ -104,11 +104,18 @@ export function RequestsTable({ data, refetch }: RequestsTableProps) {
           Date Received <ArrowUpDown className="w-4 h-4" />
         </button>
       ),
-      cell: (info) => (
-        <span className="text-gray-600">
-          {(info.getValue() as string).slice(0,10) ?? 'N/A'}
-        </span>
-      ),
+      cell: (info) => {
+        const rawDate = info.getValue() as string;
+        const formattedDate = new Date(rawDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+
+        return <span className="text-gray-600">{formattedDate}</span>;
+      },
     },
     {
       accessorKey: 'status',
@@ -119,9 +126,15 @@ export function RequestsTable({ data, refetch }: RequestsTableProps) {
       header: 'Actions',
       cell: (info) => {
         const request_id = info.row.original.id;
-        const tutor_id = info.row.original.tutor_id
-        return ( 
-        <Button onClick={()=>handleAcceptRequest(request_id, tutor_id)} className="bg-green-500 hover:bg-green-700">Accept</Button>)
+        const tutor_id = info.row.original.tutor_id;
+        return (
+          <Button
+            onClick={() => handleAcceptRequest(request_id, tutor_id)}
+            className="bg-green-500 hover:bg-green-700"
+          >
+            Accept
+          </Button>
+        );
       },
     },
   ];

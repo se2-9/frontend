@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { PostDetailsDialog } from '@/components/posts/post-details-dialog';
 import { deletePost } from '@/lib/api/post';
+import { reviewPost } from '@/lib/api/post';
 import { createRequest } from '@/lib/api/request';
 import { submitRating } from '@/lib/api/post';
 import type { PostDTO } from '@/dtos/post';
@@ -36,7 +37,8 @@ import Link from 'next/link';
 import PostStatusBadge from './post-status-badge';
 import { TutorContactDTO } from '@/dtos/user';
 import { TutorContactDialog } from './tutor-contact-dialog';
-import { RatingForm } from '@/components/ui/rating-form';
+import ReviewForm from '@/components/ui/review-form';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 
 interface PostCardProps {
   post: PostDTO;
@@ -102,7 +104,7 @@ export const PostCard = ({
 
   const handleRatingSubmit = async (rating: number, feedback: string) => {
     try {
-      await submitRating(tutorInfo!.id, post.post_id, rating, feedback);
+      await reviewPost(tutorInfo!.id, post.post_id, rating, feedback);
       toast.success('Rating submitted successfully!');
       setIsRatingOpen(false); // Close form after submission
     } catch (error) {
@@ -219,30 +221,6 @@ export const PostCard = ({
             </Button>
           )}
 
-          {/* Rating Button (Only show if tutor exists) */}
-          {tutorInfo && (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setIsRatingOpen(!isRatingOpen)}
-              className="flex items-center gap-2"
-            >
-              <Star
-                size={16}
-                className="text-yellow-500"
-              />
-              {isRatingOpen ? 'Hide Rating' : 'Rate Tutor'}
-            </Button>
-          )}
-
-          {/* Rating Form (Only visible when `isRatingOpen` is true) */}
-          {isRatingOpen && tutorInfo && (
-            <RatingForm
-              onRatingSubmit={handleRatingSubmit}
-              className="mt-2"
-            />
-          )}
-
           {onDelete ? (
             <Button
               variant="destructive"
@@ -264,6 +242,29 @@ export const PostCard = ({
               Request
             </Button>
           ) : null}
+          {tutorInfo && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <Star
+                    size={16}
+                    className="text-yellow-500"
+                  />
+                  Rate Tutor
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <ReviewForm
+                  post_id={post.post_id}
+                  tutor_id={tutorInfo.id}
+                />
+              </DialogContent>
+            </Dialog>
+          )}
         </CardFooter>
       </Card>
 

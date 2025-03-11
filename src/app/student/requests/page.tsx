@@ -15,12 +15,12 @@ export default function StudentRequestsPage() {
   const {
     data: requestsFromTutors,
     isLoading,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: ['requests'],
     queryFn: async () => {
       const r = await getAllStudentRequests();
-      console.log(r)
+      console.log(r);
       return r?.result ?? [];
     },
     enabled: true,
@@ -58,7 +58,10 @@ export default function StudentRequestsPage() {
           </div>
         </div>
 
-        <RequestsTable data={requestsFromTutors} refetch={refetch}/>
+        <RequestsTable
+          data={requestsFromTutors}
+          refetch={refetch}
+        />
       </div>
     </MaxWidthWrapper>
   );

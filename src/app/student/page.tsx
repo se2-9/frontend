@@ -40,7 +40,7 @@ export default function Page() {
         'Check posts that have been successfully matched with tutors.',
     },
     {
-      href: '/report',
+      href: '/reports',
       icon: <AlertTriangle className="w-6 h-6 text-yellow-500" />,
       title: 'View Report',
       description: 'Send inquiry for problem occuring in the platform',

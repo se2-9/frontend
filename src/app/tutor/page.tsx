@@ -38,7 +38,7 @@ export default function DashboardPage() {
       description: 'See feedback from students about your tutoring sessions.',
     },
     {
-      href: '/report',
+      href: '/reports',
       icon: <AlertTriangle className="w-6 h-6 text-yellow-500" />,
       title: 'View Report',
       description: 'Send inquiry for problem occuring in the platform',

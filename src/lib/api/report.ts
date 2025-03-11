@@ -24,7 +24,7 @@ export async function getReport(): Promise<ApiResponse<ReportDTO[]>> {
   }
 }
 
-export async function deletePost(reportId: string) {
+export async function deleteReport(reportId: string) {
   try {
     const res = await apiClient.delete(`/report/${reportId}`);
 

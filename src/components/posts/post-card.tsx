@@ -68,9 +68,15 @@ export const PostCard = ({ post, tutorInfo, onDelete, onRequest }: PostCardProps
       if (onRequest) onRequest(post.post_id);
     },
     onError: (error) => {
-      toast.error(
-        `Failed to create request: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
+      if (error instanceof Error) {
+        if (error.message == "Forbidden") {
+          toast.error('Failed to create request: Already sent request')
+        } else {
+          toast.error(`Failed to create request: ${error.message}`);
+        }
+      } else {
+        toast.error('Failed to create request: Unknown error');
+      }
     },
   })
 

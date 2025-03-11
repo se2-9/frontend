@@ -20,7 +20,6 @@ import { useForm } from 'react-hook-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { PostCard } from '@/components/posts/post-card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { toast } from 'sonner';
 import { Icons } from '@/components/icons';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
@@ -63,7 +62,6 @@ export default function Page() {
 
   function onRequest(postId: string) {
     console.log('Requesting post', postId);
-    toast.success('Request sent successfully');
   }
 
   useEffect(() => {
@@ -81,7 +79,7 @@ export default function Page() {
           (post) =>
             post.title.toLowerCase().includes(search.toLowerCase()) ||
             post.subject.toLowerCase().includes(search.toLowerCase()) ||
-            post.username.toLowerCase().includes(search.toLowerCase())
+            post.user?.name.toLowerCase().includes(search.toLowerCase())
         )
       );
     }
@@ -182,7 +180,7 @@ export default function Page() {
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post: PostDTO) => (
               <PostCard
-                key={`${post.user_id}-${post.created_at}`}
+                key={`${post.user?.id}-${post.created_at}`}
                 post={post}
                 onRequest={onRequest}
               />

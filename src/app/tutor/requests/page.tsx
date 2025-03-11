@@ -6,43 +6,32 @@ import { useAuthStore } from '@/store/auth-store';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
+import { getAllRequestSentByTutor } from '@/lib/api/request';
+import { useQuery } from '@tanstack/react-query';
+import { Icons } from '@/components/icons';
+import { RequestDTO } from '@/dtos/request';
 
 export default function TutorRequestsPage() {
   const user = useAuthStore((state) => state.user);
 
-  // Dummy Data - Requests Sent by Tutor
-  const sentRequests = [
-    {
-      id: '1',
-      studentName: 'Alex Johnson',
-      date: '2024-02-01',
-      status: 'Pending',
+  const { data: sentRequests, isLoading } = useQuery<RequestDTO[]>({
+    queryKey: ['requests'],
+    queryFn: async () => {
+      const r = await getAllRequestSentByTutor();
+      return r?.result ?? [];
     },
-    {
-      id: '2',
-      studentName: 'Emily Davis',
-      date: '2024-01-29',
-      status: 'Not Paid',
-    },
-    {
-      id: '3',
-      studentName: 'Michael Smith',
-      date: '2024-01-25',
-      status: 'Paid',
-    },
-    {
-      id: '4',
-      studentName: 'Sophia Williams',
-      date: '2024-02-05',
-      status: 'Payment Failed',
-    },
-    {
-      id: '5',
-      studentName: 'Daniel Brown',
-      date: '2024-02-03',
-      status: 'Replaced',
-    },
-  ];
+    enabled: true,
+  });
+
+  if (isLoading) {
+    return (
+      <MaxWidthWrapper>
+        <div className="h-[calc(100vh-80px)] grid place-items-center">
+          <Icons.logo className="animate-spin" />
+        </div>
+      </MaxWidthWrapper>
+    );
+  }
 
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
@@ -74,14 +63,15 @@ export default function TutorRequestsPage() {
             <TabsTrigger value="replaced">Replaced</TabsTrigger>
           </TabsList>
 
-          {['Pending', 'Not Paid', 'Paid', 'Payment Failed', 'Replaced'].map(
+          {['pending', 'Not Paid', 'Paid', 'Payment Failed', 'Replaced'].map(
             (status) => (
               <TabsContent
                 key={status}
                 value={status.toLowerCase().replace(' ', '-')}
               >
-                {sentRequests.filter((req) => req.status === status).length >
-                0 ? (
+                {sentRequests &&
+                sentRequests.filter((req) => req.status === status).length >
+                  0 ? (
                   sentRequests
                     .filter((req) => req.status === status)
                     .map((req) => (
@@ -91,15 +81,15 @@ export default function TutorRequestsPage() {
                       >
                         <div>
                           <h3 className="text-lg font-semibold">
-                            {req.studentName}
+                            {req.student_id}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            Requested on: {req.date}
+                            Requested on: {req.created_at}
                           </p>
                         </div>
                         <div
                           className={`px-3 py-1 rounded-lg text-sm font-medium ${
-                            status === 'Paid'
+                            status === 'paid'
                               ? 'bg-green-100 text-green-600'
                               : status === 'Payment Failed'
                                 ? 'bg-red-100 text-red-600'

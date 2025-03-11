@@ -31,18 +31,21 @@ import {
 import { Icons } from '../icons';
 import Link from 'next/link';
 import PostStatusBadge from './post-status-badge';
+import { TutorContactDTO } from '@/dtos/user';
+import { TutorContactDialog } from './tutor-contact-dialog';
 
 interface PostCardProps {
   post: PostDTO;
+  tutorInfo?: TutorContactDTO;
   onDelete?: (postId: string) => void;
   onRequest?: (postId: string, tutorId: string) => void;
 }
 
-export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
+export const PostCard = ({ post, tutorInfo, onDelete, onRequest }: PostCardProps) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-
+  const [isTutorContactOpen, setIsTutorContactOpen] = useState(false);
   const mutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
     onSuccess: () => {
@@ -156,6 +159,18 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
             />
             View Details
           </Button>
+          {tutorInfo != null && (<Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsTutorContactOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Eye
+              size={16}
+              className="text-primary"
+            />
+            View Tutor Contact Info
+          </Button>)}
           {onDelete ? (
             <Button
               variant="destructive"
@@ -192,6 +207,12 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
         isOpen={isDetailsOpen}
         onClose={() => setIsDetailsOpen(false)}
         post={post}
+      />
+
+      <TutorContactDialog
+        isOpen={isTutorContactOpen}
+        onClose={() => setIsTutorContactOpen(false)}
+        tutorInfo={tutorInfo||undefined}
       />
     </>
   );

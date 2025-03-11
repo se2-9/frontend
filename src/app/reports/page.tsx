@@ -23,8 +23,8 @@ export default function ReportsPage() {
     );
   }
 
-  const hasReports = data?.result && data.result.length > 0;
-
+  const reportsData = data?.result ?? [];
+  
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
       <div className="hidden lg:block w-[480px] sticky top-4 self-start mt-6">
@@ -47,11 +47,11 @@ export default function ReportsPage() {
           </div>
         </div>
 
-        {hasReports && (
+        {
           <div className="w-full space-y-6">
-            {data.result ? <ReportsTable data={data.result} /> : null}
+            {<ReportsTable data={reportsData} />}
           </div>
-        )}
+        }
       </div>
     </MaxWidthWrapper>
   );

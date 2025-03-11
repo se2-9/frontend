@@ -35,6 +35,8 @@ import { ArrowUpDown, PlusIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ReportDTO } from '@/dtos/report';
 import CreateReport from './create-report';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteReport } from '@/lib/api/report';
 
 interface ReportsTableProps {
   data: ReportDTO[];
@@ -44,7 +46,18 @@ export function ReportsTable({ data }: ReportsTableProps) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
+  const queryClient = useQueryClient();
 
+  const mutation = useMutation({
+    mutationFn: deleteReport,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["reports"]}); // Refetch the report list
+    },
+    onError: (error) => {
+      alert("Error deleting report: " + error.message);
+    },
+  });
+  
   const filteredData = useMemo(() => {
     return data.filter((req) => {
       const matchesSearch =
@@ -57,7 +70,6 @@ export function ReportsTable({ data }: ReportsTableProps) {
       return matchesSearch && matchesStatus;
     });
   }, [search, statusFilter, data]);
-
   const columns: ColumnDef<ReportDTO>[] = [
     {
       accessorKey: 'create_at',
@@ -77,14 +89,13 @@ export function ReportsTable({ data }: ReportsTableProps) {
     },
     {
       accessorKey: 'content',
-      header: 'Content',
+      header: 'content',
       cell: (info) => (
         <span className="font-medium">
           {(info.getValue() as string) ?? 'N/A'}
         </span>
       ),
     },
-    
     {
       accessorKey: 'status',
       id: "status",
@@ -92,15 +103,24 @@ export function ReportsTable({ data }: ReportsTableProps) {
       cell: (info) => <ReportStatusBadge status={info.getValue() as string} />,
     },
     {
-      accessorKey: 'status',
-      id: "delete_button",
-      header: 'Actions',
-      cell: (info) => ((info.getValue() as string).match("pending") ?
-        <Button className="bg-red-500 hover:bg-red-700">Delete</Button> : <></>
-      ),
+      accessorKey: "report_id",
+      id: "report_id",
+      header: "Actions",
+      cell: ({ row }) => {
+        const status = row.getValue("status") as string;
+        const id = row.getValue("report_id") as string;
+
+        return status === "pending" ? (
+          <Button
+            className="bg-red-500 hover:bg-red-700"
+            onClick={() => mutation.mutate(id)}
+          >
+            Delete
+          </Button>
+        ) : null;
+      },
     },
   ];
-
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -109,7 +129,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
-
+  
   return (
     <div className="bg-white shadow-md rounded-lg p-4">
       {/* Search and Filter Inputs */}
@@ -150,10 +170,10 @@ export function ReportsTable({ data }: ReportsTableProps) {
             </DialogTrigger>
             <DialogContent
               className="sm:max-w-[425px]"
-              aria-description="Create your post"
+              aria-description="Create your report"
             >
               <DialogHeader>
-                <DialogTitle>Create Your Post</DialogTitle>
+                <DialogTitle>Create Your Report</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <CreateReport />
@@ -171,10 +191,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -186,20 +203,14 @@ export function ReportsTable({ data }: ReportsTableProps) {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center text-gray-500 py-4"
-                >
+                <TableCell colSpan={columns.length} className="text-center text-gray-500 py-4">
                   No reports found.
                 </TableCell>
               </TableRow>

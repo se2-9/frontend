@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Form, FormField, FormItem, FormControl, FormLabel } from '../ui/form';
@@ -18,7 +18,7 @@ export default function CreateReport() {
       content: '',
     },
   });
-
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: createReport,
     onSuccess: (data) => {
@@ -26,6 +26,7 @@ export default function CreateReport() {
         toast.error('Something went wrong');
         return;
       }
+      queryClient.invalidateQueries({ queryKey: ['reports'] });
       toast.success('Report created successfully!');
       form.reset();
     },

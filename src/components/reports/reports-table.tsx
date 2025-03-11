@@ -174,10 +174,10 @@ export function ReportsTable({ data }: ReportsTableProps) {
             </DialogTrigger>
             <DialogContent
               className="sm:max-w-[425px]"
-              aria-description="Create your post"
+              aria-description="Create your report"
             >
               <DialogHeader>
-                <DialogTitle>Create Your Post</DialogTitle>
+                <DialogTitle>Create Your Report</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <CreateReport />

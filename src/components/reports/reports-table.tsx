@@ -35,6 +35,8 @@ import { ArrowUpDown, PlusIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ReportDTO } from '@/dtos/report';
 import CreateReport from './create-report';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteReport } from '@/lib/api/report';
 
 interface ReportsTableProps {
   data: ReportDTO[];
@@ -44,7 +46,18 @@ export function ReportsTable({ data }: ReportsTableProps) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
+  const queryClient = useQueryClient();
 
+  const mutation = useMutation({
+    mutationFn: deleteReport,
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({queryKey: ["reports"]}); // Refetch the report list
+    },
+    onError: (error) => {
+      alert("Error deleting report: " + error.message);
+    },
+  });
+  
   const filteredData = useMemo(() => {
     return data.filter((req) => {
       const matchesSearch =
@@ -92,12 +105,23 @@ export function ReportsTable({ data }: ReportsTableProps) {
       cell: (info) => <ReportStatusBadge status={info.getValue() as string} />,
     },
     {
-      accessorKey: 'status',
-      id: "delete_button",
-      header: 'Actions',
-      cell: (info) => ((info.getValue() as string).match("pending") ?
-        <Button className="bg-red-500 hover:bg-red-700">Delete</Button> : <></>
-      ),
+      accessorKey: "report_id",
+      id: "report_id",
+      header: "Actions",
+      cell: ({ row }) => {
+        const status = row.getValue("status") as string;
+        console.log(row)
+        const id = row.getValue("report_id") as string;
+
+        return status === "pending" ? (
+          <Button
+            className="bg-red-500 hover:bg-red-700"
+            onClick={() => mutation.mutate(id)}
+          >
+            Delete
+          </Button>
+        ) : null;
+      },
     },
   ];
 

@@ -61,8 +61,8 @@ export default function Page() {
 
   const [filteredPosts, setFilteredPosts] = useState<PostDTO[]>(posts ?? []);
 
-  function onRequest(postId: string, tutorId: string) {
-    console.log('Requesting post', postId, 'from tutor', tutorId);
+  function onRequest(postId: string) {
+    console.log('Requesting post', postId);
     toast.success('Request sent successfully');
   }
 

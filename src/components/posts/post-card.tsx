@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { PostDetailsDialog } from '@/components/posts/post-details-dialog';
 import { deletePost } from '@/lib/api/post';
+import { createRequest } from '@/lib/api/request'
 import type { PostDTO } from '@/dtos/post';
 import {
   Eye,
@@ -35,7 +36,7 @@ import PostStatusBadge from './post-status-badge';
 interface PostCardProps {
   post: PostDTO;
   onDelete?: (postId: string) => void;
-  onRequest?: (postId: string, tutorId: string) => void;
+  onRequest?: (postId: string) => void;
 }
 
 export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
@@ -56,8 +57,26 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
       );
     },
   });
+  console.log(post)
+  const createRequestMutation = useMutation({
+    mutationFn: (postId: string) => createRequest({ post_id: postId }),
+    onSuccess: () => {
+      toast.success('Create Request successfully');
+      if (onRequest) onRequest(post.post_id);
+    },
+    onError: (error) => {
+      toast.error(
+        `Failed to create request: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    },
+  })
 
   if (isDeleted) return null;
+
+  const handleCreateRequest = () => {
+    console.log(post.post_id)
+    createRequestMutation.mutate(post.post_id);
+  }
 
   const handleDelete = () => {
     setIsConfirmOpen(false);
@@ -171,7 +190,7 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
             <Button
               size="sm"
               className="flex items-center gap-2 bg-app-blue"
-              onClick={() => onRequest(post.post_id, '')}
+              onClick={handleCreateRequest}
             >
               <SendIcon size={16} />
               Request

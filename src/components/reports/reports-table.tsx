@@ -50,7 +50,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
 
   const mutation = useMutation({
     mutationFn: deleteReport,
-    onSuccess: (_, id) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ["reports"]}); // Refetch the report list
     },
     onError: (error) => {

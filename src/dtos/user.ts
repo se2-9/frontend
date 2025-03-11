@@ -27,3 +27,9 @@ export interface UserDTO {
 //   tutor_education_level: string|undefined;
 //   gender: string,
 // }
+export interface TutorContactDTO {
+  id: string;
+  phone_number: string;
+  name: string;
+  email: string;
+}

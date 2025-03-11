@@ -31,18 +31,21 @@ import {
 import { Icons } from '../icons';
 import Link from 'next/link';
 import PostStatusBadge from './post-status-badge';
+import { TutorContactDTO } from '@/dtos/user';
+import { TutorContactDialog } from './tutor-contact-dialog';
 
 interface PostCardProps {
   post: PostDTO;
+  tutorInfo?: TutorContactDTO;
   onDelete?: (postId: string) => void;
   onRequest?: (postId: string, tutorId: string) => void;
 }
 
-export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
+export const PostCard = ({ post, tutorInfo, onDelete, onRequest }: PostCardProps) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-
+  const [isTutorContactOpen, setIsTutorContactOpen] = useState(false);
   const mutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
     onSuccess: () => {
@@ -82,13 +85,13 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
                   size={14}
                   className="text-gray-500"
                 />
-                {post.username}
+                {post.user?.name}
                 <AtSignIcon size={14} />
                 <Link
-                  href={`/profile/${post.email}`}
+                  href={`/profile/${post.user?.email}`}
                   className="hover:underline"
                 >
-                  {post.email}
+                  {post.user?.email}
                 </Link>
               </CardDescription>
             </div>
@@ -156,6 +159,18 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
             />
             View Details
           </Button>
+          {tutorInfo != null && (<Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsTutorContactOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Eye
+              size={16}
+              className="text-primary"
+            />
+            View Tutor Contact Info
+          </Button>)}
           {onDelete ? (
             <Button
               variant="destructive"
@@ -193,6 +208,12 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
         onClose={() => setIsDetailsOpen(false)}
         post={post}
       />
-    </>
+
+      {tutorInfo &&(<TutorContactDialog
+        isOpen={isTutorContactOpen}
+        onClose={() => setIsTutorContactOpen(false)}
+        tutorInfo={tutorInfo||undefined}
+      />)}
+    </> 
   );
 };

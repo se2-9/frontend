@@ -41,9 +41,9 @@ export const PostDetailsDialog = ({
           <div className="flex flex-col gap-2">
             <p className="text-sm flex items-center gap-2">
               <User size={16} /> <span className="font-medium">Tutor:</span>{' '}
-              {post.username} ({post.tutor_gender || 'N/A'})
+              {post.user?.name} ({post.tutor_gender || 'N/A'})
             </p>
-            <p className="text-sm text-muted-foreground">{post.email}</p>
+            <p className="text-sm text-muted-foreground">{post.user?.email}</p>
           </div>
 
           <Separator />

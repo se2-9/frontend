@@ -1,8 +1,8 @@
-import { UserDTO } from "./user";
+import { UserDTO } from './user';
 
 export interface PostDTO {
   post_id: string;
-  user :UserDTO|undefined;
+  user: UserDTO | undefined;
   title: string;
   subject: string;
   tutor_gender: string;

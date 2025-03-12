@@ -63,11 +63,19 @@ export default function StudentRequestsPage() {
           </div>
         </div>
 
-        <RequestsTable
-          data={requestsFromTutors}
-          refetch={refetch}
-          isTutor={false}
-        />
+        {requestsFromTutors != null ? (
+          <RequestsTable
+            data={requestsFromTutors}
+            refetch={refetch}
+            isTutor={false}
+          />
+        ) : (
+          <MaxWidthWrapper>
+            <div className="h-[calc(100vh-80px)] grid place-items-center">
+              <Icons.logo className="animate-spin" />
+            </div>
+          </MaxWidthWrapper>
+        )}
       </div>
     </MaxWidthWrapper>
   );

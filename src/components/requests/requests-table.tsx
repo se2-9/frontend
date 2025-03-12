@@ -121,13 +121,14 @@ export function RequestsTable({
 
   const columns: ColumnDef<RequestDTO>[] = [
     {
-      accessorKey: 'post.title',
+      accessorKey: isTutor?'post.title':'tutor_name',
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           className="flex items-center gap-1 font-medium"
         >
-          Title <ArrowUpDown className="w-4 h-4" />
+          {isTutor ? "Title" : "Name"} 
+          <ArrowUpDown className="w-4 h-4" />
         </button>
       ),
       cell: (info) => (

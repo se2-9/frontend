@@ -1,5 +1,7 @@
 // src/types/post.ts
 
+import { User } from "./user";
+
 export type Post = {
   id: string;
   Title: string;
@@ -11,4 +13,5 @@ export type Post = {
   Description: string;
   createdAt: string; // Optional: Timestamp when the post was created
   updatedAt: string; // Optional: Timestamp when the post was last updated
+  User: User | undefined
 };

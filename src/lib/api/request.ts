@@ -51,3 +51,27 @@ export async function getAllRequestSentByTutor(): Promise<
     throw handleAxiosError(error);
   }
 }
+
+export async function cancelRequest(
+  request_id: string
+): Promise<ApiResponse<boolean>> {
+  try {
+    console.log('request_id', request_id);
+    const res = await apiClient.delete(`/request/cancel/${request_id}`);
+
+    if (res.status !== 200) {
+      return {
+        result: false,
+        message: 'Failed to cancel request',
+        success: false,
+      };
+    }
+
+    return {
+      result: true,
+      success: true,
+    };
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+}

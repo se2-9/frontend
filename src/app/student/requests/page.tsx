@@ -66,6 +66,7 @@ export default function StudentRequestsPage() {
         <RequestsTable
           data={requestsFromTutors}
           refetch={refetch}
+          isTutor={false}
         />
       </div>
     </MaxWidthWrapper>

@@ -77,7 +77,7 @@ export const PostCard = ({
     },
     onError: (error) => {
       if (error instanceof Error) {
-        if (error.message == 'Forbidden') {
+        if (error.message == 'Invalid post') {
           toast.error('Failed to create request: Already sent request');
         } else {
           toast.error(`Failed to create request: ${error.message}`);

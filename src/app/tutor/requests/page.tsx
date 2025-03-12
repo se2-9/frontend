@@ -52,10 +52,7 @@ export default function TutorRequestsPage() {
           )}
           <div className="flex flex-col">
             <Breadcrumbs
-              items={[
-                { label: 'Home', href: '/student' },
-                { label: 'Requests' },
-              ]}
+              items={[{ label: 'Home', href: '/tutor' }, { label: 'Requests' }]}
               className="mt-4"
             />
 
@@ -66,6 +63,7 @@ export default function TutorRequestsPage() {
         <RequestsTable
           data={requests}
           refetch={refetch}
+          isTutor={true}
         />
       </div>
     </MaxWidthWrapper>

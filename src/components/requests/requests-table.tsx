@@ -27,16 +27,21 @@ import { RequestDTO } from '@/dtos/request';
 import { StatusBadge } from './status-badge';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
-import { acceptRequest } from '@/lib/api/request';
+import { acceptRequest, cancelRequest } from '@/lib/api/request';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 interface RequestsTableProps {
   data: RequestDTO[] | undefined;
   refetch: () => void;
+  isTutor: boolean;
 }
 
-export function RequestsTable({ data, refetch }: RequestsTableProps) {
+export function RequestsTable({
+  data,
+  refetch,
+  isTutor = false,
+}: RequestsTableProps) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
@@ -54,7 +59,8 @@ export function RequestsTable({ data, refetch }: RequestsTableProps) {
         return matchesSearch && matchesStatus;
       });
     }, [search, statusFilter, data]) || [];
-  const mutation = useMutation({
+
+  const acceptRequestMutation = useMutation({
     mutationFn: acceptRequest,
     onSuccess: (data) => {
       if (!data.result) {
@@ -73,8 +79,36 @@ export function RequestsTable({ data, refetch }: RequestsTableProps) {
       }
     },
   });
+
+  const cancelRequestMutation = useMutation({
+    mutationFn: cancelRequest,
+    onSuccess: (data) => {
+      if (!data.result) {
+        toast.error('Something went wrong');
+        return;
+      }
+      toast.success('Cancel successfully!');
+      refetch();
+    },
+    onError: (err) => {
+      console.error('❌ Full error cancelling request:', err);
+      if (err instanceof Error) {
+        toast.error(err.message || 'Error cancelling request');
+      } else {
+        toast.error('Unexpected error');
+      }
+    },
+  });
+
   const handleAcceptRequest = (request_id: string, tutor_id: string) => {
-    mutation.mutate({ request_id: request_id, tutor_id: tutor_id });
+    acceptRequestMutation.mutate({
+      request_id: request_id,
+      tutor_id: tutor_id,
+    });
+  };
+
+  const handleCancelRequest = (request_id: string) => {
+    cancelRequestMutation.mutate(request_id);
   };
 
   const columns: ColumnDef<RequestDTO>[] = [
@@ -122,21 +156,47 @@ export function RequestsTable({ data, refetch }: RequestsTableProps) {
       header: 'Status',
       cell: (info) => <StatusBadge status={info.getValue() as string} />,
     },
-    {
-      header: 'Actions',
-      cell: (info) => {
-        const request_id = info.row.original.id;
-        const tutor_id = info.row.original.tutor_id;
-        return (
-          <Button
-            onClick={() => handleAcceptRequest(request_id, tutor_id)}
-            className="bg-green-500 hover:bg-green-700"
-          >
-            Accept
-          </Button>
-        );
-      },
-    },
+    ...(!isTutor
+      ? [
+          {
+            header: 'Accept',
+            cell: (info) => {
+              const request_id = info.row.original.id;
+              const tutor_id = info.row.original.tutor_id;
+
+              return (
+                <Button
+                  onClick={() => handleAcceptRequest(request_id, tutor_id)}
+                  className="bg-green-500 hover:bg-green-700"
+                >
+                  Accept
+                </Button>
+              );
+            },
+          } as ColumnDef<RequestDTO, unknown>,
+        ]
+      : []),
+    ...(isTutor
+      ? [
+          {
+            header: 'Cancel',
+            cell: (info) => {
+              const request_id = info.row.original.id;
+              const status = info.row.original.status;
+
+              return (
+                <Button
+                  onClick={() => handleCancelRequest(request_id)}
+                  className="bg-red-400 hover:bg-red-500"
+                  disabled={status !== 'pending'}
+                >
+                  Cancel
+                </Button>
+              );
+            },
+          } as ColumnDef<RequestDTO, unknown>,
+        ]
+      : []),
   ];
 
   const table = useReactTable({

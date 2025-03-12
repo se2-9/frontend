@@ -60,11 +60,19 @@ export default function TutorRequestsPage() {
           </div>
         </div>
 
-        <RequestsTable
-          data={requests}
-          refetch={refetch}
-          isTutor={true}
-        />
+        {requests != null ? (
+          <RequestsTable
+            data={requests}
+            refetch={refetch}
+            isTutor={true}
+          />
+        ) : (
+          <MaxWidthWrapper>
+            <div className="h-[calc(100vh-80px)] grid place-items-center">
+              <Icons.logo className="animate-spin" />
+            </div>
+          </MaxWidthWrapper>
+        )}
       </div>
     </MaxWidthWrapper>
   );

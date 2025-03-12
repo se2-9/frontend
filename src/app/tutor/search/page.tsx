@@ -96,8 +96,8 @@ export default function Page() {
   }
 
   return (
-    <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-4 space-y-4 md:space-x-6">
-      <div className="hidden lg:block w-[400px] sticky top-4 self-start mt-8">
+    <MaxWidthWrapper className="w-full h-full flex flex-col xl:flex-row p-4 space-y-4 md:space-x-6">
+      <div className="hidden xl:block w-[400px] sticky top-4 self-start mt-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <FilterForm
             refetch={refetch}
@@ -122,7 +122,7 @@ export default function Page() {
 
         <div className="flex items-center justify-between">
           {/* mobile filter popup */}
-          <div className="lg:hidden flex items-center space-x-4">
+          <div className="xl:hidden flex items-center space-x-4">
             <Dialog>
               <DialogTrigger asChild>
                 <Button

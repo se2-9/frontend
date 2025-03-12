@@ -25,11 +25,13 @@ import {
 } from '@/components/ui/select';
 import { RequestDTO } from '@/dtos/request';
 import { StatusBadge } from './status-badge';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Eye } from 'lucide-react';
 import { Button } from '../ui/button';
 import { acceptRequest, cancelRequest } from '@/lib/api/request';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { PostDTO } from '@/dtos/post';
+import { PostDetailsDialog } from '../posts/post-details-dialog';
 
 interface RequestsTableProps {
   data: RequestDTO[] | undefined;
@@ -45,7 +47,10 @@ export function RequestsTable({
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
-
+  const [isShowingDetail, setIsShowingDetail] = useState(false);
+  const [currentPostDetail, setCurrentPostDetail] = useState<
+    PostDTO | undefined
+  >(undefined);
   const filteredData =
     useMemo(() => {
       return data?.filter((req) => {
@@ -99,7 +104,11 @@ export function RequestsTable({
       }
     },
   });
-
+  const handleViewDetail = (post: PostDTO) => {
+    // console.log(postDTO)
+    setCurrentPostDetail(post);
+    setIsShowingDetail(true);
+  };
   const handleAcceptRequest = (request_id: string, tutor_id: string) => {
     acceptRequestMutation.mutate({
       request_id: request_id,
@@ -113,13 +122,14 @@ export function RequestsTable({
 
   const columns: ColumnDef<RequestDTO>[] = [
     {
-      accessorKey: 'tutor_name',
+      accessorKey: isTutor ? 'post.title' : 'tutor_name',
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           className="flex items-center gap-1 font-medium"
         >
-          Tutor <ArrowUpDown className="w-4 h-4" />
+          {isTutor ? 'Title' : 'Name'}
+          <ArrowUpDown className="w-4 h-4" />
         </button>
       ),
       cell: (info) => (
@@ -150,6 +160,26 @@ export function RequestsTable({
 
         return <span className="text-gray-600">{formattedDate}</span>;
       },
+    },
+    {
+      accessorKey: 'post',
+      header: 'View Detail',
+      cell: (info) => (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            handleViewDetail(info.row.original.post);
+          }}
+          className="flex items-center gap-2"
+        >
+          <Eye
+            size={16}
+            className="text-primary"
+          />
+          View Details
+        </Button>
+      ),
     },
     {
       accessorKey: 'status',
@@ -188,7 +218,9 @@ export function RequestsTable({
                 <Button
                   onClick={() => handleCancelRequest(request_id)}
                   className="bg-red-400 hover:bg-red-500"
-                  disabled={status !== 'pending'}
+                  disabled={
+                    status !== 'pending' && status !== 'processing other'
+                  }
                 >
                   Cancel
                 </Button>
@@ -282,6 +314,11 @@ export function RequestsTable({
           </TableBody>
         </Table>
       </div>
+      <PostDetailsDialog
+        isOpen={isShowingDetail}
+        onClose={() => setIsShowingDetail(false)}
+        post={currentPostDetail}
+      />
     </div>
   );
 }

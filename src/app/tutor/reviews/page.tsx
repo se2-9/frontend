@@ -21,6 +21,7 @@ export default function TutorReviewsPage() {
   const { data: tutorReviews, isLoading } = useQuery<ReviewDTO[]>({
     queryKey: ['tutor-reviews', user?.id],
     queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       const r = await getTutorReviewsByTutorID(user?.id!);
       return r?.result ?? [];
     },

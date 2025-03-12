@@ -45,7 +45,7 @@ export async function getAllRequestSentByTutor(): Promise<
   ApiResponse<RequestDTO[]>
 > {
   try {
-    const res = await apiClient.get(`/request/tutor`);
+    const res = await apiClient.get('/request/tutor');
     return res.data;
   } catch (error) {
     throw handleAxiosError(error);

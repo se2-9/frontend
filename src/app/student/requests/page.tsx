@@ -15,12 +15,12 @@ export default function StudentRequestsPage() {
   const {
     data: requestsFromTutors,
     isLoading,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: ['requests'],
     queryFn: async () => {
       const r = await getAllStudentRequests();
-      console.log(r)
+      console.log(r);
       return r?.result ?? [];
     },
     enabled: true,
@@ -44,7 +44,12 @@ export default function StudentRequestsPage() {
 
       <div className="flex flex-col w-full">
         <div className="flex items-center gap-4">
-          {user && <AvatarDropdownProfile user={user} />}
+          {user && (
+            <AvatarDropdownProfile
+              className="lg:hidden"
+              user={user}
+            />
+          )}
           <div className="flex flex-col">
             <Breadcrumbs
               items={[
@@ -58,7 +63,10 @@ export default function StudentRequestsPage() {
           </div>
         </div>
 
-        <RequestsTable data={requestsFromTutors} refetch={refetch}/>
+        <RequestsTable
+          data={requestsFromTutors}
+          refetch={refetch}
+        />
       </div>
     </MaxWidthWrapper>
   );

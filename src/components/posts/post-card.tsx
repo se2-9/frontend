@@ -27,6 +27,7 @@ import {
   BookOpen,
   SendIcon,
   AtSignIcon,
+  Star,
 } from 'lucide-react';
 
 import { Icons } from '../icons';
@@ -34,6 +35,8 @@ import Link from 'next/link';
 import PostStatusBadge from './post-status-badge';
 import { TutorContactDTO } from '@/dtos/user';
 import { TutorContactDialog } from './tutor-contact-dialog';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import ReviewForm from '../review/review-form';
 
 interface PostCardProps {
   post: PostDTO;
@@ -52,6 +55,7 @@ export const PostCard = ({
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isTutorContactOpen, setIsTutorContactOpen] = useState(false);
+
   const mutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
     onSuccess: () => {
@@ -201,6 +205,7 @@ export const PostCard = ({
               View Tutor Contact Info
             </Button>
           )}
+
           {onDelete ? (
             <Button
               variant="destructive"
@@ -222,6 +227,29 @@ export const PostCard = ({
               Request
             </Button>
           ) : null}
+          {tutorInfo && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <Star
+                    size={16}
+                    className="text-yellow-500"
+                  />
+                  Rate Tutor
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <ReviewForm
+                  post_id={post.post_id}
+                  tutor_id={tutorInfo.id}
+                />
+              </DialogContent>
+            </Dialog>
+          )}
         </CardFooter>
       </Card>
 

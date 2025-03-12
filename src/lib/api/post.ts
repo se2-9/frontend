@@ -35,7 +35,9 @@ export async function deletePost(postId: string) {
   }
 }
 
-export async function getStudentMatchedPosts(): Promise<ApiResponse<PostWithTutorDTO[]>> {
+export async function getStudentMatchedPosts(): Promise<
+  ApiResponse<PostWithTutorDTO[]>
+> {
   try {
     const res = await apiClient.get('/post/match');
 

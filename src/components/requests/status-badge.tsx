@@ -28,7 +28,7 @@ const getStatusColor = (status: string) => {
 export function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <span
-      className={`px-3 py-1 rounded-lg text-sm font-medium ${getStatusColor(status)}`}
+      className={`px-3 py-1 rounded-lg text-sm font-medium truncate ${getStatusColor(status)}`}
     >
       {status}
     </span>

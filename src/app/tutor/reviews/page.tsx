@@ -42,17 +42,24 @@ export default function TutorReviewsPage() {
 
       <div className="flex flex-col w-full">
         <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:items-center md:justify-between mb-6">
-          {user && (
-            <AvatarDropdownProfile
-              className="lg:hidden"
-              user={user}
-            />
-          )}
-          <div>
-            <Breadcrumbs
-              items={[{ label: 'Home', href: '/tutor' }, { label: 'Reviews' }]}
-            />
-            <h1 className="text-2xl md:text-3xl font-bold mt-2">My Reviews</h1>
+          <div className="flex items-center gap-2">
+            {user && (
+              <AvatarDropdownProfile
+                className="lg:hidden"
+                user={user}
+              />
+            )}
+            <div>
+              <Breadcrumbs
+                items={[
+                  { label: 'Home', href: '/tutor' },
+                  { label: 'Reviews' },
+                ]}
+              />
+              <h1 className="text-2xl md:text-3xl font-bold mt-2">
+                My Reviews
+              </h1>
+            </div>
           </div>
 
           <div className="relative w-full md:w-64">

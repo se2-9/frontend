@@ -42,7 +42,7 @@ export default function ReportsPage() {
           <div className="flex flex-col">
             <Breadcrumbs
               items={[
-                { label: 'Home', href: '/student' },
+                { label: 'Home', href: `/${user?.role}` },
                 { label: 'Reports' },
               ]}
               className="mt-4"

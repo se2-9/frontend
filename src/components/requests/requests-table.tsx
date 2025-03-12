@@ -193,11 +193,13 @@ export function RequestsTable({
             cell: (info) => {
               const request_id = info.row.original.id;
               const tutor_id = info.row.original.tutor_id;
+              const status = info.row.original.status;
 
               return (
                 <Button
                   onClick={() => handleAcceptRequest(request_id, tutor_id)}
                   className="bg-green-500 hover:bg-green-700"
+                  disabled={status !== 'pending'}
                 >
                   Accept
                 </Button>

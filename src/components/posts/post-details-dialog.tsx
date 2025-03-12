@@ -16,7 +16,7 @@ import type { PostDTO } from '@/dtos/post';
 interface PostDetailsDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  post: PostDTO;
+  post?: PostDTO;
 }
 
 export const PostDetailsDialog = ({
@@ -32,41 +32,41 @@ export const PostDetailsDialog = ({
       <DialogContent className="w-full max-w-md md:max-w-lg p-6 max-h-[80vh]">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-center">
-            {post.title}
+            {post?.title}
           </DialogTitle>
-          <p className="text-muted-foreground text-center">{post.subject}</p>
+          <p className="text-muted-foreground text-center">{post?.subject}</p>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="flex flex-col gap-2">
             <p className="text-sm flex items-center gap-2">
               <User size={16} /> <span className="font-medium">Tutor:</span>{' '}
-              {post.username} ({post.tutor_gender || 'N/A'})
+              {post?.user?.name} ({post?.tutor_gender || 'N/A'})
             </p>
-            <p className="text-sm text-muted-foreground">{post.email}</p>
+            <p className="text-sm text-muted-foreground">{post?.user?.email}</p>
           </div>
 
           <Separator />
 
           <p className="text-sm flex items-center gap-2">
             <DollarSign size={16} /> <span className="font-medium">Rate:</span>{' '}
-            ${post.hourly_rate} / hr
+            ${post?.hourly_rate} / hr
           </p>
 
           <p className="text-sm flex items-center gap-2">
             <MapPin size={16} /> <span className="font-medium">Location:</span>{' '}
-            {post.place}
+            {post?.place}
           </p>
 
           <p className="text-xs text-gray-500 flex items-center gap-2">
             <Calendar size={16} /> Created:{' '}
-            {new Date(post.created_at).toLocaleDateString()}
+            {new Date(post?.created_at || 0).toLocaleDateString()}
           </p>
 
           <Separator />
 
           <p className="px-2 max-w-sm md:max-w-md text-sm text-muted-foreground break-words">
-            {post.description}
+            {post?.description}
           </p>
         </div>
 

@@ -52,7 +52,7 @@ export default function EditProfileForm() {
         phone_number: currentUser.phoneNumber || '0000000000',
       });
     }
-  }, []);
+  }, [currentUser, form]);
 
   const mutation = useMutation({
     mutationFn: editUserProfile,

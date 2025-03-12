@@ -25,40 +25,111 @@ import {
 } from '@/components/ui/select';
 import { RequestDTO } from '@/dtos/request';
 import { StatusBadge } from './status-badge';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Eye } from 'lucide-react';
 import { Button } from '../ui/button';
+import { acceptRequest, cancelRequest } from '@/lib/api/request';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { PostDTO } from '@/dtos/post';
+import { PostDetailsDialog } from '../posts/post-details-dialog';
 
 interface RequestsTableProps {
-  data: RequestDTO[];
+  data: RequestDTO[] | undefined;
+  refetch: () => void;
+  isTutor: boolean;
 }
 
-export function RequestsTable({ data }: RequestsTableProps) {
+export function RequestsTable({
+  data,
+  refetch,
+  isTutor = false,
+}: RequestsTableProps) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
+  const [isShowingDetail, setIsShowingDetail] = useState(false);
+  const [currentPostDetail, setCurrentPostDetail] = useState<
+    PostDTO | undefined
+  >(undefined);
+  const filteredData =
+    useMemo(() => {
+      return data?.filter((req) => {
+        const matchesSearch =
+          req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
+          req.status.toLowerCase().includes(search.toLowerCase());
 
-  const filteredData = useMemo(() => {
-    return data.filter((req) => {
-      const matchesSearch =
-        req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
-        req.status.toLowerCase().includes(search.toLowerCase());
+        const matchesStatus =
+          statusFilter === 'all' || req.status === statusFilter;
 
-      const matchesStatus =
-        statusFilter === 'all' || req.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      });
+    }, [search, statusFilter, data]) || [];
 
-      return matchesSearch && matchesStatus;
+  const acceptRequestMutation = useMutation({
+    mutationFn: acceptRequest,
+    onSuccess: (data) => {
+      if (!data.result) {
+        toast.error('Something went wrong');
+        return;
+      }
+      toast.success('Accept successfully!');
+      refetch();
+    },
+    onError: (err) => {
+      console.error('❌ Full error accepting request:', err);
+      if (err instanceof Error) {
+        toast.error(err.message || 'Error accepting request');
+      } else {
+        toast.error('Unexpected error');
+      }
+    },
+  });
+
+  const cancelRequestMutation = useMutation({
+    mutationFn: cancelRequest,
+    onSuccess: (data) => {
+      if (!data.result) {
+        toast.error('Something went wrong');
+        return;
+      }
+      toast.success('Cancel successfully!');
+      refetch();
+    },
+    onError: (err) => {
+      console.error('❌ Full error cancelling request:', err);
+      if (err instanceof Error) {
+        toast.error(err.message || 'Error cancelling request');
+      } else {
+        toast.error('Unexpected error');
+      }
+    },
+  });
+  const handleViewDetail = (post: PostDTO) => {
+    // console.log(postDTO)
+    setCurrentPostDetail(post);
+    setIsShowingDetail(true);
+  };
+  const handleAcceptRequest = (request_id: string, tutor_id: string) => {
+    acceptRequestMutation.mutate({
+      request_id: request_id,
+      tutor_id: tutor_id,
     });
-  }, [search, statusFilter, data]);
+  };
+
+  const handleCancelRequest = (request_id: string) => {
+    cancelRequestMutation.mutate(request_id);
+  };
 
   const columns: ColumnDef<RequestDTO>[] = [
     {
-      accessorKey: 'tutor_id',
+      accessorKey: isTutor ? 'post.title' : 'tutor_name',
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           className="flex items-center gap-1 font-medium"
         >
-          Tutor <ArrowUpDown className="w-4 h-4" />
+          {isTutor ? 'Title' : 'Name'}
+          <ArrowUpDown className="w-4 h-4" />
         </button>
       ),
       cell: (info) => (
@@ -77,10 +148,37 @@ export function RequestsTable({ data }: RequestsTableProps) {
           Date Received <ArrowUpDown className="w-4 h-4" />
         </button>
       ),
+      cell: (info) => {
+        const rawDate = info.getValue() as string;
+        const formattedDate = new Date(rawDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+
+        return <span className="text-gray-600">{formattedDate}</span>;
+      },
+    },
+    {
+      accessorKey: 'post',
+      header: 'View Detail',
       cell: (info) => (
-        <span className="text-gray-600">
-          {(info.getValue() as string) ?? 'N/A'}
-        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            handleViewDetail(info.row.original.post);
+          }}
+          className="flex items-center gap-2"
+        >
+          <Eye
+            size={16}
+            className="text-primary"
+          />
+          View Details
+        </Button>
       ),
     },
     {
@@ -88,12 +186,49 @@ export function RequestsTable({ data }: RequestsTableProps) {
       header: 'Status',
       cell: (info) => <StatusBadge status={info.getValue() as string} />,
     },
-    {
-      header: 'Actions',
-      cell: () => (
-        <Button className="bg-green-500 hover:bg-green-700">Accept</Button>
-      ),
-    },
+    ...(!isTutor
+      ? [
+          {
+            header: 'Accept',
+            cell: (info) => {
+              const request_id = info.row.original.id;
+              const tutor_id = info.row.original.tutor_id;
+
+              return (
+                <Button
+                  onClick={() => handleAcceptRequest(request_id, tutor_id)}
+                  className="bg-green-500 hover:bg-green-700"
+                >
+                  Accept
+                </Button>
+              );
+            },
+          } as ColumnDef<RequestDTO, unknown>,
+        ]
+      : []),
+    ...(isTutor
+      ? [
+          {
+            header: 'Cancel',
+            cell: (info) => {
+              const request_id = info.row.original.id;
+              const status = info.row.original.status;
+
+              return (
+                <Button
+                  onClick={() => handleCancelRequest(request_id)}
+                  className="bg-red-400 hover:bg-red-500"
+                  disabled={
+                    status !== 'pending' && status !== 'processing other'
+                  }
+                >
+                  Cancel
+                </Button>
+              );
+            },
+          } as ColumnDef<RequestDTO, unknown>,
+        ]
+      : []),
   ];
 
   const table = useReactTable({
@@ -179,6 +314,11 @@ export function RequestsTable({ data }: RequestsTableProps) {
           </TableBody>
         </Table>
       </div>
+      <PostDetailsDialog
+        isOpen={isShowingDetail}
+        onClose={() => setIsShowingDetail(false)}
+        post={currentPostDetail}
+      />
     </div>
   );
 }

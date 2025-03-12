@@ -20,7 +20,6 @@ import { useForm } from 'react-hook-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { PostCard } from '@/components/posts/post-card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { toast } from 'sonner';
 import { Icons } from '@/components/icons';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
@@ -61,9 +60,8 @@ export default function Page() {
 
   const [filteredPosts, setFilteredPosts] = useState<PostDTO[]>(posts ?? []);
 
-  function onRequest(postId: string, tutorId: string) {
-    console.log('Requesting post', postId, 'from tutor', tutorId);
-    toast.success('Request sent successfully');
+  function onRequest(postId: string) {
+    console.log('Requesting post', postId);
   }
 
   useEffect(() => {
@@ -81,7 +79,7 @@ export default function Page() {
           (post) =>
             post.title.toLowerCase().includes(search.toLowerCase()) ||
             post.subject.toLowerCase().includes(search.toLowerCase()) ||
-            post.username.toLowerCase().includes(search.toLowerCase())
+            post.user?.name.toLowerCase().includes(search.toLowerCase())
         )
       );
     }
@@ -98,8 +96,8 @@ export default function Page() {
   }
 
   return (
-    <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-4 space-y-4 md:space-x-6">
-      <div className="hidden lg:block w-[400px] sticky top-4 self-start mt-8">
+    <MaxWidthWrapper className="w-full h-full flex flex-col xl:flex-row p-4 space-y-4 md:space-x-6">
+      <div className="hidden xl:block w-[400px] sticky top-4 self-start mt-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <FilterForm
             refetch={refetch}
@@ -124,7 +122,7 @@ export default function Page() {
 
         <div className="flex items-center justify-between">
           {/* mobile filter popup */}
-          <div className="lg:hidden flex items-center space-x-4">
+          <div className="xl:hidden flex items-center space-x-4">
             <Dialog>
               <DialogTrigger asChild>
                 <Button
@@ -182,7 +180,7 @@ export default function Page() {
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post: PostDTO) => (
               <PostCard
-                key={`${post.user_id}-${post.created_at}`}
+                key={`${post.user?.id}-${post.created_at}`}
                 post={post}
                 onRequest={onRequest}
               />

@@ -2,7 +2,7 @@ import { CreatePostData } from '../validations/post';
 import { createPostSchema } from '../validations/post';
 import { apiClient, handleAxiosError } from './axios';
 import { ApiResponse } from '@/types/api';
-import { PostDTO } from '@/dtos/post';
+import { PostDTO, PostWithTutorDTO } from '@/dtos/post';
 
 export async function createPost(data: CreatePostData) {
   const validatedData = createPostSchema.parse(data);
@@ -28,6 +28,18 @@ export async function getStudentPosts(): Promise<ApiResponse<PostDTO[]>> {
 export async function deletePost(postId: string) {
   try {
     const res = await apiClient.delete(`/post/${postId}`);
+
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+}
+
+export async function getStudentMatchedPosts(): Promise<
+  ApiResponse<PostWithTutorDTO[]>
+> {
+  try {
+    const res = await apiClient.get('/post/match');
 
     return res.data;
   } catch (error) {

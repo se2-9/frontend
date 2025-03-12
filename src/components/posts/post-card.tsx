@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { PostDetailsDialog } from '@/components/posts/post-details-dialog';
 import { deletePost } from '@/lib/api/post';
+import { createRequest } from '@/lib/api/request';
 import type { PostDTO } from '@/dtos/post';
 import {
   Eye,
@@ -26,22 +27,34 @@ import {
   BookOpen,
   SendIcon,
   AtSignIcon,
+  Star,
 } from 'lucide-react';
 
 import { Icons } from '../icons';
 import Link from 'next/link';
 import PostStatusBadge from './post-status-badge';
+import { TutorContactDTO } from '@/dtos/user';
+import { TutorContactDialog } from './tutor-contact-dialog';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import ReviewForm from '../review/review-form';
 
 interface PostCardProps {
   post: PostDTO;
+  tutorInfo?: TutorContactDTO;
   onDelete?: (postId: string) => void;
-  onRequest?: (postId: string, tutorId: string) => void;
+  onRequest?: (postId: string) => void;
 }
 
-export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
+export const PostCard = ({
+  post,
+  tutorInfo,
+  onDelete,
+  onRequest,
+}: PostCardProps) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isTutorContactOpen, setIsTutorContactOpen] = useState(false);
 
   const mutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
@@ -56,8 +69,30 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
       );
     },
   });
+  const createRequestMutation = useMutation({
+    mutationFn: (postId: string) => createRequest({ post_id: postId }),
+    onSuccess: () => {
+      toast.success('Create Request successfully');
+      if (onRequest) onRequest(post.post_id);
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        if (error.message == 'Invalid post') {
+          toast.error('Failed to create request: Already sent request');
+        } else {
+          toast.error(`Failed to create request: ${error.message}`);
+        }
+      } else {
+        toast.error('Failed to create request: Unknown error');
+      }
+    },
+  });
 
   if (isDeleted) return null;
+
+  const handleCreateRequest = () => {
+    createRequestMutation.mutate(post.post_id);
+  };
 
   const handleDelete = () => {
     setIsConfirmOpen(false);
@@ -82,13 +117,13 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
                   size={14}
                   className="text-gray-500"
                 />
-                {post.username}
+                {post.user?.name}
                 <AtSignIcon size={14} />
                 <Link
-                  href={`/profile/${post.email}`}
+                  href={`/profile/${post.user?.email}`}
                   className="hover:underline"
                 >
-                  {post.email}
+                  {post.user?.email}
                 </Link>
               </CardDescription>
             </div>
@@ -156,6 +191,21 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
             />
             View Details
           </Button>
+          {tutorInfo != null && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsTutorContactOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <Eye
+                size={16}
+                className="text-primary"
+              />
+              View Tutor Contact Info
+            </Button>
+          )}
+
           {onDelete ? (
             <Button
               variant="destructive"
@@ -170,13 +220,36 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
           {onRequest ? (
             <Button
               size="sm"
-              className="flex items-center gap-2 bg-app-blue"
-              onClick={() => onRequest(post.post_id, '')}
+              className="flex items-center gap-2 bg-cyan-500"
+              onClick={handleCreateRequest}
             >
               <SendIcon size={16} />
               Request
             </Button>
           ) : null}
+          {tutorInfo && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <Star
+                    size={16}
+                    className="text-yellow-500"
+                  />
+                  Rate Tutor
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <ReviewForm
+                  post_id={post.post_id}
+                  tutor_id={tutorInfo.id}
+                />
+              </DialogContent>
+            </Dialog>
+          )}
         </CardFooter>
       </Card>
 
@@ -193,6 +266,14 @@ export const PostCard = ({ post, onDelete, onRequest }: PostCardProps) => {
         onClose={() => setIsDetailsOpen(false)}
         post={post}
       />
+
+      {tutorInfo && (
+        <TutorContactDialog
+          isOpen={isTutorContactOpen}
+          onClose={() => setIsTutorContactOpen(false)}
+          tutorInfo={tutorInfo || undefined}
+        />
+      )}
     </>
   );
 };

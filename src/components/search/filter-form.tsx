@@ -51,7 +51,7 @@ export default function FilterForm({ refetch, form }: FilterFormProps) {
           <h2 className="text-2xl font-bold text-gray-800">Filter Posts</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <FormField
             name="title"
             render={({ field }) => (

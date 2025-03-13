@@ -178,7 +178,7 @@ export const PostCard = ({
           </p>
         </CardContent>
 
-        <CardFooter className="flex justify-between pt-4">
+        <CardFooter className="flex justify-between pt-4 flex-wrap gap-2">
           <Button
             variant="outline"
             size="sm"

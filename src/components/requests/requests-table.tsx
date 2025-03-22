@@ -32,6 +32,8 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { PostDTO } from '@/dtos/post';
 import { PostDetailsDialog } from '../posts/post-details-dialog';
+import { apiClient } from '@/lib/api/axios';
+import { Card, PaymentDialog } from '@/app/payment/payment-dialog';
 
 interface RequestsTableProps {
   data: RequestDTO[] | undefined;
@@ -119,6 +121,48 @@ export function RequestsTable({
   const handleCancelRequest = (request_id: string) => {
     cancelRequestMutation.mutate(request_id);
   };
+
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(
+    null
+  );
+  const [savedCards, setSavedCards] = useState<Card[]>([
+    {
+      id: 'card_1',
+      brand: 'Visa',
+      last4: '4242',
+      expiration_month: 12,
+      expiration_year: 2030,
+    },
+    {
+      id: 'card_2',
+      brand: 'MasterCard',
+      last4: '1234',
+      expiration_month: 10,
+      expiration_year: 2030,
+    },
+    {
+      id: 'card_3',
+      brand: 'Visa',
+      last4: '5678',
+      expiration_month: 6,
+      expiration_year: 2030,
+    },
+    {
+      id: 'card_4',
+      brand: 'JCB',
+      last4: '9876',
+      expiration_month: 3,
+      expiration_year: 2030,
+    },
+    {
+      id: 'card_5',
+      brand: 'American Express',
+      last4: '1111',
+      expiration_month: 9,
+      expiration_year: 2030,
+    },
+  ]);
 
   const columns: ColumnDef<RequestDTO>[] = [
     {
@@ -219,9 +263,16 @@ export function RequestsTable({
               return (
                 <div className="flex items-center gap-2">
                   <Button
-                    //onClick={() => handlePayment(request_id)}
+                    onClick={() => {
+                      // const cardsRes = await apiClient.get('/users/me/cards');
+                      // setSavedCards(savedCards);
+                      setSelectedRequestId(request_id);
+                      setIsPaymentOpen(true);
+                    }}
                     className="bg-blue-500 hover:bg-blue-700"
-                    disabled={status !== 'not paid' && status !== 'payment failed'}
+                    disabled={
+                      status === 'not paid' || status === 'payment failed'
+                    }
                   >
                     Pay
                   </Button>
@@ -330,6 +381,15 @@ export function RequestsTable({
         onClose={() => setIsShowingDetail(false)}
         post={currentPostDetail}
       />
+      {selectedRequestId && (
+        <PaymentDialog
+          isOpen={isPaymentOpen}
+          onClose={() => setIsPaymentOpen(false)}
+          requestId={selectedRequestId}
+          savedCards={savedCards}
+          refetch={refetch}
+        />
+      )}
     </div>
   );
 }

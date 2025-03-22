@@ -20,7 +20,6 @@ export default function TutorRequestsPage() {
     queryKey: ['requests'],
     queryFn: async () => {
       const r = await getAllRequestSentByTutor();
-      console.log(r);
       return r?.result ?? [];
     },
     enabled: true,

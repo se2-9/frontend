@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios';
 
 export const apiClient = axios.create({
   // baseURL: process.env.NEXT_PUBLIC_API_URL,
-  // baseURL: 'http://18.211.57.246:8080/api/v1',
+  //baseURL: 'http://18.211.57.246:8080/api/v1',
   baseURL: 'https://api.findmytutor.macgeargear.dev/api/v1',
   withCredentials: true,
 });

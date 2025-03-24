@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   ColumnDef,
   useReactTable,
@@ -51,19 +51,35 @@ export function RequestsTable({
   const [currentPostDetail, setCurrentPostDetail] = useState<
     PostDTO | undefined
   >(undefined);
-  const filteredData =
-    useMemo(() => {
-      return data?.filter((req) => {
-        const matchesSearch =
-          req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
-          req.status.toLowerCase().includes(search.toLowerCase());
 
-        const matchesStatus =
-          statusFilter === 'all' || req.status === statusFilter;
+  const [requests, setRequests] = useState<RequestDTO[]>(data || []);
 
-        return matchesSearch && matchesStatus;
-      });
-    }, [search, statusFilter, data]) || [];
+  const filteredData = useMemo(() => {
+    return requests.filter((req) => {
+      const matchesSearch =
+        req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
+        req.status.toLowerCase().includes(search.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === 'all' || req.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [search, statusFilter, requests]);
+
+  // const filteredData =
+  //   useMemo(() => {
+  //     return data?.filter((req) => {
+  //       const matchesSearch =
+  //         req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
+  //         req.status.toLowerCase().includes(search.toLowerCase());
+
+  //       const matchesStatus =
+  //         statusFilter === 'all' || req.status === statusFilter;
+
+  //       return matchesSearch && matchesStatus;
+  //     });
+  //   }, [search, statusFilter, data]) || [];
 
   const acceptRequestMutation = useMutation({
     mutationFn: acceptRequest,
@@ -104,6 +120,53 @@ export function RequestsTable({
       }
     },
   });
+
+  useEffect(() => {
+    if (!data) return; // Avoid subscribing if no data
+
+    const chargeId = 'yourChargeId'; // Replace with dynamic value
+
+    const eventSource = new EventSource(
+      `http://localhost:8080/api/v1/payment/sse/${chargeId}`
+    );
+
+    eventSource.onmessage = (event) => {
+      const updatedStatus = JSON.parse(event.data);
+
+      // 🔹 Update data state efficiently
+      setData((prevData) =>
+        prevData.map((req) =>
+          req.id === updatedStatus.id
+            ? { ...req, status: updatedStatus.status }
+            : req
+        )
+      );
+
+      // Optional: Trigger toast notifications
+      toast.info(
+        `Request ${updatedStatus.id} updated to ${updatedStatus.status}`
+      );
+    };
+
+    evtSource.addEventListener('charge.create', (e) => {
+      console.log({ event: e });
+      toast.success('Payment successful!');
+      refetch();
+      evtSource.close();
+      setIsProcessing(false);
+      onClose();
+    });
+
+    eventSource.onerror = (error) => {
+      console.error('SSE Error:', error);
+      eventSource.close(); // Auto-reconnect prevention
+    };
+
+    return () => {
+      eventSource.close(); // Cleanup on unmount
+    };
+  }, [data]); // 🔥 Depend only on `data` to prevent redundant re-subscriptions
+
   const handleViewDetail = (post: PostDTO) => {
     // console.log(postDTO)
     setCurrentPostDetail(post);
@@ -221,7 +284,9 @@ export function RequestsTable({
                   <Button
                     //onClick={() => handlePayment(request_id)}
                     className="bg-blue-500 hover:bg-blue-700"
-                    disabled={status !== 'not paid' && status !== 'payment failed'}
+                    disabled={
+                      status !== 'not paid' && status !== 'payment failed'
+                    }
                   >
                     Pay
                   </Button>

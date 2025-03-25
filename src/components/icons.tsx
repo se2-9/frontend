@@ -140,4 +140,60 @@ export const Icons = {
       />
     </svg>
   ),
+  visa: (props: LucideProps) => (
+    <svg
+      width="48"
+      height="16"
+      viewBox="0 0 48 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        width="48"
+        height="16"
+        rx="2"
+        fill="#1A1F71"
+      />
+      <text
+        x="50%"
+        y="50%"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontFamily="Arial, sans-serif"
+        fontWeight="bold"
+        fontSize="9"
+        fill="white"
+      >
+        VISA
+      </text>
+    </svg>
+  ),
+  mastercard: (props: LucideProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      {...props}
+    >
+      <circle
+        cx="8"
+        cy="12"
+        r="6"
+        fill="#EB001B"
+      />
+      <circle
+        cx="16"
+        cy="12"
+        r="6"
+        fill="#F79E1B"
+      />
+      <path
+        d="M12 6a6 6 0 000 12 6 6 0 000-12z"
+        fill="#FF5F00"
+      />
+    </svg>
+  ),
 };

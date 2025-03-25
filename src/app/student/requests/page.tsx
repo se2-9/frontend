@@ -20,7 +20,6 @@ export default function StudentRequestsPage() {
     queryKey: ['requests'],
     queryFn: async () => {
       const r = await getAllStudentRequests();
-      console.log(r);
       return r?.result ?? [];
     },
     enabled: true,

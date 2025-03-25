@@ -18,20 +18,21 @@ import { cn } from '@/lib/utils';
 import { payWithCard } from '@/lib/api/payment';
 import { useOmise } from '@/hooks/useOmise';
 import { useMutation } from '@tanstack/react-query';
+import { CardDTO } from '@/dtos/card';
 
-export interface Card {
-  id: string;
-  last4: string;
-  brand: string;
-  expiration_month: number;
-  expiration_year: number;
-}
+// export interface Card {
+//   id: string;
+//   cardNumber: string;
+//   brand: string;
+//   expiration_month: number;
+//   expiration_year: number;
+// }
 
 interface PaymentDialogProps {
   isOpen: boolean;
   onClose: () => void;
   requestId: string;
-  savedCards: Card[];
+  savedCards: CardDTO[];
   refetch: () => void;
 }
 
@@ -55,12 +56,8 @@ export function PaymentDialog({
       const chargeId = data.result.charge_id;
 
       const evtSource = new EventSource(
-        'http://localhost:8080/api/v1/payment/status/' + chargeId
+        'http://localhost:8080/api/v1/payment/sse/' + chargeId
       );
-
-      evtSource.onmessage = (e) => {
-        console.log({ event: e });
-      };
 
       evtSource.addEventListener('charge.create', (e) => {
         console.log({ event: e });
@@ -85,32 +82,76 @@ export function PaymentDialog({
   });
 
   const handleConfirm = async () => {
-    if (!selectedCardId) return toast.error('Please select a card');
+    if (!selectedCardId) {
+      return toast.error('Please select a card');
+    }
+
+    const selectedCard = savedCards.find((card) => card.id === selectedCardId);
+    if (!selectedCard) {
+      return toast.error('Selected card not found');
+    }
+
+    const omisePublicKey = process.env.NEXT_PUBLIC_OMISE_PUBLIC_KEY;
+    if (!omisePublicKey) {
+      toast.error('Payment service is not configured properly.');
+      return;
+    }
+
     setIsProcessing(true);
+    window.Omise.setPublicKey(omisePublicKey);
 
     omise?.createToken(
       'card',
       {
-        name: 'macgeargear',
-        expiration_month: savedCards[0].expiration_month,
-        expiration_year: savedCards[0].expiration_year,
-        number: '4242424242424242',
-        security_code: '123',
+        name: 'macgeargear', // Consider replacing with actual user input
+        expiration_month: selectedCard.expiration_month,
+        expiration_year: selectedCard.expiration_year,
+        number: selectedCard.card_number, // Ensure proper security
+        security_code: '123', // Handle securely in production
       },
       async (_, response) => {
         if (response.object === 'error') {
           toast.error(response.message);
+          setIsProcessing(false);
           return;
         }
 
         pay({
           request_id: requestId,
-          amount: 20 * 100,
+          amount: 20 * 100, // Replace with dynamic value if needed
           card_token: response.id,
         });
       }
     );
   };
+
+  // const handleConfirm = async () => {
+  //   if (!selectedCardId) return toast.error('Please select a card');
+  //   setIsProcessing(true);
+  //   window.Omise.setPublicKey('pkey_test_635k9a501kjvh6lac06');
+  //   omise?.createToken(
+  //     'card',
+  //     {
+  //       name: 'macgeargear',
+  //       expiration_month: savedCards[0].expiration_month,
+  //       expiration_year: savedCards[0].expiration_year,
+  //       number: '4242424242424242',
+  //       security_code: '123',
+  //     },
+  //     async (_, response) => {
+  //       if (response.object === 'error') {
+  //         toast.error(response.message);
+  //         return;
+  //       }
+
+  //       pay({
+  //         request_id: requestId,
+  //         amount: 20 * 100,
+  //         card_token: response.id,
+  //       });
+  //     }
+  //   );
+  // };
 
   const getCardIcon = (brand: string) => {
     switch (brand.toLowerCase()) {
@@ -229,7 +270,7 @@ export function PaymentDialog({
                       </div>
                       <div className="mb-6">
                         <div className="text-lg font-mono tracking-wider">
-                          •••• •••• •••• {card.last4}
+                          •••• •••• •••• {card.card_number.slice(-4)}
                         </div>
                       </div>
                       <div className="flex justify-between items-end">

@@ -15,7 +15,7 @@ export async function payWithCard(data: PayWithCardData) {
 
 export async function getTutorCard(): Promise<ApiResponse<CardDTO[]>> {
   try {
-    const res = await apiClient.get('/cards');
+    const res = await apiClient.get('/user/get-cards');
 
     return res.data;
   } catch (error) {

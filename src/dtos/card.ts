@@ -2,8 +2,8 @@
 
 export interface CardDTO {
   id: string;
-  brand: string;
-  card_number: string;
-  expiration_month: number;
-  expiration_year: number;
+  name: string;
+  number: string;
+  expiration_month: string;
+  expiration_year: string;
 }

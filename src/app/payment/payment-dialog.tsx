@@ -20,14 +20,6 @@ import { useOmise } from '@/hooks/useOmise';
 import { useMutation } from '@tanstack/react-query';
 import { CardDTO } from '@/dtos/card';
 
-// export interface Card {
-//   id: string;
-//   cardNumber: string;
-//   brand: string;
-//   expiration_month: number;
-//   expiration_year: number;
-// }
-
 interface PaymentDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -103,11 +95,11 @@ export function PaymentDialog({
     omise?.createToken(
       'card',
       {
-        name: 'macgeargear', // Consider replacing with actual user input
-        expiration_month: selectedCard.expiration_month,
-        expiration_year: selectedCard.expiration_year,
-        number: selectedCard.card_number, // Ensure proper security
-        security_code: '123', // Handle securely in production
+        name: 'macgeargear',
+        expiration_month: Number(selectedCard.expiration_month),
+        expiration_year: Number(selectedCard.expiration_year),
+        number: selectedCard.number,
+        security_code: '123',
       },
       async (_, response) => {
         if (response.object === 'error') {
@@ -118,7 +110,7 @@ export function PaymentDialog({
 
         pay({
           request_id: requestId,
-          amount: 20 * 100, // Replace with dynamic value if needed
+          amount: 20 * 100,
           card_token: response.id,
         });
       }
@@ -153,8 +145,8 @@ export function PaymentDialog({
   //   );
   // };
 
-  const getCardIcon = (brand: string) => {
-    switch (brand.toLowerCase()) {
+  const getCardIcon = (name: string) => {
+    switch (name.toLowerCase()) {
       case 'visa':
         return <Icons.visa className="h-8 w-8" />;
       case 'mastercard':
@@ -164,8 +156,8 @@ export function PaymentDialog({
     }
   };
 
-  const getCardColor = (brand: string) => {
-    switch (brand.toLowerCase()) {
+  const getCardColor = (name: string) => {
+    switch (name.toLowerCase()) {
       case 'visa':
         return 'from-blue-500 to-blue-600';
       case 'mastercard':
@@ -252,7 +244,7 @@ export function PaymentDialog({
                   />
                   <div className="w-full">
                     <div
-                      className={`bg-gradient-to-r ${getCardColor(card.brand)} rounded-lg p-4 text-white shadow-md relative`}
+                      className={`bg-gradient-to-r ${getCardColor(card.name)} rounded-lg p-4 text-white shadow-md relative`}
                     >
                       {isDefaultCard(index) && (
                         <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full px-2 py-1 font-medium">
@@ -264,13 +256,13 @@ export function PaymentDialog({
                           <span className="text-xs uppercase opacity-80">
                             Card
                           </span>
-                          <span className="font-medium">{card.brand}</span>
+                          <span className="font-medium">{card.name}</span>
                         </div>
-                        {getCardIcon(card.brand)}
+                        {getCardIcon(card.name)}
                       </div>
                       <div className="mb-6">
                         <div className="text-lg font-mono tracking-wider">
-                          •••• •••• •••• {card.card_number.slice(-4)}
+                          •••• •••• •••• {card.number.toString().slice(-4)}
                         </div>
                       </div>
                       <div className="flex justify-between items-end">

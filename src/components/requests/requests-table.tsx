@@ -143,43 +143,6 @@ export function RequestsTable({
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(
     null
   );
-  // const [savedCards, setSavedCards] = useState<Card[]>([
-  //   {
-  //     id: 'card_1',
-  //     brand: 'Visa',
-  //     cardNumber: '4242',
-  //     expiration_month: 12,
-  //     expiration_year: 2030,
-  //   },
-  //   {
-  //     id: 'card_2',
-  //     brand: 'MasterCard',
-  //     cardNumber: '1234',
-  //     expiration_month: 10,
-  //     expiration_year: 2030,
-  //   },
-  //   {
-  //     id: 'card_3',
-  //     brand: 'Visa',
-  //     cardNumber: '5678',
-  //     expiration_month: 6,
-  //     expiration_year: 2030,
-  //   },
-  //   {
-  //     id: 'card_4',
-  //     brand: 'JCB',
-  //     cardNumber: '9876',
-  //     expiration_month: 3,
-  //     expiration_year: 2030,
-  //   },
-  //   {
-  //     id: 'card_5',
-  //     brand: 'American Express',
-  //     cardNumber: '1111',
-  //     expiration_month: 9,
-  //     expiration_year: 2030,
-  //   },
-  // ]);
 
   const { data: cardsResponse } = useCards();
   const savedCards = cardsResponse?.result || [];

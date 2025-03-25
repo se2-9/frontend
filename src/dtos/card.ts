@@ -6,4 +6,5 @@ export interface CardDTO {
   number: string;
   expiration_month: string;
   expiration_year: string;
+  cvv: string;
 }

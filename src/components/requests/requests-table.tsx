@@ -32,7 +32,7 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { PostDTO } from '@/dtos/post';
 import { PostDetailsDialog } from '../posts/post-details-dialog';
-import { PaymentDialog } from '@/app/payment/payment-dialog';
+import { PaymentDialog } from '@/components/payment/payment-dialog';
 import { useCards } from '@/hooks/useCards';
 
 interface RequestsTableProps {
@@ -54,6 +54,7 @@ export function RequestsTable({
     PostDTO | undefined
   >(undefined);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [requests, setRequests] = useState<RequestDTO[]>(data || []);
 
   const filteredData = useMemo(() => {
@@ -144,7 +145,7 @@ export function RequestsTable({
     null
   );
 
-  const { data: cardsResponse } = useCards();
+  const { data: cardsResponse, refetch: refetchCards } = useCards();
   const savedCards = cardsResponse?.result || [];
 
   const columns: ColumnDef<RequestDTO>[] = [
@@ -370,7 +371,8 @@ export function RequestsTable({
           onClose={() => setIsPaymentOpen(false)}
           requestId={selectedRequestId}
           savedCards={savedCards}
-          refetch={refetch}
+          refetchCard={refetchCards}
+          refetchRequests={refetch}
         />
       )}
     </div>

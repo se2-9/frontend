@@ -21,5 +21,14 @@ export const payWithCardSchema = z.object({
   request_id: z.string(),
 });
 
+export const addPaymentCardSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  number: z.string(),
+  expiration_month: z.string().min(1, 'Invalid month').max(12, 'Invalid month'),
+  expiration_year: z.string(),
+  cvv: z.string().min(3).max(4),
+});
+
+export type AddPaymentCardData = z.infer<typeof addPaymentCardSchema>;
 export type PayWithCardData = z.infer<typeof payWithCardSchema>;
 export type OmisePaymentForm = z.infer<typeof omisePaymentSchema>;

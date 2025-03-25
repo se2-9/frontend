@@ -55,7 +55,7 @@ export function PaymentDialog({
       const chargeId = data.result.charge_id;
 
       const evtSource = new EventSource(
-        'http://localhost:8080/api/v1/payment/status/' + chargeId
+        'http://localhost:8080/api/v1/payment/sse/' + chargeId
       );
 
       evtSource.onmessage = (e) => {
@@ -88,6 +88,7 @@ export function PaymentDialog({
     if (!selectedCardId) return toast.error('Please select a card');
     setIsProcessing(true);
 
+    window.Omise.setPublicKey('pkey_test_600efhihjwg96138vv6');
     omise?.createToken(
       'card',
       {

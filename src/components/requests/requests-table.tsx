@@ -32,7 +32,6 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { PostDTO } from '@/dtos/post';
 import { PostDetailsDialog } from '../posts/post-details-dialog';
-import { apiClient } from '@/lib/api/axios';
 import { Card, PaymentDialog } from '@/app/payment/payment-dialog';
 
 interface RequestsTableProps {

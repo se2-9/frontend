@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import AddPaymentCard from './add-payment-card';
+import { AddPaymentCardData } from '@/lib/validations/payment';
+import { CardDTO } from '@/dtos/card';
 
 const getCardColor = (cardName: string) => {
   const name = cardName.toLowerCase();
@@ -31,19 +33,9 @@ const getCardIcon = (cardName: string) => {
   );
 };
 
-interface PaymentCard {
-  id: string;
-  name: string;
-  number: string;
-  expiration_month: string;
-  expiration_year: string;
-  cvv: string;
-  makeDefault?: boolean;
-}
-
 export default function PaymentCardList() {
   // Sample saved cards
-  const [savedCards, setSavedCards] = useState<PaymentCard[]>([
+  const [savedCards, setSavedCards] = useState<CardDTO[]>([
     {
       id: 'card_1',
       name: 'Visa',
@@ -65,20 +57,8 @@ export default function PaymentCardList() {
   const [selectedCardId, setSelectedCardId] = useState(savedCards[0]?.id || '');
   const [showAddCard, setShowAddCard] = useState(false);
 
-  const isDefaultCard = (index: number) => {
-    return savedCards[index]?.makeDefault === true;
-  };
-
-  // Handle adding a new card
-  const handleAddCard = (newCard: PaymentCard) => {
-    let updatedCards = [...savedCards];
-
-    if (newCard.makeDefault) {
-      updatedCards = updatedCards.map((card) => ({
-        ...card,
-        makeDefault: false,
-      }));
-    }
+  const handleAddCard = (newCard: CardDTO) => {
+    const updatedCards = [...savedCards];
 
     setSavedCards([...updatedCards, newCard]);
     setSelectedCardId(newCard.id);
@@ -130,7 +110,7 @@ export default function PaymentCardList() {
                       <div
                         className={`bg-gradient-to-r ${getCardColor(card.name)} rounded-lg p-4 text-white shadow-md relative`}
                       >
-                        {isDefaultCard(index) && (
+                        {index === 0 && (
                           <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full px-2 py-1 font-medium">
                             Default
                           </div>

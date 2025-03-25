@@ -8,7 +8,6 @@ export function useOmise() {
   useEffect(() => {
     loadScript('https://cdn.omise.co/omise.js').then(() => {
       setOmise(window.Omise);
-      window.Omise.setPublicKey('pkey_test_635k9a501kjvh6lac06');
     });
   }, []);
 

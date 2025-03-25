@@ -48,16 +48,16 @@ export function PaymentDialog({
       const chargeId = data.result.charge_id;
 
       const evtSource = new EventSource(
-        'http://localhost:8080/api/v1/payment/sse/' + chargeId
+        `${process.env.NEXT_PUBLIC_API_URL}/payment/sse/${chargeId}`
       );
 
       evtSource.addEventListener('charge.create', (e) => {
         console.log({ event: e });
         toast.success('Payment successful!');
-        refetch();
         evtSource.close();
         setIsProcessing(false);
         onClose();
+        refetch();
       });
 
       evtSource.addEventListener('charge.failed', (e) => {
@@ -65,6 +65,7 @@ export function PaymentDialog({
         evtSource.close();
         setIsProcessing(false);
         onClose();
+        refetch();
       });
     },
     onError: (error) => {
@@ -198,7 +199,7 @@ export function PaymentDialog({
         ) : (
           <>
             <div className="flex justify-end mb-2">
-              <div className="flex items-center space-x-1 border rounded-md">
+              <div className="flex items-center space-x-1 border rounded-md w-fit">
                 <Toggle
                   pressed={viewMode === 'list'}
                   onPressedChange={() => setViewMode('list')}

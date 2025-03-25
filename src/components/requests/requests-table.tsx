@@ -211,21 +211,30 @@ export function RequestsTable({
     ...(isTutor
       ? [
           {
-            header: 'Cancel',
+            header: 'Action',
             cell: (info) => {
               const request_id = info.row.original.id;
               const status = info.row.original.status;
 
               return (
-                <Button
-                  onClick={() => handleCancelRequest(request_id)}
-                  className="bg-red-400 hover:bg-red-500"
-                  disabled={
-                    status !== 'pending' && status !== 'processing other'
-                  }
-                >
-                  Cancel
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    //onClick={() => handlePayment(request_id)}
+                    className="bg-blue-500 hover:bg-blue-700"
+                    disabled={status !== 'not paid' && status !== 'payment failed'}
+                  >
+                    Pay
+                  </Button>
+                  <Button
+                    onClick={() => handleCancelRequest(request_id)}
+                    className="bg-red-400 hover:bg-red-500"
+                    disabled={
+                      status !== 'pending' && status !== 'processing other'
+                    }
+                  >
+                    Cancel
+                  </Button>
+                </div>
               );
             },
           } as ColumnDef<RequestDTO, unknown>,

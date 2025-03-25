@@ -57,32 +57,19 @@ export function RequestsTable({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [requests, setRequests] = useState<RequestDTO[]>(data || []);
 
-  const filteredData = useMemo(() => {
-    return requests.filter((req) => {
-      const matchesSearch =
-        req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
-        req.status.toLowerCase().includes(search.toLowerCase());
+  const filteredData =
+    useMemo(() => {
+      return data?.filter((req) => {
+        const matchesSearch =
+          req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
+          req.status.toLowerCase().includes(search.toLowerCase());
 
-      const matchesStatus =
-        statusFilter === 'all' || req.status === statusFilter;
+        const matchesStatus =
+          statusFilter === 'all' || req.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
-    });
-  }, [search, statusFilter, requests]);
-
-  // const filteredData =
-  //   useMemo(() => {
-  //     return data?.filter((req) => {
-  //       const matchesSearch =
-  //         req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
-  //         req.status.toLowerCase().includes(search.toLowerCase());
-
-  //       const matchesStatus =
-  //         statusFilter === 'all' || req.status === statusFilter;
-
-  //       return matchesSearch && matchesStatus;
-  //     });
-  //   }, [search, statusFilter, data]) || [];
+        return matchesSearch && matchesStatus;
+      });
+    }, [search, statusFilter, data]) || [];
 
   const acceptRequestMutation = useMutation({
     mutationFn: acceptRequest,

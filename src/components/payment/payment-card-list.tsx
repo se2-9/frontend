@@ -22,6 +22,7 @@ const getCardColor = (cardName: string) => {
   return 'from-gray-700 to-gray-900'; // Default color
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getCardIcon = (cardName: string) => {
   return (
     <div className="h-6 w-10 bg-white bg-opacity-20 rounded-md flex items-center justify-center text-xs font-bold">

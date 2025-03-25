@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import {
   ColumnDef,
   useReactTable,
@@ -122,52 +122,6 @@ export function RequestsTable({
       }
     },
   });
-
-  useEffect(() => {
-    if (!data) return; // Avoid subscribing if no data
-
-    const chargeId = 'yourChargeId'; // Replace with dynamic value
-
-    const eventSource = new EventSource(
-      `http://localhost:8080/api/v1/payment/sse/${chargeId}`
-    );
-
-    eventSource.onmessage = (event) => {
-      const updatedStatus = JSON.parse(event.data);
-
-      // 🔹 Update data state efficiently
-      setData((prevData) =>
-        prevData.map((req) =>
-          req.id === updatedStatus.id
-            ? { ...req, status: updatedStatus.status }
-            : req
-        )
-      );
-
-      // Optional: Trigger toast notifications
-      toast.info(
-        `Request ${updatedStatus.id} updated to ${updatedStatus.status}`
-      );
-    };
-
-    evtSource.addEventListener('charge.create', (e) => {
-      console.log({ event: e });
-      toast.success('Payment successful!');
-      refetch();
-      evtSource.close();
-      setIsProcessing(false);
-      onClose();
-    });
-
-    eventSource.onerror = (error) => {
-      console.error('SSE Error:', error);
-      eventSource.close(); // Auto-reconnect prevention
-    };
-
-    return () => {
-      eventSource.close(); // Cleanup on unmount
-    };
-  }, [data]); // 🔥 Depend only on `data` to prevent redundant re-subscriptions
 
   const handleViewDetail = (post: PostDTO) => {
     // console.log(postDTO)

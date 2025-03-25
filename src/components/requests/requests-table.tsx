@@ -32,6 +32,8 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { PostDTO } from '@/dtos/post';
 import { PostDetailsDialog } from '../posts/post-details-dialog';
+import { PaymentDialog } from '@/components/payment/payment-dialog';
+import { useCards } from '@/hooks/useCards';
 
 interface RequestsTableProps {
   data: RequestDTO[] | undefined;
@@ -51,19 +53,36 @@ export function RequestsTable({
   const [currentPostDetail, setCurrentPostDetail] = useState<
     PostDTO | undefined
   >(undefined);
-  const filteredData =
-    useMemo(() => {
-      return data?.filter((req) => {
-        const matchesSearch =
-          req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
-          req.status.toLowerCase().includes(search.toLowerCase());
 
-        const matchesStatus =
-          statusFilter === 'all' || req.status === statusFilter;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [requests, setRequests] = useState<RequestDTO[]>(data || []);
 
-        return matchesSearch && matchesStatus;
-      });
-    }, [search, statusFilter, data]) || [];
+  const filteredData = useMemo(() => {
+    return requests.filter((req) => {
+      const matchesSearch =
+        req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
+        req.status.toLowerCase().includes(search.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === 'all' || req.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [search, statusFilter, requests]);
+
+  // const filteredData =
+  //   useMemo(() => {
+  //     return data?.filter((req) => {
+  //       const matchesSearch =
+  //         req.tutor_id.toLowerCase().includes(search.toLowerCase()) ||
+  //         req.status.toLowerCase().includes(search.toLowerCase());
+
+  //       const matchesStatus =
+  //         statusFilter === 'all' || req.status === statusFilter;
+
+  //       return matchesSearch && matchesStatus;
+  //     });
+  //   }, [search, statusFilter, data]) || [];
 
   const acceptRequestMutation = useMutation({
     mutationFn: acceptRequest,
@@ -104,6 +123,7 @@ export function RequestsTable({
       }
     },
   });
+
   const handleViewDetail = (post: PostDTO) => {
     // console.log(postDTO)
     setCurrentPostDetail(post);
@@ -119,6 +139,14 @@ export function RequestsTable({
   const handleCancelRequest = (request_id: string) => {
     cancelRequestMutation.mutate(request_id);
   };
+
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(
+    null
+  );
+
+  const { data: cardsResponse, refetch: refetchCards } = useCards();
+  const savedCards = cardsResponse?.result || [];
 
   const columns: ColumnDef<RequestDTO>[] = [
     {
@@ -219,9 +247,16 @@ export function RequestsTable({
               return (
                 <div className="flex items-center gap-2">
                   <Button
-                    //onClick={() => handlePayment(request_id)}
+                    onClick={() => {
+                      // const cardsRes = await apiClient.get('/users/me/cards');
+                      // setSavedCards(savedCards);
+                      setSelectedRequestId(request_id);
+                      setIsPaymentOpen(true);
+                    }}
                     className="bg-blue-500 hover:bg-blue-700"
-                    disabled={status !== 'not paid' && status !== 'payment failed'}
+                    disabled={
+                      status !== 'not paid' && status !== 'payment failed'
+                    }
                   >
                     Pay
                   </Button>
@@ -330,6 +365,16 @@ export function RequestsTable({
         onClose={() => setIsShowingDetail(false)}
         post={currentPostDetail}
       />
+      {selectedRequestId && (
+        <PaymentDialog
+          isOpen={isPaymentOpen}
+          onClose={() => setIsPaymentOpen(false)}
+          requestId={selectedRequestId}
+          savedCards={savedCards}
+          refetchCard={refetchCards}
+          refetchRequests={refetch}
+        />
+      )}
     </div>
   );
 }

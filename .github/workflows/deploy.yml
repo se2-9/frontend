@@ -24,11 +24,15 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build and Push Docker Image to GHCR
+      - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME="ghcr.io/${{ github.repository }}:latest"
-          docker build -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
+          docker build \
+            --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+            --build-arg NEXT_PUBLIC_OMISE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_OMISE_PUBLIC_KEY }} \
+            --build-arg NEXT_PUBLIC_OMISE_SECRET_KEY=${{ secrets.NEXT_PUBLIC_OMISE_SECRET_KEY }} \
+            --build-arg NEXT_PUBLIC_OMISE_API_VERSION=${{ secrets.NEXT_PUBLIC_OMISE_API_VERSION }} \
+            -t ghcr.io/${{ github.repository }}:latest .
+          docker push ghcr.io/${{ github.repository }}:latest
 
   deploy:
     runs-on: ubuntu-latest

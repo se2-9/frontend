@@ -19,3 +19,12 @@ export async function editUserProfile(
     throw handleAxiosError(error);
   }
 }
+
+export async function deleteUser() {
+  try {
+    const res = await apiClient.delete('/user');
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+}

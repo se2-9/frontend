@@ -4,38 +4,38 @@ import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import { useState } from 'react';
 import { Input } from '../ui/input';
+import { useMutation } from '@tanstack/react-query';
+import { deleteUser } from '@/lib/api/profile';
+import { useRouter } from 'next/navigation';
 
 export default function ProfileView() {
   const user = useAuthStore((state) => state.user);
+  const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [confirmationText, setConfirmationText] = useState('');
   
-  const handleDelete = async () => {
+  const mutation = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      alert('Account deleted successfully.');
+      router.push('/login');
+    },
+    onError: (error) => {
+      console.error('Error deleting account:', error);
+      alert('Failed to delete account.');
+    },
+    onSettled: () => {
+      setIsDialogOpen(false);
+      setConfirmationText('');
+    },
+  });
+
+  const handleDelete = () => {
     if (confirmationText !== 'Confirm Delete') {
       alert('You must type "Confirm Delete" to proceed.');
       return;
     }
-    
-    try {
-      // const response = await fetch('/api/delete-account', {
-      //   method: 'DELETE',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ userId: user?.id })
-      // });
-      
-      // if (response.ok) {
-      //   alert('Account deleted successfully.');
-      //   // Perform logout or redirect logic here
-      // } else {
-      //   alert('Failed to delete account.');
-      // }
-    } catch (error) {
-      console.error('Error deleting account:', error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsDialogOpen(false);
-      setConfirmationText('');
-    }
+    mutation.mutate();
   };
 
   return (
@@ -56,7 +56,6 @@ export default function ProfileView() {
           onClick={() => setIsDialogOpen(true)}
         >
           Delete Account
-        {/* {mutation.isPending ? 'Saving...' : 'Save Changes'} */}
       </Button>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>

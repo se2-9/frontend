@@ -20,7 +20,7 @@ import { useOmise } from '@/hooks/useOmise';
 import { useMutation } from '@tanstack/react-query';
 import { CardDTO } from '@/dtos/card';
 import { AddPaymentCardData } from '@/lib/validations/payment';
-import AddPaymentCard from './add-payment-card';
+import AddPaymentCard, { detectCardType } from './add-payment-card';
 
 interface PaymentDialogProps {
   isOpen: boolean;
@@ -66,22 +66,37 @@ export function PaymentDialog({
         `${process.env.NEXT_PUBLIC_API_URL || 'https://api.findmytutor.macgeargear.dev/api/v1'}/payment/sse/${chargeId}`
       );
 
+      evtSource.onmessage = (e) => {
+        console.log({ event: e });
+      };
+
       evtSource.addEventListener('charge.create', (e) => {
+        console.log('create');
         console.log({ event: e });
         toast.success('Payment successful!');
-        evtSource.close();
+        // evtSource.close();
         setIsProcessing(false);
         onClose();
         refetchRequests();
       });
 
       evtSource.addEventListener('charge.failed', (e) => {
+        console.log('failed');
         console.log({ event: e });
-        evtSource.close();
+        // evtSource.close();
         setIsProcessing(false);
         onClose();
         refetchRequests();
       });
+
+      evtSource.onerror = (e) => {
+        console.log('error');
+        console.log({ event: e });
+        // evtSource.close();
+        setIsProcessing(false);
+        onClose();
+        refetchRequests();
+      };
     },
     onError: (error) => {
       toast.error(error.message);
@@ -98,6 +113,7 @@ export function PaymentDialog({
   };
 
   const handleConfirmPay = async () => {
+    console.log(selectedCardId);
     if (!selectedCardId) {
       return toast.error('Please select a card');
     }
@@ -121,13 +137,14 @@ export function PaymentDialog({
     omise?.createToken(
       'card',
       {
-        name: 'macgeargear',
+        name: selectedCard.name,
         expiration_month: Number(selectedCard.expiration_month),
         expiration_year: Number(selectedCard.expiration_year),
         number: selectedCard.number,
         security_code: '123',
       },
       async (_, response) => {
+        console.log('omise craete token response: ', response);
         if (response.object === 'error') {
           toast.error(response.message);
           setIsProcessing(false);
@@ -255,7 +272,7 @@ export function PaymentDialog({
                       />
                       <div className="w-full">
                         <div
-                          className={`bg-gradient-to-r ${getCardColor(card.name)} rounded-lg p-4 text-white shadow-md relative`}
+                          className={`bg-gradient-to-r ${getCardColor(detectCardType(card.number))} rounded-lg p-4 text-white shadow-md relative`}
                         >
                           {isDefaultCard(index) && (
                             <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full px-2 py-1 font-medium">
@@ -269,7 +286,7 @@ export function PaymentDialog({
                               </span>
                               <span className="font-medium">{card.name}</span>
                             </div>
-                            {getCardIcon(card.name)}
+                            {getCardIcon(detectCardType(card.number))}
                           </div>
                           <div className="mb-6">
                             <div className="text-lg font-mono tracking-wider">

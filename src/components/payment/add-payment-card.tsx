@@ -45,7 +45,7 @@ const getCardColor = (cardName: string) => {
   return 'from-gray-700 to-gray-900'; // Default color
 };
 
-const detectCardType = (number: string) => {
+export const detectCardType = (number: string) => {
   const cleanNumber = number.replace(/\s+/g, '');
 
   if (/^4/.test(cleanNumber)) return 'Visa';
@@ -153,7 +153,7 @@ export default function AddPaymentCard({
         >
           {/* Preview Card */}
           <div
-            className={`bg-gradient-to-r ${getCardColor(previewName)} rounded-lg p-4 text-white shadow-md relative mb-6`}
+            className={`bg-gradient-to-r ${getCardColor(detectCardType(form.getValues().number))} rounded-lg p-4 text-white shadow-md relative mb-6`}
           >
             <div className="flex justify-between items-start mb-6">
               <div className="flex flex-col">

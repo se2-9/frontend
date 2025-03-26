@@ -29,6 +29,11 @@ export const addPaymentCardSchema = z.object({
   cvv: z.string().min(3).max(4),
 });
 
+export const deletePaymentCardSchema = z.object({
+  card_number: z.string(),
+});
+
 export type AddPaymentCardData = z.infer<typeof addPaymentCardSchema>;
 export type PayWithCardData = z.infer<typeof payWithCardSchema>;
 export type OmisePaymentForm = z.infer<typeof omisePaymentSchema>;
+export type DeletePaymentCardData = z.infer<typeof deletePaymentCardSchema>;

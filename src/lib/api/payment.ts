@@ -1,5 +1,9 @@
 import { CardDTO } from '@/dtos/card';
-import { AddPaymentCardData, PayWithCardData } from '../validations/payment';
+import {
+  AddPaymentCardData,
+  DeletePaymentCardData,
+  PayWithCardData,
+} from '../validations/payment';
 import { apiClient, handleAxiosError } from './axios';
 import { ApiResponse } from '@/types/api';
 
@@ -27,6 +31,17 @@ export async function getUserCards(): Promise<ApiResponse<CardDTO[]>> {
   try {
     const res = await apiClient.get('/user/get-cards');
 
+    return res.data;
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+}
+
+export async function deletePaymentCard(data: DeletePaymentCardData) {
+  try {
+    const res = await apiClient.delete('/user/delete-card', {
+      data: data,
+    });
     return res.data;
   } catch (error) {
     throw handleAxiosError(error);

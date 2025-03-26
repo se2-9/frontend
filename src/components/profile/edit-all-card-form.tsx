@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { CardDTO } from '@/dtos/card';
 import { Icons } from '../icons';
 import MaxWidthWrapper from '../max-width-wrapper';
-import { PlusIcon, ScrollTextIcon, CreditCardIcon,  TrashIcon } from 'lucide-react';
+import { PlusIcon, CreditCardIcon,  TrashIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from '@radix-ui/react-dialog';
 import { addPaymentCard, deletePaymentCard, getUserCards } from '@/lib/api/payment';
@@ -102,17 +102,17 @@ export default function EditAllCardForm() {
                 <div className="flex justify-center">
                   <Button className="bg-app-lightbrown text-lightbrown-foreground hover:text-white">
                     <PlusIcon className="mr-2 h-4 w-4" />
-                    Create Card
+                    Add Card
                   </Button>
                 </div>
               ) : (
                 <div className="text-center space-y-4">
-                  <ScrollTextIcon className="mx-auto h-12 w-12 text-muted-foreground" />
+                  <CreditCardIcon className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h2 className="text-2xl font-semibold text-foreground">No cards yet</h2>
-                  <p className="text-muted-foreground mb-4">Create your first card to get started!</p>
+                  <p className="text-muted-foreground mb-4">Add your first card to get started!</p>
                   <Button className="bg-app-lightbrown text-lightbrown-foreground">
                     <PlusIcon className="mr-2 h-4 w-4" />
-                    Create Card
+                    Add Card
                   </Button>
                 </div>
               )}

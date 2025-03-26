@@ -1,21 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 
-import { fetchCards } from '@/lib/api/profile';
 import { CardDTO } from '@/dtos/card';
 import { Icons } from '../icons';
 import MaxWidthWrapper from '../max-width-wrapper';
-import {EditCardCard} from './edit-card-card';
-import { ScrollTextIcon, PlusIcon } from 'lucide-react';
+import { ScrollTextIcon, PlusIcon, CreditCardIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from '@radix-ui/react-dialog';
-import CreatePost from '../posts/create-post';
 import { DialogHeader } from '../ui/dialog';
-import CreateCard from './create-card';
+import { addPaymentCard, getUserCards } from '@/lib/api/payment';
+import AddPaymentCard from '../payment/add-payment-card';
+import { AddPaymentCardData } from '@/lib/validations/payment';
+import { toast } from 'sonner';
 export default function EditAllCardForm() {
+  const [showAddCardDialog, setShowAddCardDialog] = useState(false);
   const {
     data: cards,
     isLoading,
@@ -23,14 +24,48 @@ export default function EditAllCardForm() {
   } = useQuery({
     queryKey: ['get'],
     queryFn: async () => {
-      const p = await fetchCards();
+      const p = await getUserCards();
       return p?.result ?? [];
     },
     enabled: true,
   });
   const allCards = cards??[]
-  // const [allCards, setAllCards] = useState<CardDTO[]>(cards ?? []);
-
+  const { mutate: addCard } = useMutation({
+      mutationFn: addPaymentCard,
+      onSuccess: () => {
+        toast.success('Card added successfully');
+        setShowAddCardDialog(false);
+        refetch();
+      },
+    });
+  const handleAddCard = async (newCard: AddPaymentCardData) => {
+    try {
+      addCard(newCard);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const getCardIcon = (name: string) => {
+      switch (name.toLowerCase()) {
+        case 'visa':
+          return <Icons.visa className="h-8 w-8" />;
+        case 'mastercard':
+          return <Icons.mastercard className="h-8 w-8" />;
+        case 'amex':
+          return <CreditCardIcon className="h-8 w-8" />;
+      }
+    };
+  
+    const getCardColor = (name: string) => {
+      switch (name.toLowerCase()) {
+        case 'visa':
+          return 'from-blue-500 to-blue-600';
+        case 'mastercard':
+          return 'from-red-500 to-orange-500';
+        default:
+          return 'from-gray-500 to-gray-600';
+      }
+    };
   if (isLoading) {
     return (
       <MaxWidthWrapper>
@@ -42,6 +77,7 @@ export default function EditAllCardForm() {
 
   }
   const hasCards = allCards.length > 0;
+  // console.log(showAddCardDialog)
   return (
     <MaxWidthWrapper className="py-8">
           <div className="flex flex-col items-center">
@@ -52,7 +88,8 @@ export default function EditAllCardForm() {
                 <DialogTrigger asChild>
                   {hasCards ? (
                     <div className="flex justify-center">
-                      <Button className="bg-app-lightbrown text-lightbrown-foreground hover:text-white">
+                      <Button className="bg-app-lightbrown text-lightbrown-foreground hover:text-white"
+                       onClick={() => setShowAddCardDialog(true)}>
                         <PlusIcon className="mr-2 h-4 w-4" />
                         Create Card
                       </Button>
@@ -66,13 +103,15 @@ export default function EditAllCardForm() {
                       <p className="text-muted-foreground mb-4">
                         Create your first card to get started!
                       </p>
-                      <Button className="bg-app-lightbrown text-lightbrown-foreground transition-colors">
+                      <Button className="bg-app-lightbrown text-lightbrown-foreground transition-colors"
+                       onClick={() => setShowAddCardDialog(true)}>
                         <PlusIcon className="mr-2 h-4 w-4" />
                         Create Card
                       </Button>
                     </div>
                   )}
                 </DialogTrigger>
+                {showAddCardDialog && 
                 <DialogContent
                   className="sm:max-w-[425px]"
                   aria-description="Add you card"
@@ -81,19 +120,65 @@ export default function EditAllCardForm() {
                     <DialogTitle>Add Your Card</DialogTitle>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
-                    <CreateCard refetch={refetch}/>
+                    <AddPaymentCard
+                      onAddCard={(card) => {
+                        handleAddCard(card);
+                        setShowAddCardDialog(false);
+                      }}
+                      onCancel={() => setShowAddCardDialog(false)}
+                    />
                   </div>
-                </DialogContent>
+                </DialogContent>}
               </Dialog>
+              
             </div>
     
             {hasCards && (
               <div className="w-full space-y-6">
-                {allCards.map((card: CardDTO) => (
+                {/* {allCards.map((card: CardDTO) => (
                   <EditCardCard
                     key={card.id}
                     card={card}
                   />
+                ))} */}
+                {allCards.map((card:CardDTO) => (
+                  <label
+                    key={card.id}
+                    className={`relative flex cursor-pointer rounded-lg border p-1 m-1`}>
+                    <div className="w-full">
+                      <div
+                        className={`bg-gradient-to-r ${getCardColor(card.name)} rounded-lg p-4 text-white shadow-md relative`}
+                      >
+                        <div className="flex justify-between items-start mb-6">
+                          <div className="flex flex-col">
+                            <span className="text-xs uppercase opacity-80">
+                              Card
+                            </span>
+                            <span className="font-medium">{card.name}</span>
+                          </div>
+                          {getCardIcon(card.name)}
+                        </div>
+                        <div className="mb-6">
+                          <div className="text-lg font-mono tracking-wider">
+                            •••• •••• •••• {card.number.toString().slice(-4)}
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-end">
+                          <div>
+                            <span className="text-xs uppercase opacity-80">
+                              Expires
+                            </span>
+                            <div className="font-medium">
+                              {card.expiration_month
+                                .toString()
+                                .padStart(2, '0')}
+                              /{card.expiration_year.toString().slice(-2)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
                 ))}
                 
               </div>

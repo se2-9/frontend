@@ -63,7 +63,7 @@ export function PaymentDialog({
       const chargeId = data.result.charge_id;
 
       const evtSource = new EventSource(
-        `${process.env.NEXT_PUBLIC_API_URL}/payment/sse/${chargeId}`
+        `${process.env.NEXT_PUBLIC_API_URL || 'https://api.findmytutor.macgeargear.dev/api/v1'}/payment/sse/${chargeId}`
       );
 
       evtSource.addEventListener('charge.create', (e) => {
@@ -107,7 +107,9 @@ export function PaymentDialog({
       return toast.error('Selected card not found');
     }
 
-    const omisePublicKey = process.env.NEXT_PUBLIC_OMISE_PUBLIC_KEY;
+    const omisePublicKey =
+      process.env.NEXT_PUBLIC_OMISE_PUBLIC_KEY ||
+      'pkey_test_600efhihjwg96138vv6';
     if (!omisePublicKey) {
       toast.error('Payment service is not configured properly.');
       return;

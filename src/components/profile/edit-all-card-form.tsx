@@ -10,7 +10,6 @@ import { addPaymentCard, deletePaymentCard, getUserCards } from '@/lib/api/payme
 import AddPaymentCard from '../payment/add-payment-card';
 import { AddPaymentCardData, DeletePaymentCardData } from '@/lib/validations/payment';
 import { toast } from 'sonner';
-import { DeleteCardSchema } from '@/lib/validations/profile';
 
 export default function EditAllCardForm() {
   const [showAddCardDialog, setShowAddCardDialog] = useState(false);

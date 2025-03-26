@@ -63,7 +63,7 @@ export default function ProfileView() {
             <DialogTitle>Confirm Deletion</DialogTitle>
           </DialogHeader>
           <p className="select-none">Are you sure you want to delete your account? This action cannot be undone.</p>
-          <p className="select-none"> If you want to continue, please type "Confirm Delete" to continue</p>
+          <p className="select-none"> If you want to continue, please type &apos;Confirm Delete&apos; to continue</p>
           <Input
             type="text"
             placeholder="Type 'Confirm Delete' to proceed"

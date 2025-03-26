@@ -8,12 +8,10 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter,
 } from '@/components/ui/card';
 import EditProfileForm from '@/components/profile/edit-profile-form';
 import ProfileHeader from '@/components/profile/edit-profile-header';
 import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
 
 export default function Dashboard() {
   const user = useAuthStore((state) => state.user);

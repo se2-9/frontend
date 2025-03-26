@@ -83,7 +83,7 @@ export function PaymentDialog({
       evtSource.addEventListener('charge.failed', (e) => {
         console.log('failed');
         console.log({ event: e });
-        // evtSource.close();
+        evtSource.close();
         setIsProcessing(false);
         onClose();
         refetchRequests();
@@ -92,7 +92,7 @@ export function PaymentDialog({
       evtSource.onerror = (e) => {
         console.log('error');
         console.log({ event: e });
-        // evtSource.close();
+        evtSource.close();
         setIsProcessing(false);
         onClose();
         refetchRequests();

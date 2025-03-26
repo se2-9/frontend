@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { CardDTO } from '@/dtos/card';
 import { Icons } from '../icons';
 import MaxWidthWrapper from '../max-width-wrapper';
-import { PlusIcon, ScrollTextIcon, CreditCardIcon,  TrashIcon } from 'lucide-react';
+import { PlusIcon, CreditCardIcon,  TrashIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from '@radix-ui/react-dialog';
 import { addPaymentCard, deletePaymentCard, getUserCards } from '@/lib/api/payment';

@@ -7,6 +7,7 @@ import { Input } from '../ui/input';
 import { useMutation } from '@tanstack/react-query';
 import { deleteUser } from '@/lib/api/profile';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function ProfileView() {
   const user = useAuthStore((state) => state.user);
@@ -17,12 +18,12 @@ export default function ProfileView() {
   const mutation = useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
-      alert('Account deleted successfully.');
+      toast.success("Account deleted successfully")
       router.push('/login');
     },
     onError: (error) => {
       console.error('Error deleting account:', error);
-      alert('Failed to delete account.');
+      toast.error("Failed to delete account")
     },
     onSettled: () => {
       setIsDialogOpen(false);

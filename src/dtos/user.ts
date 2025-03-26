@@ -13,20 +13,6 @@ export interface UserDTO {
   tutor_portfolio: string | undefined;
   tutor_education_level: string | undefined;
 }
-// export interface UserEditDTO {
-//   id: string;
-//   name: string;
-//   email: string;
-//   verify_status: boolean;
-//   date_of_birth: Date ;
-//   citizen_id: string;
-//   phone_number: string;
-//   role: 'student' | 'tutor'; 
-//   password: string;
-//   tutor_portfolio: string|undefined;
-//   tutor_education_level: string|undefined;
-//   gender: string,
-// }
 export interface TutorContactDTO {
   id: string;
   phone_number: string;

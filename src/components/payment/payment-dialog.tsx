@@ -55,6 +55,9 @@ export function PaymentDialog({
       setShowAddCardDialog(false);
       refetchCard();
     },
+    onError: () =>{
+      toast.error('Unable to add card')
+    }
   });
 
   const { mutate: pay } = useMutation({

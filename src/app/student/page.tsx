@@ -13,10 +13,12 @@ import {
 } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);
-
+  const router = useRouter()
   const stats = {
     requestsFromTutors: 8,
     matchedPosts: 4,
@@ -52,7 +54,14 @@ export default function Page() {
       description: 'Send inquiry for problem occuring in the platform',
     },
   ];
-
+  useEffect(() => {
+    if (user) {
+      if (user.role !== 'student') {
+        router.push(`/${user.role}`);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
       <div className="hidden lg:block w-[480px] sticky top-4 self-start mt-6">

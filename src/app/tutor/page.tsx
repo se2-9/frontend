@@ -7,10 +7,12 @@ import Link from 'next/link';
 import { Mail, Star, Users, Search, Send, AlertTriangle } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
-
+  const router = useRouter()
   const stats = {
     totalRequests: 15,
     pendingRequests: 5,
@@ -44,7 +46,14 @@ export default function DashboardPage() {
       description: 'Send inquiry for problem occuring in the platform',
     },
   ];
-
+  useEffect(() => {
+    if (user) {
+      if (user.role !== 'tutor') {
+        router.push(`/${user.role}`);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
       <div className="hidden lg:block w-[480px] sticky top-4 self-start mt-6">

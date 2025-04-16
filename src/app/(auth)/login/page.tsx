@@ -30,7 +30,7 @@ export default function Page() {
             className={cn('w-full text-center hover:underline mt-10 text-sm')}
             href="/"
           >
-            Don&apos;t have an account?{'  '}
+            Doesn&apos;t have an account?{'  '}
             <span className="font-bold hover:underline">Register</span>
           </Link>
         </CardFooter>

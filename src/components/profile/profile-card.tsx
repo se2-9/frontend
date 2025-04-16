@@ -57,7 +57,7 @@ export function ProfileCard({ user }: ProfileCardProps) {
           <Calendar className="h-4 w-4" />
           <span>
             <strong>Date of birth: </strong>{' '}
-            {new Date(user.dateOfBirth).toLocaleString()}
+            {new Date(user.dateOfBirth).toLocaleString().split(',')[0]}
           </span>
         </div>
         <div className="flex items-center space-x-2 text-sm text-gray-600">

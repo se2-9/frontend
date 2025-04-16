@@ -72,7 +72,7 @@ export default function RegisterTutorForm() {
                 />
               </FormControl>
               <FormDescription className="text-destructive">
-                {form.formState.errors.email?.message}
+                {form.formState.errors.name?.message}
               </FormDescription>
             </FormItem>
           )}

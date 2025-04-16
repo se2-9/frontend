@@ -81,6 +81,7 @@ export default function LoginForm() {
                 <Input
                   {...field}
                   placeholder="Enter your email"
+                  id="email"
                   type="email"
                 />
               </FormControl>
@@ -101,10 +102,12 @@ export default function LoginForm() {
                   <Input
                     {...field}
                     placeholder="Enter your password"
+                    id="password"
                     type={`${showPassword ? 'text' : 'password'}`}
                   />
                   <Button
                     type="button"
+                    id="submit-login"
                     variant="ghost"
                     className="bg-background text-text h-fit absolute right-2 top-1/2 -translate-y-1/2 p-1"
                     onClick={() => setShowPassword((prev) => !prev)}

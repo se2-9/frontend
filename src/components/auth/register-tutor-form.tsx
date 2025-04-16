@@ -143,7 +143,7 @@ export default function RegisterTutorForm() {
                 />
               </FormControl>
               <FormDescription className="text-destructive">
-                {form.formState.errors.password?.message}
+                {form.formState.errors.educationLevel?.message}
               </FormDescription>
             </FormItem>
           )}
@@ -162,7 +162,7 @@ export default function RegisterTutorForm() {
                 />
               </FormControl>
               <FormDescription className="text-destructive">
-                {form.formState.errors.password?.message}
+                {form.formState.errors.portfolio?.message}
               </FormDescription>
             </FormItem>
           )}

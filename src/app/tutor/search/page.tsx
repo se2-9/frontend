@@ -122,23 +122,25 @@ export default function Page() {
 
         <div className="flex items-center justify-between">
           {/* mobile filter popup */}
-          <div className="xl:hidden flex items-center space-x-4">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  <FilterIcon size={16} /> Filter
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <FilterForm
-                  refetch={refetch}
-                  form={form}
-                />
-              </DialogContent>
-            </Dialog>
+          <div className="flex items-center space-x-4">
+            <div className='xl:hidden'>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2"
+                  >
+                    <FilterIcon size={16} /> Filter
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <FilterForm
+                    refetch={refetch}
+                    form={form}
+                  />
+                </DialogContent>
+              </Dialog>
+            </div>
 
             {/* search and sort */}
             <div className="flex w-full items-center space-x-2 my-4">

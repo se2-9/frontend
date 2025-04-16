@@ -151,7 +151,7 @@ export default function Page() {
                 />
                 <Input
                   className="pl-10 pr-4 py-2 w-full rounded-md"
-                  placeholder="Search by title, subject, or tutor..."
+                  placeholder="Search by title, subject, or student..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />

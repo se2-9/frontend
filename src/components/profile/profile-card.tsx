@@ -48,13 +48,13 @@ export function ProfileCard({ user }: ProfileCardProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <Mail className="h-4 w-4" />
+          <Mail className="h-4 w-4 shrink-0" />
           <span>
             <strong>Email:</strong> {user.email}
           </span>
         </div>
         <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <Calendar className="h-4 w-4" />
+          <Calendar className="h-4 w-4 shrink-0" />
           <span>
             <strong>Date of birth: </strong>{' '}
             {new Date(user.dateOfBirth).toLocaleString().split(',')[0]}
@@ -67,23 +67,27 @@ export function ProfileCard({ user }: ProfileCardProps) {
           </span>
         </div>
         <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <PhoneCallIcon className="h-4 w-4" />
+          <PhoneCallIcon className="h-4 w-4 shrink-0" />
           <span>
             <strong>Phone number: </strong> {user.phoneNumber}
           </span>
         </div>
-        {user.role === 'tutor' && <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <BookTextIcon className="h-4 w-4" />
-          <span>
-            <strong>Portfolio: </strong> {user.tutorPortfolio}
-          </span>
-        </div>}
-        {user.role === 'tutor' && <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <GraduationCap className="h-4 w-4" />
-          <span>
-            <strong>Education Level: </strong> {user.tutorEducationLevel}
-          </span>
-        </div>}
+        {user.role === 'tutor' && (
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <BookTextIcon className="h-4 w-4 shrink-0" />
+            <span>
+              <strong>Portfolio: </strong> {user.tutorPortfolio}
+            </span>
+          </div>
+        )}
+        {user.role === 'tutor' && (
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <GraduationCap className="h-4 w-4 shrink-0" />
+            <span>
+              <strong>Education Level: </strong> {user.tutorEducationLevel}
+            </span>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex justify-between">
         <Link href="/profile/edit">
@@ -91,7 +95,7 @@ export function ProfileCard({ user }: ProfileCardProps) {
             variant="outline"
             size="sm"
           >
-            <Edit className="h-4 w-4 mr-2" />
+            <Edit className="h-4 w-4 shrink-0 mr-2" />
             Edit Profile
           </Button>
         </Link>

@@ -12,6 +12,19 @@ export interface PostDTO {
   description: string;
   created_at: string;
 }
+export interface PostWithIsRequestedDTO {
+  post_id: string;
+  user: UserDTO | undefined;
+  title: string;
+  subject: string;
+  tutor_gender: string;
+  is_online: boolean;
+  place: string;
+  hourly_rate: number;
+  description: string;
+  created_at: string;
+  is_requested: boolean;
+}
 
 export interface PostWithTutorDTO {
   post_id: string;

@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/select';
 import { fetchPosts } from '@/lib/api/search';
 import FilterForm from '@/components/search/filter-form';
-import { FilterPostDTO, PostDTO } from '@/dtos/post';
+import { FilterPostDTO, PostWithIsRequestedDTO } from '@/dtos/post';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
@@ -58,7 +58,9 @@ export default function Page() {
     enabled: true,
   });
 
-  const [filteredPosts, setFilteredPosts] = useState<PostDTO[]>(posts ?? []);
+  const [filteredPosts, setFilteredPosts] = useState<PostWithIsRequestedDTO[]>(
+    posts ?? []
+  );
 
   function onRequest(postId: string) {
     console.log('Requesting post', postId);
@@ -123,7 +125,7 @@ export default function Page() {
         <div className="flex items-center justify-between">
           {/* mobile filter popup */}
           <div className="flex items-center space-x-4">
-            <div className='xl:hidden'>
+            <div className="xl:hidden">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
@@ -180,11 +182,12 @@ export default function Page() {
         {/* posts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           {filteredPosts.length > 0 ? (
-            filteredPosts.map((post: PostDTO) => (
+            filteredPosts.map((post: PostWithIsRequestedDTO) => (
               <PostCard
                 key={`${post.user?.id}-${post.created_at}`}
                 post={post}
                 onRequest={onRequest}
+                refetch={refetch}
               />
             ))
           ) : (

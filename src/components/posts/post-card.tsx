@@ -17,7 +17,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog';
 import { PostDetailsDialog } from '@/components/posts/post-details-dialog';
 import { deletePost } from '@/lib/api/post';
 import { createRequest } from '@/lib/api/request';
-import type { PostDTO } from '@/dtos/post';
+import type { PostWithIsRequestedDTO } from '@/dtos/post';
 import {
   Eye,
   Trash2,
@@ -39,10 +39,11 @@ import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import ReviewForm from '../review/review-form';
 
 interface PostCardProps {
-  post: PostDTO;
+  post: PostWithIsRequestedDTO;
   tutorInfo?: TutorContactDTO;
   onDelete?: (postId: string) => void;
   onRequest?: (postId: string) => void;
+  refetch?: () => void;
 }
 
 export const PostCard = ({
@@ -50,6 +51,7 @@ export const PostCard = ({
   tutorInfo,
   onDelete,
   onRequest,
+  refetch,
 }: PostCardProps) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -74,6 +76,7 @@ export const PostCard = ({
     onSuccess: () => {
       toast.success('Create Request successfully');
       if (onRequest) onRequest(post.post_id);
+      if (refetch) refetch();
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -220,11 +223,12 @@ export const PostCard = ({
           {onRequest ? (
             <Button
               size="sm"
-              className="flex items-center gap-2 bg-cyan-500"
+              className="flex items-center gap-2 bg-cyan-500 disabled:bg-gray-500"
+              disabled={post.is_requested ?? false}
               onClick={handleCreateRequest}
             >
               <SendIcon size={16} />
-              Request
+              {post.is_requested ? 'Requested' : 'Request'}
             </Button>
           ) : null}
           {tutorInfo && (

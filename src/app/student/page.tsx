@@ -4,13 +4,7 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { ProfileCard } from '@/components/profile/profile-card';
 import { useAuthStore } from '@/store/auth-store';
 import Link from 'next/link';
-import {
-  Send,
-  ClipboardList,
-  Users,
-  FileText,
-  AlertTriangle,
-} from 'lucide-react';
+import { Send, ClipboardList, FileText, AlertTriangle } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
 import { useEffect } from 'react';
@@ -18,13 +12,13 @@ import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);
-  const router = useRouter()
-  const stats = {
-    requestsFromTutors: 8,
-    matchedPosts: 4,
-    activeTutors: 6,
-    myPosts: 5,
-  };
+  const router = useRouter();
+  // const stats = {
+  //   requestsFromTutors: 8,
+  //   matchedPosts: 4,
+  //   activeTutors: 6,
+  //   myPosts: 5,
+  // };
 
   const quickLinks = [
     {
@@ -86,7 +80,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">
             <Send className="text-green-600 w-6 h-6" />
             <div>
@@ -115,7 +109,7 @@ export default function Page() {
               <p className="text-sm text-gray-500">My Posts</p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quickLinks.map((link, index) => (

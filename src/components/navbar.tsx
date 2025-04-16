@@ -45,7 +45,7 @@ export default function Navbar() {
             {/* left */}
             <div className="ml-4 flex items-center gap-2">
               <Link
-                href="/"
+                href="/login"
                 className="flex items-center gap-2 mr-4 font-bold"
               >
                 <div className="flex items-center gap-4">

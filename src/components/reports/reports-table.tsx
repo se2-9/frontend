@@ -154,7 +154,6 @@ export function ReportsTable({ data }: ReportsTableProps) {
               <SelectItem value="resolved">Resolved</SelectItem>
               <SelectItem value="processing">Processing</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
             </SelectContent>
           </Select>
         </div>

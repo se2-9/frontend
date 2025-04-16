@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/select';
 import { fetchPosts } from '@/lib/api/search';
 import FilterForm from '@/components/search/filter-form';
-import { FilterPostDTO, PostDTO } from '@/dtos/post';
+import { FilterPostDTO, PostWithIsRequestedDTO } from '@/dtos/post';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import MaxWidthWrapper from '@/components/max-width-wrapper';
@@ -58,7 +58,9 @@ export default function Page() {
     enabled: true,
   });
 
-  const [filteredPosts, setFilteredPosts] = useState<PostDTO[]>(posts ?? []);
+  const [filteredPosts, setFilteredPosts] = useState<PostWithIsRequestedDTO[]>(
+    posts ?? []
+  );
 
   function onRequest(postId: string) {
     console.log('Requesting post', postId);
@@ -122,23 +124,25 @@ export default function Page() {
 
         <div className="flex items-center justify-between">
           {/* mobile filter popup */}
-          <div className="xl:hidden flex items-center space-x-4">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  <FilterIcon size={16} /> Filter
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <FilterForm
-                  refetch={refetch}
-                  form={form}
-                />
-              </DialogContent>
-            </Dialog>
+          <div className="flex items-center space-x-4">
+            <div className="xl:hidden">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2"
+                  >
+                    <FilterIcon size={16} /> Filter
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <FilterForm
+                    refetch={refetch}
+                    form={form}
+                  />
+                </DialogContent>
+              </Dialog>
+            </div>
 
             {/* search and sort */}
             <div className="flex w-full items-center space-x-2 my-4">
@@ -149,7 +153,7 @@ export default function Page() {
                 />
                 <Input
                   className="pl-10 pr-4 py-2 w-full rounded-md"
-                  placeholder="Search by title, subject, or tutor..."
+                  placeholder="Search by title, subject, or student..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -178,11 +182,12 @@ export default function Page() {
         {/* posts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           {filteredPosts.length > 0 ? (
-            filteredPosts.map((post: PostDTO) => (
+            filteredPosts.map((post: PostWithIsRequestedDTO) => (
               <PostCard
                 key={`${post.user?.id}-${post.created_at}`}
                 post={post}
                 onRequest={onRequest}
+                refetch={refetch}
               />
             ))
           ) : (

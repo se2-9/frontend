@@ -62,7 +62,7 @@ export default function TutorRequestCard({ request }: TutorRequestCardProps) {
         isOpen={isConfirmCancelOpen}
         onClose={() => setIsConfirmCancelOpen(false)}
         onConfirm={() => {
-          toast('Request is cancelled!');
+          toast('Request is canceled!');
           setIsConfirmCancelOpen(true);
         }}
       />

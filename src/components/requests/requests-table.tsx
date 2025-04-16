@@ -298,7 +298,7 @@ export function RequestsTable({
             <SelectItem value="paid">Paid</SelectItem>
             <SelectItem value="payment failed">Payment Failed</SelectItem>
             <SelectItem value="replaced">Replaced</SelectItem>
-            <SelectItem value="cancelled">Cancelled</SelectItem>
+            <SelectItem value="canceled">Canceled</SelectItem>
             <SelectItem value="processing other">Processing Other</SelectItem>
           </SelectContent>
         </Select>

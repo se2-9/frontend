@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth-store';
 import { toast } from 'sonner';
@@ -12,7 +12,6 @@ export default function AuthProvider({
 }) {
   const router = useRouter();
   const { initializeAuth } = useAuthStore();
-  const [hydrated, setHydrated] = useState(false);
 
   const checkAuth = useCallback(async () => {
     const { accessToken, expiresAt, user } = useAuthStore.getState();
@@ -33,11 +32,6 @@ export default function AuthProvider({
   }, [initializeAuth, router]);
 
   useEffect(() => {
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
     checkAuth();
   }, [checkAuth, router, hydrated]);
 

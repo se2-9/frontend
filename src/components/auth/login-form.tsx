@@ -54,7 +54,6 @@ export default function LoginForm() {
         );
         toast.success('Logged in!');
         if (data.result.user.role) {
-          console.log('role: ', data.result.user.role);
           router.push(`/${data.result.user.role}/`);
         }
       } catch (error) {
@@ -66,11 +65,6 @@ export default function LoginForm() {
   });
 
   function onSubmit(values: LoginRequest) {
-    if (!values.email || !values.password) {
-      console.warn('❌ Prevented login with incomplete form');
-      return;
-    }
-
     mutation.mutate(values);
   }
 

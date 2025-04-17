@@ -250,6 +250,7 @@ export function RequestsTable({
                   <Button
                     onClick={() => handleCancelRequest(request_id)}
                     className="bg-red-400 hover:bg-red-500"
+                    id="cancel-button"
                     disabled={
                       status !== 'pending' && status !== 'processing other'
                     }

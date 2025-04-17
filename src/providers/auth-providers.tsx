@@ -33,7 +33,7 @@ export default function AuthProvider({
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth, router, hydrated]);
+  }, [checkAuth, router]);
 
   return <>{children}</>;
 }

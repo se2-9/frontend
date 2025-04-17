@@ -116,7 +116,10 @@ export default function Page() {
               items={[{ label: 'Home', href: '/tutor' }, { label: 'Search' }]}
               className="mt-4"
             />
-            <h1 className="text-3xl font-semibold mb-6">
+            <h1
+              id="page-title"
+              className="text-3xl font-semibold mb-6"
+            >
               Search Student Posts
             </h1>
           </div>

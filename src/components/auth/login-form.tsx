@@ -53,7 +53,10 @@ export default function LoginForm() {
           DtoToUser(data.result.user)
         );
         toast.success('Logged in!');
-        router.push(`/${data.result.user.role}/`);
+        if (data.result.user.role) {
+          console.log('role: ', data.result.user.role);
+          router.push(`/${data.result.user.role}/`);
+        }
       } catch (error) {
         console.error(error);
         toast.error('Something went wrong');
@@ -63,13 +66,26 @@ export default function LoginForm() {
   });
 
   function onSubmit(values: LoginRequest) {
+    if (!values.email || !values.password) {
+      console.warn('❌ Prevented login with incomplete form');
+      return;
+    }
+
     mutation.mutate(values);
   }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+          }
+        }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit(onSubmit)(e);
+        }}
         className="space-y-2 w-full mx-auto px-4 text-text"
       >
         <FormField
@@ -80,6 +96,11 @@ export default function LoginForm() {
               <FormControl>
                 <Input
                   {...field}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                    }
+                  }}
                   placeholder="Enter your email"
                   id="email"
                   type="email"
@@ -101,13 +122,17 @@ export default function LoginForm() {
                 <div className="relative w-full">
                   <Input
                     {...field}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                      }
+                    }}
                     placeholder="Enter your password"
                     id="password"
                     type={`${showPassword ? 'text' : 'password'}`}
                   />
                   <Button
                     type="button"
-                    id="submit-login"
                     variant="ghost"
                     className="bg-background text-text h-fit absolute right-2 top-1/2 -translate-y-1/2 p-1"
                     onClick={() => setShowPassword((prev) => !prev)}
@@ -129,6 +154,7 @@ export default function LoginForm() {
         />
         <Button
           type="submit"
+          id="submit-login"
           className="w-full text-text bg-app-lightbrown"
         >
           Login

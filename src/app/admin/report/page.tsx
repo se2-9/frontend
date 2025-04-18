@@ -8,7 +8,6 @@ import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile'
 import { ReportsTable } from '@/components/reports/reports-table-admin';
 import { useReportsAdmin } from '@/hooks/useReports';
 import { Icons } from '@/components/icons';
-import { ReportDTO } from '@/dtos/report';
 
 export default function ReportsPage() {
   const user = useAuthStore((state) => state.user);

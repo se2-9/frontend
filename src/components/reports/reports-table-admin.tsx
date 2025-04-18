@@ -24,12 +24,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ReportStatusBadge } from './report-status-badge';
-import { ArrowUpDown, PlusIcon } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ReportDTO } from '@/dtos/report';
 import { toast } from 'sonner';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteReport, updateReport } from '@/lib/api/report';
+import { useMutation } from '@tanstack/react-query';
+import { updateReport } from '@/lib/api/report';
 
 interface ReportsTableProps {
   data: ReportDTO[];
@@ -40,20 +40,6 @@ export function ReportsTable({ data, refetch }: ReportsTableProps) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sorting, setSorting] = useState<ColumnSort[]>([]);
-  const queryClient = useQueryClient();
-  const [reportContent, setReportContent] = useState('');
-  const [reportStatus, setReportStatus] = useState('');
-  const [reportId, setReportId] = useState('');
-
-  const mutation = useMutation({
-    mutationFn: deleteReport,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reports-admin'] }); // Refetch the report list
-    },
-    onError: (error) => {
-      alert('Error deleting report: ' + error.message);
-    },
-  });
 
   const updateReportMutation = useMutation({
     mutationFn: updateReport,
@@ -148,7 +134,6 @@ export function ReportsTable({ data, refetch }: ReportsTableProps) {
                 Mark as processing
               </Button>
             )}
-            {/* {( */}
             {status !== 'resolved' && (
               <Button
                 className="bg-green-500 hover:bg-green-700"

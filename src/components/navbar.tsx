@@ -26,6 +26,7 @@ import {
   SendIcon,
   StarIcon,
   TriangleAlertIcon,
+  UserRoundX,
   Users2Icon,
 } from 'lucide-react';
 import RoleBadge from './role-badge';
@@ -35,7 +36,12 @@ export default function Navbar() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
 
-  const home = user?.role === 'student' ? '/student' : '/tutor';
+  const home =
+    user?.role === 'student'
+      ? '/student'
+      : user?.role === 'tutor'
+        ? '/tutor'
+        : '/admin';
 
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16 !backdrop-blur-xl bg-lightbrown/50">
@@ -45,7 +51,7 @@ export default function Navbar() {
             {/* left */}
             <div className="ml-4 flex items-center gap-2">
               <Link
-                href="/"
+                href="/login"
                 className="flex items-center gap-2 mr-4 font-bold"
               >
                 <div className="flex items-center gap-4">
@@ -78,73 +84,90 @@ export default function Navbar() {
                       </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     <Separator />
-                    <DropdownMenuItem asChild>
-                      <div className="flex items-center gap-2">
-                        <HomeIcon className="h-4 w-4" />
-                        <Link href={home}>Home</Link>
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <div className="flex items-center gap-2">
-                        <Edit2Icon className="h-4 w-4" />
-                        <Link href="/profile/edit">Edit profile</Link>
-                      </div>
-                    </DropdownMenuItem>
-                    {user.role === 'student' ? (
-                      <>
-                        <DropdownMenuItem>
-                          <div className="flex items-center gap-2">
-                            <SendIcon size={16} />
-                            <Link href="/student/posts">Posts</Link>
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <div className="flex items-center gap-2">
-                            <BookIcon size={16} />
-                            <Link href="/student/requests">Requests</Link>
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <div className="flex items-center gap-2">
-                            <StarIcon size={16} />
-                            <Link href="/student/reviews">Reviews</Link>
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <div className="flex items-center gap-2">
-                            <TriangleAlertIcon size={16} />
-                            <Link href="/reports">Reports</Link>
-                          </div>
-                        </DropdownMenuItem>
-                      </>
-                    ) : (
-                      <>
-                        <DropdownMenuItem asChild>
-                          <div className="flex items-center gap-2">
-                            <SearchIcon size={16} />
-                            <Link href="/tutor/search">Searchs</Link>
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <div className="flex items-center gap-2">
-                            <Users2Icon size={16} />
-                            <Link href="/tutor/requests">Requests</Link>
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <div className="flex items-center gap-2">
-                            <StarIcon size={16} />
-                            <Link href="/tutor/reviews">Reviews</Link>
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <div className="flex items-center gap-2">
-                            <TriangleAlertIcon size={16} />
-                            <Link href="/reports">Reports</Link>
-                          </div>
-                        </DropdownMenuItem>
-                      </>
-                    )}
+                    <div className="flex-col">
+                      <DropdownMenuItem asChild>
+                        <div className="flex items-center gap-2">
+                          <HomeIcon className="h-4 w-4" />
+                          <Link href={home}>Home</Link>
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <div className="flex items-center gap-2">
+                          <Edit2Icon className="h-4 w-4" />
+                          <Link href="/profile/edit">Edit profile</Link>
+                        </div>
+                      </DropdownMenuItem>
+                      {user.role === 'student' ? (
+                        <>
+                          <DropdownMenuItem>
+                            <div className="flex items-center gap-2">
+                              <SendIcon size={16} />
+                              <Link href="/student/posts">Posts</Link>
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <div className="flex items-center gap-2">
+                              <BookIcon size={16} />
+                              <Link href="/student/requests">Requests</Link>
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <div className="flex items-center gap-2">
+                              <StarIcon size={16} />
+                              <Link href="/student/reviews">Reviews</Link>
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <div className="flex items-center gap-2">
+                              <TriangleAlertIcon size={16} />
+                              <Link href="/reports">Reports</Link>
+                            </div>
+                          </DropdownMenuItem>
+                        </>
+                      ) : user.role === 'tutor' ? (
+                        <>
+                          <DropdownMenuItem asChild>
+                            <div className="flex items-center gap-2">
+                              <SearchIcon size={16} />
+                              <Link href="/tutor/search">Searchs</Link>
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <div className="flex items-center gap-2">
+                              <Users2Icon size={16} />
+                              <Link href="/tutor/requests">Requests</Link>
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <div className="flex items-center gap-2">
+                              <StarIcon size={16} />
+                              <Link href="/tutor/reviews">Reviews</Link>
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <div className="flex items-center gap-2">
+                              <TriangleAlertIcon size={16} />
+                              <Link href="/reports">Reports</Link>
+                            </div>
+                          </DropdownMenuItem>
+                        </>
+                      ) : (
+                        <>
+                          <DropdownMenuItem asChild>
+                            <div className="flex items-center gap-2">
+                              <UserRoundX size={16} />
+                              <Link href="/admin/blacklist">Blacklist</Link>
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <div className="flex items-center gap-2">
+                              <TriangleAlertIcon size={16} />
+                              <Link href="/admin/report">Reports</Link>
+                            </div>
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                    </div>
                     <Separator />
                     <DropdownMenuItem
                       asChild

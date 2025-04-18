@@ -65,7 +65,10 @@ export default function CreatePost() {
     <div className="max-w-md">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit(onSubmit)(e);
+          }}
           className="space-y-4 h-[480px] overflow-scroll"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

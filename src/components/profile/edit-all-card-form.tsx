@@ -46,6 +46,10 @@ export default function EditAllCardForm() {
       setShowAddCardDialog(false);
       refetch();
     },
+    onError: (err)=>{
+      console.log(err)
+      toast.error('Unable to add card')
+    }
   });
   const { mutate: deleteCard } = useMutation({
     mutationFn: deletePaymentCard,

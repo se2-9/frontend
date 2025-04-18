@@ -4,19 +4,15 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { ProfileCard } from '@/components/profile/profile-card';
 import { useAuthStore } from '@/store/auth-store';
 import Link from 'next/link';
-import { Mail, Star, Users, Search, Send, AlertTriangle } from 'lucide-react';
+import { Star, Search, Send, AlertTriangle } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
-
-  const stats = {
-    totalRequests: 15,
-    pendingRequests: 5,
-    totalReviews: 12,
-    activeStudents: 8,
-  };
+  const router = useRouter();
 
   const quickLinks = [
     {
@@ -44,7 +40,14 @@ export default function DashboardPage() {
       description: 'Send inquiry for problem occuring in the platform',
     },
   ];
-
+  useEffect(() => {
+    if (user) {
+      if (user.role !== 'tutor') {
+        router.push(`/${user.role}`);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
       <div className="hidden lg:block w-[480px] sticky top-4 self-start mt-6">
@@ -67,32 +70,6 @@ export default function DashboardPage() {
             <h1 className="text-3xl font-semibold mb-6">Tutor Dashboard</h1>
           </div>
         </div>
-
-        {/* dash board stat */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-          <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3 bg-white">
-            <Mail className="text-blue-600 w-6 h-6" />
-            <div>
-              <p className="text-lg font-bold">{stats.totalRequests}</p>
-              <p className="text-sm text-gray-500">Total Requests</p>
-            </div>
-          </div>
-          <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3 bg-white">
-            <Star className="text-yellow-500 w-6 h-6" />
-            <div>
-              <p className="text-lg font-bold">{stats.totalReviews}</p>
-              <p className="text-sm text-gray-500">Reviews</p>
-            </div>
-          </div>
-          <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3 bg-white">
-            <Users className="text-green-600 w-6 h-6" />
-            <div>
-              <p className="text-lg font-bold">{stats.activeStudents}</p>
-              <p className="text-sm text-gray-500">Active Students</p>
-            </div>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quickLinks.map((link, index) => (
             <Link

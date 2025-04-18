@@ -6,8 +6,8 @@ export interface User {
   dateOfBirth: string;
   citizenId: string;
   phoneNumber: string;
-  role: 'student' | 'tutor';
-  gender: string
+  role: 'student' | 'tutor' | 'admin';
+  gender: string;
   // tutor only
   tutorPortfolio: string | undefined;
   tutorEducationLevel: string | undefined;

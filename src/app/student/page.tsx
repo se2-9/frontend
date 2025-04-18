@@ -4,25 +4,15 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 import { ProfileCard } from '@/components/profile/profile-card';
 import { useAuthStore } from '@/store/auth-store';
 import Link from 'next/link';
-import {
-  Send,
-  ClipboardList,
-  Users,
-  FileText,
-  AlertTriangle,
-} from 'lucide-react';
+import { Send, ClipboardList, FileText, AlertTriangle } from 'lucide-react';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import AvatarDropdownProfile from '@/components/profile/avatar-dropdown-profile';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);
-
-  const stats = {
-    requestsFromTutors: 8,
-    matchedPosts: 4,
-    activeTutors: 6,
-    myPosts: 5,
-  };
+  const router = useRouter();
 
   const quickLinks = [
     {
@@ -52,7 +42,14 @@ export default function Page() {
       description: 'Send inquiry for problem occuring in the platform',
     },
   ];
-
+  useEffect(() => {
+    if (user) {
+      if (user.role !== 'student') {
+        router.push(`/${user.role}`);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col md:flex-row p-6 space-y-6 md:space-x-8 mb-6">
       <div className="hidden lg:block w-[480px] sticky top-4 self-start mt-6">
@@ -76,38 +73,6 @@ export default function Page() {
             <h1 className="text-3xl font-semibold mb-6">Student Dashboard</h1>
           </div>
         </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">
-            <Send className="text-green-600 w-6 h-6" />
-            <div>
-              <p className="text-lg font-bold">{stats.requestsFromTutors}</p>
-              <p className="text-sm text-gray-500">Requests from Tutors</p>
-            </div>
-          </div>
-          <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">
-            <ClipboardList className="text-blue-600 w-6 h-6" />
-            <div>
-              <p className="text-lg font-bold">{stats.matchedPosts}</p>
-              <p className="text-sm text-gray-500">Matched Posts</p>
-            </div>
-          </div>
-          <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">
-            <Users className="text-purple-600 w-6 h-6" />
-            <div>
-              <p className="text-lg font-bold">{stats.activeTutors}</p>
-              <p className="text-sm text-gray-500">Active Tutors</p>
-            </div>
-          </div>
-          <div className="p-4 border rounded-lg shadow-sm flex items-center space-x-3">
-            <FileText className="text-purple-600 w-6 h-6" />
-            <div>
-              <p className="text-lg font-bold">{stats.myPosts}</p>
-              <p className="text-sm text-gray-500">My Posts</p>
-            </div>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quickLinks.map((link, index) => (
             <Link

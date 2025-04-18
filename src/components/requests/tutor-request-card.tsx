@@ -17,7 +17,10 @@ export default function TutorRequestCard({ request }: TutorRequestCardProps) {
 
   return (
     <>
-      <Card className="w-xl">
+      <Card
+        id="request-card"
+        className="w-xl"
+      >
         <CardHeader>
           <div className="flex items-center gap-2">
             <BookIcon className="w-6 h-6" />
@@ -62,7 +65,7 @@ export default function TutorRequestCard({ request }: TutorRequestCardProps) {
         isOpen={isConfirmCancelOpen}
         onClose={() => setIsConfirmCancelOpen(false)}
         onConfirm={() => {
-          toast('Request is cancelled!');
+          toast('Request is canceled!');
           setIsConfirmCancelOpen(true);
         }}
       />

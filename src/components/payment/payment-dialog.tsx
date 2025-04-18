@@ -55,48 +55,57 @@ export function PaymentDialog({
       setShowAddCardDialog(false);
       refetchCard();
     },
+    onError: () => {
+      toast.error('Unable to add card');
+    },
   });
 
   const { mutate: pay } = useMutation({
     mutationFn: payWithCard,
     onSuccess: (data) => {
-      const chargeId = data.result.charge_id;
+      //sui :)
+      console.log(data);
+      toast.success('Payment successful!');
+      setIsProcessing(false);
+      onClose();
+      refetchRequests();
+      //end of suiing
+      // const chargeId = data.result.charge_id;
+      // const evtSource = new EventSource(
+      //   `${process.env.NEXT_PUBLIC_API_URL || 'https://api.findmytutor.macgeargear.dev/api/v1'}/payment/sse/${chargeId}`
+      // );
 
-      const evtSource = new EventSource(
-        `${process.env.NEXT_PUBLIC_API_URL || 'https://api.findmytutor.macgeargear.dev/api/v1'}/payment/sse/${chargeId}`
-      );
+      // evtSource.onmessage = (e) => {
+      //   console.log({ event: e });
+      // };
 
-      evtSource.onmessage = (e) => {
-        console.log({ event: e });
-      };
+      // evtSource.addEventListener('charge.create', (e) => {
+      //   console.log('create');
+      //   console.log({ event: e });
+      //   toast.success('Payment successful!');
+      //   // evtSource.close();
+      //   setIsProcessing(false);
+      //   onClose();
+      //   refetchRequests();
+      // });
 
-      evtSource.addEventListener('charge.create', (e) => {
-        console.log('create');
-        console.log({ event: e });
-        toast.success('Payment successful!');
-        // evtSource.close();
-        setIsProcessing(false);
-        onClose();
-        refetchRequests();
-      });
+      // evtSource.addEventListener('charge.failed', (e) => {
+      //   console.log('failed');
+      //   console.log({ event: e });
+      //   evtSource.close();
+      //   setIsProcessing(false);
+      //   onClose();
+      //   refetchRequests();
+      // });
 
-      evtSource.addEventListener('charge.failed', (e) => {
-        console.log('failed');
-        console.log({ event: e });
-        evtSource.close();
-        setIsProcessing(false);
-        onClose();
-        refetchRequests();
-      });
-
-      evtSource.onerror = (e) => {
-        console.log('error');
-        console.log({ event: e });
-        evtSource.close();
-        setIsProcessing(false);
-        onClose();
-        refetchRequests();
-      };
+      // evtSource.onerror = (e) => {
+      //   console.log('error');
+      //   console.log({ event: e });
+      //   evtSource.close();
+      //   setIsProcessing(false);
+      //   onClose();
+      //   refetchRequests();
+      // };
     },
     onError: (error) => {
       toast.error(error.message);
@@ -125,15 +134,13 @@ export function PaymentDialog({
 
     const omisePublicKey =
       process.env.NEXT_PUBLIC_OMISE_PUBLIC_KEY ||
-      'pkey_test_600efhihjwg96138vv6';
+      'pkey_test_63er62n5vctl2mbas5p';
     if (!omisePublicKey) {
       toast.error('Payment service is not configured properly.');
       return;
     }
-
     setIsProcessing(true);
     window.Omise.setPublicKey(omisePublicKey);
-
     omise?.createToken(
       'card',
       {
@@ -144,7 +151,7 @@ export function PaymentDialog({
         security_code: '123',
       },
       async (_, response) => {
-        console.log('omise craete token response: ', response);
+        console.log('omise create token response: ', response);
         if (response.object === 'error') {
           toast.error(response.message);
           setIsProcessing(false);

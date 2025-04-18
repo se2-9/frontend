@@ -16,7 +16,7 @@ const getStatusColor = (status: string) => {
       return '!bg-red-100 !text-red-600';
     case 'replaced':
       return '!bg-gray-100 !text-gray-600';
-    case 'cancelled':
+    case 'canceled':
       return '!bg-purple-100 !text-purple-600';
     case 'processing other':
       return '!bg-blue-100 !text-blue-600';

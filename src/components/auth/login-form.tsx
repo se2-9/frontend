@@ -53,7 +53,9 @@ export default function LoginForm() {
           DtoToUser(data.result.user)
         );
         toast.success('Logged in!');
-        router.push(`/${data.result.user.role}/`);
+        if (data.result.user.role) {
+          router.push(`/${data.result.user.role}/`);
+        }
       } catch (error) {
         console.error(error);
         toast.error('Something went wrong');
@@ -69,7 +71,15 @@ export default function LoginForm() {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+          }
+        }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit(onSubmit)(e);
+        }}
         className="space-y-2 w-full mx-auto px-4 text-text"
       >
         <FormField
@@ -80,7 +90,13 @@ export default function LoginForm() {
               <FormControl>
                 <Input
                   {...field}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                    }
+                  }}
                   placeholder="Enter your email"
+                  id="email"
                   type="email"
                 />
               </FormControl>
@@ -100,7 +116,13 @@ export default function LoginForm() {
                 <div className="relative w-full">
                   <Input
                     {...field}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                      }
+                    }}
                     placeholder="Enter your password"
+                    id="password"
                     type={`${showPassword ? 'text' : 'password'}`}
                   />
                   <Button
@@ -126,6 +148,7 @@ export default function LoginForm() {
         />
         <Button
           type="submit"
+          id="submit-login"
           className="w-full text-text bg-app-lightbrown"
         >
           Login

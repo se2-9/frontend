@@ -104,11 +104,17 @@ export const PostCard = ({
 
   return (
     <>
-      <Card className="w-full flex flex-col h-full rounded-2xl shadow-md hover:shadow-lg transition-shadow bg-white text-text p-4">
+      <Card
+        id="post-card"
+        className="w-full flex flex-col h-full rounded-2xl shadow-md hover:shadow-lg transition-shadow bg-white text-text p-4"
+      >
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <CardTitle
+                id="post-card-title"
+                className="text-lg font-semibold flex items-center gap-2"
+              >
                 <BookOpen
                   size={18}
                   className="text-primary"
@@ -222,6 +228,7 @@ export const PostCard = ({
           ) : null}
           {onRequest ? (
             <Button
+              id="request-button"
               size="sm"
               className="flex items-center gap-2 bg-cyan-500 disabled:bg-gray-500"
               disabled={post.is_requested ?? false}

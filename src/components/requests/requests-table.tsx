@@ -250,6 +250,7 @@ export function RequestsTable({
                   <Button
                     onClick={() => handleCancelRequest(request_id)}
                     className="bg-red-400 hover:bg-red-500"
+                    id="cancel-button"
                     disabled={
                       status !== 'pending' && status !== 'processing other'
                     }
@@ -305,7 +306,7 @@ export function RequestsTable({
       </div>
 
       <div className="overflow-x-auto">
-        <Table>
+        <Table id="requests-table">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -323,7 +324,11 @@ export function RequestsTable({
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  id="requests-table-row"
+                  data-testid="requests-table-row"
+                  key={row.id}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(

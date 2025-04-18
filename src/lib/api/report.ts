@@ -16,7 +16,7 @@ export async function createReport(data: CreateReportData) {
 
 export async function getReport(): Promise<ApiResponse<ReportDTO[]>> {
   try {
-    const res = await apiClient.get('/report');
+    const res = await apiClient.get('/report/me');
 
     return res.data;
   } catch (error) {

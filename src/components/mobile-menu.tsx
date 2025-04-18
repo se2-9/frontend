@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
 import RoleBadge from './role-badge';
+import { Separator } from './ui/separator';
 
 export default function MobileMenu() {
   const router = useRouter();
@@ -77,6 +78,7 @@ export default function MobileMenu() {
                 <HomeIcon size={16} />
                 <p>Home</p>
               </Link>
+              <Separator />
             </>
           ) : (
             <Button

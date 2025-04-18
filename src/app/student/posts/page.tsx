@@ -29,7 +29,7 @@ export default function Page() {
   }
 
   const hasPosts = data?.result && data.result.length > 0;
-
+  console.log(data?.result)
   return (
     <MaxWidthWrapper className="py-8">
       <div className="flex flex-col items-center">

@@ -1,19 +1,22 @@
+import { ApiResponse } from '@/types/api';
 import { apiClient, handleAxiosError } from './axios';
 import { Blacklist } from '@/types/blacklist';
-import { AxiosError } from 'axios';
 
-export async function fetchAllBlacklist(): Promise<Blacklist[]> {
+export async function fetchAllBlacklist(): Promise<ApiResponse<Blacklist[]>> {
   try {
-    const res = await apiClient.get<Blacklist[]>('/admin/blacklist');
+    const res = await apiClient.get('/admin/blacklist');
     return res.data;
   } catch (error) {
     throw handleAxiosError(error);
   }
 }
 
-export async function addBlacklist(entry: Blacklist): Promise<void> {
+export async function addBlacklist(
+  entry: Blacklist
+): Promise<ApiResponse<Blacklist>> {
   try {
-    await apiClient.post('/admin/blacklist', entry);
+    const res = await apiClient.post('/admin/blacklist', entry);
+    return res.data;
   } catch (error) {
     throw handleAxiosError(error);
   }
@@ -21,21 +24,21 @@ export async function addBlacklist(entry: Blacklist): Promise<void> {
 
 export async function searchBlacklist(
   email: string
-): Promise<Blacklist | null> {
+): Promise<ApiResponse<Blacklist | null>> {
   try {
-    const res = await apiClient.get<Blacklist>(`/admin/blacklist/${email}`);
+    const res = await apiClient.get(`/admin/blacklist/${email}`);
     return res.data;
   } catch (error) {
-    if ((error as AxiosError)?.response?.status === 404) {
-      return null;
-    }
     throw handleAxiosError(error);
   }
 }
 
-export async function deleteBlacklist(email: string): Promise<void> {
+export async function deleteBlacklist(
+  email: string
+): Promise<ApiResponse<Blacklist>> {
   try {
-    await apiClient.delete(`/admin/blacklist/${email}`);
+    const res = await apiClient.delete(`/admin/blacklist/${email}`);
+    return res.data;
   } catch (error) {
     throw handleAxiosError(error);
   }

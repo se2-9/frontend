@@ -50,11 +50,12 @@ export default function ReportsPage() {
           </div>
         </div>
 
-        {
-          <div className="w-full space-y-6">
-              {<ReportsTable data={reportsData} refetch={refetch} />}
-          </div>
-        }
+        <div className="w-full space-y-6">
+          <ReportsTable
+            data={reportsData}
+            refetch={refetch}
+          />
+        </div>
       </div>
     </MaxWidthWrapper>
   );

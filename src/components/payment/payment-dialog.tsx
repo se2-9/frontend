@@ -63,7 +63,6 @@ export function PaymentDialog({
   const { mutate: pay } = useMutation({
     mutationFn: payWithCard,
     onSuccess: (data) => {
-      //sui :)
       console.log(data);
       toast.success('Payment successful!');
       setIsProcessing(false);

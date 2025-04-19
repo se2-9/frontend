@@ -8,7 +8,6 @@ export async function getTutorReviewsByTutorID(
 ): Promise<ApiResponse<ReviewDTO[]>> {
   try {
     const res = await apiClient.get(`/review/${tutor_id}`);
-    console.log(res.data);
     return res.data;
   } catch (error) {
     throw handleAxiosError(error);

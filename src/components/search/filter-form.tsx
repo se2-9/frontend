@@ -28,7 +28,7 @@ interface FilterFormProps {
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<PostDTO[], Error>>;
-  form: UseFormReturn<FilterPostDTO, unknown, undefined>;
+  form: UseFormReturn<FilterPostDTO, unknown, FilterPostDTO>;
 }
 
 export default function FilterForm({ refetch, form }: FilterFormProps) {

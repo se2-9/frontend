@@ -32,7 +32,7 @@ export default function Page() {
     'Highest Rate'
   );
 
-  const form = useForm<FilterPostDTO>({
+  const form = useForm<FilterPostDTO, unknown, FilterPostDTO>({
     defaultValues: {
       title: '',
       subject: '',

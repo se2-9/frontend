@@ -58,6 +58,8 @@ export const PostCard = ({
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isTutorContactOpen, setIsTutorContactOpen] = useState(false);
 
+  console.log(post);
+
   const mutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
     onSuccess: () => {
@@ -122,18 +124,24 @@ export const PostCard = ({
                 {post.title}
               </CardTitle>
               <CardDescription className="text-muted-foreground text-sm flex items-center gap-2">
-                <User
-                  size={14}
-                  className="text-gray-500"
-                />
-                {post.user?.name}
-                <AtSignIcon size={14} />
-                <Link
-                  href={`/profile/${post.user?.email}`}
-                  className="hover:underline"
-                >
-                  {post.user?.email}
-                </Link>
+                <div className="flex flex-col gap-2 items-start">
+                  <div className="flex items-center gap-2">
+                    <User
+                      size={14}
+                      className="text-gray-500"
+                    />
+                    {post.user?.name}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <AtSignIcon size={14} />
+                    <Link
+                      href={`/profile/${post.user?.email}`}
+                      className="hover:underline"
+                    >
+                      {post.user?.email}
+                    </Link>
+                  </div>
+                </div>
               </CardDescription>
             </div>
             <PostStatusBadge isOnline={post.is_online} />

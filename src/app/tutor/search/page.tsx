@@ -97,6 +97,8 @@ export default function Page() {
     );
   }
 
+  console.log('posts: ', posts);
+
   return (
     <MaxWidthWrapper className="w-full h-full flex flex-col xl:flex-row p-4 space-y-4 md:space-x-6">
       <div className="hidden xl:block w-[400px] sticky top-4 self-start mt-8">

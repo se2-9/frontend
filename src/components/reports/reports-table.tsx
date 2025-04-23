@@ -31,7 +31,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { ReportStatusBadge } from './report-status-badge';
-import { ArrowUpDown, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ReportDTO } from '@/dtos/report';
 import CreateReport from './create-report';
@@ -51,13 +51,13 @@ export function ReportsTable({ data }: ReportsTableProps) {
   const mutation = useMutation({
     mutationFn: deleteReport,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["reports"]}); // Refetch the report list
+      queryClient.invalidateQueries({ queryKey: ['reports'] }); // Refetch the report list
     },
     onError: (error) => {
-      alert("Error deleting report: " + error.message);
+      alert('Error deleting report: ' + error.message);
     },
   });
-  
+
   const filteredData = useMemo(() => {
     return data.filter((req) => {
       const matchesSearch =
@@ -71,22 +71,22 @@ export function ReportsTable({ data }: ReportsTableProps) {
     });
   }, [search, statusFilter, data]);
   const columns: ColumnDef<ReportDTO>[] = [
-    {
-      accessorKey: 'create_at',
-      header: ({ column }) => (
-        <button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="flex items-center gap-1 font-medium"
-        >
-          Date Received <ArrowUpDown className="w-4 h-4" />
-        </button>
-      ),
-      cell: (info) => (
-        <span className="text-gray-600">
-          {Intl.DateTimeFormat("en-CA").format(new Date((info.getValue() as string))) ?? 'N/A'}
-        </span>
-      ),
-    },
+    // {
+    //   accessorKey: 'create_at',
+    //   header: ({ column }) => (
+    //     <button
+    //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+    //       className="flex items-center gap-1 font-medium"
+    //     >
+    //       Date Received <ArrowUpDown className="w-4 h-4" />
+    //     </button>
+    //   ),
+    //   cell: (info) => (
+    //     <span className="text-gray-600">
+    //       {Intl.DateTimeFormat("en-CA").format(new Date((info.getValue() as string))) ?? 'N/A'}
+    //     </span>
+    //   ),
+    // },
     {
       accessorKey: 'content',
       header: 'content',
@@ -98,19 +98,19 @@ export function ReportsTable({ data }: ReportsTableProps) {
     },
     {
       accessorKey: 'status',
-      id: "status",
+      id: 'status',
       header: 'Status',
       cell: (info) => <ReportStatusBadge status={info.getValue() as string} />,
     },
     {
-      accessorKey: "report_id",
-      id: "report_id",
-      header: "Actions",
+      accessorKey: 'report_id',
+      id: 'report_id',
+      header: 'Actions',
       cell: ({ row }) => {
-        const status = row.getValue("status") as string;
-        const id = row.getValue("report_id") as string;
+        const status = row.getValue('status') as string;
+        const id = row.getValue('report_id') as string;
 
-        return status === "pending" ? (
+        return status === 'pending' ? (
           <Button
             className="bg-red-500 hover:bg-red-700"
             onClick={() => mutation.mutate(id)}
@@ -129,7 +129,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
-  
+
   return (
     <div className="bg-white shadow-md rounded-lg p-4">
       {/* Search and Filter Inputs */}
@@ -158,7 +158,7 @@ export function ReportsTable({ data }: ReportsTableProps) {
           </Select>
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
-        <Dialog>
+          <Dialog>
             <DialogTrigger asChild>
               {
                 <Button className="bg-app-lightbrown text-lightbrown-foreground hover:text-white">
@@ -179,10 +179,9 @@ export function ReportsTable({ data }: ReportsTableProps) {
               </div>
             </DialogContent>
           </Dialog>
-          
         </div>
       </div>
-      
+
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
@@ -190,7 +189,10 @@ export function ReportsTable({ data }: ReportsTableProps) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -202,14 +204,20 @@ export function ReportsTable({ data }: ReportsTableProps) {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center text-gray-500 py-4">
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-center text-gray-500 py-4"
+                >
                   No reports found.
                 </TableCell>
               </TableRow>

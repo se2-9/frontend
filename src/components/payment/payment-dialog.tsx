@@ -131,9 +131,7 @@ export function PaymentDialog({
       return toast.error('Selected card not found');
     }
 
-    const omisePublicKey =
-      process.env.NEXT_PUBLIC_OMISE_PUBLIC_KEY ||
-      'pkey_test_63er62n5vctl2mbas5p';
+    const omisePublicKey = 'pkey_test_63hg8hy9cna4r4r2vqt';
     if (!omisePublicKey) {
       toast.error('Payment service is not configured properly.');
       return;

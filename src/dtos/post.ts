@@ -23,7 +23,7 @@ export interface PostWithIsRequestedDTO {
   hourly_rate: number;
   description: string;
   created_at: string;
-  is_requested: boolean;
+  is_requested?: boolean;
 }
 
 export interface PostWithTutorDTO {

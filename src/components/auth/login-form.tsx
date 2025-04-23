@@ -46,7 +46,6 @@ export default function LoginForm() {
       }
 
       try {
-        console.log(data);
         setAuth(
           data.result.access_token,
           data.result.expires_at,

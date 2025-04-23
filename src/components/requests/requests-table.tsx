@@ -112,7 +112,6 @@ export function RequestsTable({
   });
 
   const handleViewDetail = (post: PostDTO) => {
-    // console.log(postDTO)
     setCurrentPostDetail(post);
     setIsShowingDetail(true);
   };

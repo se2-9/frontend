@@ -24,7 +24,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ReportStatusBadge } from './report-status-badge';
-import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ReportDTO } from '@/dtos/report';
 import { toast } from 'sonner';
@@ -33,7 +32,7 @@ import { updateReport } from '@/lib/api/report';
 
 interface ReportsTableProps {
   data: ReportDTO[];
-  refetch: () => void
+  refetch: () => void;
 }
 
 export function ReportsTable({ data, refetch }: ReportsTableProps) {
@@ -60,14 +59,17 @@ export function ReportsTable({ data, refetch }: ReportsTableProps) {
     },
   });
 
-  const handleUpdateReport = (report_id: string, content: string, status: string) => {
-    
+  const handleUpdateReport = (
+    report_id: string,
+    content: string,
+    status: string
+  ) => {
     updateReportMutation.mutate({
       report_id: report_id,
       content: content,
       status: status,
-    })
-  }
+    });
+  };
   const filteredData = useMemo(() => {
     return data.filter((req) => {
       const matchesSearch =
@@ -81,24 +83,24 @@ export function ReportsTable({ data, refetch }: ReportsTableProps) {
     });
   }, [search, statusFilter, data]);
   const columns: ColumnDef<ReportDTO>[] = [
-    {
-      accessorKey: 'create_at',
-      header: ({ column }) => (
-        <button
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="flex items-center gap-1 font-medium"
-        >
-          Date Received <ArrowUpDown className="w-4 h-4" />
-        </button>
-      ),
-      cell: (info) => (
-        <span className="text-gray-600">
-          {Intl.DateTimeFormat('en-CA').format(
-            new Date(info.getValue() as string)
-          ) ?? 'N/A'}
-        </span>
-      ),
-    },
+    // {
+    //   accessorKey: 'create_at',
+    //   header: ({ column }) => (
+    //     <button
+    //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+    //       className="flex items-center gap-1 font-medium"
+    //     >
+    //       Date Received <ArrowUpDown className="w-4 h-4" />
+    //     </button>
+    //   ),
+    //   cell: (info) => (
+    //     <span className="text-gray-600">
+    //       {Intl.DateTimeFormat('en-CA').format(
+    //         new Date(info.getValue() as string)
+    //       ) ?? 'N/A'}
+    //     </span>
+    //   ),
+    // },
     {
       accessorKey: 'content',
       header: 'content',
@@ -124,12 +126,12 @@ export function ReportsTable({ data, refetch }: ReportsTableProps) {
 
         return (
           <div className="flex items-center gap-2">
-            
-            
             {status === 'pending' && (
               <Button
                 className="bg-blue-500 hover:bg-blue-700"
-                onClick={() => {handleUpdateReport(id, row.getValue("content"), "processing")}}
+                onClick={() => {
+                  handleUpdateReport(id, row.getValue('content'), 'processing');
+                }}
               >
                 Mark as processing
               </Button>
@@ -137,8 +139,9 @@ export function ReportsTable({ data, refetch }: ReportsTableProps) {
             {status !== 'resolved' && (
               <Button
                 className="bg-green-500 hover:bg-green-700"
-                onClick={() => {handleUpdateReport(id, row.getValue("content"), "resolved")}}
-
+                onClick={() => {
+                  handleUpdateReport(id, row.getValue('content'), 'resolved');
+                }}
               >
                 Mark as resolved
               </Button>
